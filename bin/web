@@ -54,7 +54,7 @@ try {
     log('Static web server successfully started at '.green + port.toString().cyan);
     log('Hit CTRL-C to stop the server')
     process.on('SIGINT', function() {
-        console.log('Static web server stopped.'.red);
+        log('Static web server stopped.'.red);
         return process.exit();
     });
     
