@@ -43,6 +43,7 @@ try {
     try {
         http.createServer(function(request, response) {
           return request.addListener('end', function() {
+            log('['.grey+'served'.yellow+'] '.grey + request.url.grey);
             return file.serve(request, response);
           });
         }).listen(port);
