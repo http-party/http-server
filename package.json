@@ -1,11 +1,11 @@
 {
-    "name" : "web",
+    "name" : "http-server",
     "preferGlobal": "true",
     "version" : "0.0.1",
     "author": "Matthew Bergman <matt@protovore.com>",
-    "description" : "Drop dead simple web serve cli.",
+    "description" : "Command Line Web Server.",
     "bin": {
-        "web": "./bin/web"
+        "web": "./bin/http-server"
      },
     "repository" : {
         "type" : "git",
