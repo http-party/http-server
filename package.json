@@ -1,11 +1,12 @@
 {
     "name" : "web",
+    "preferGlobal": "true",
     "version" : "0.0.1",
+    "author": "Matthew Bergman <matt@protovore.com>",
     "description" : "Drop dead simple web serve cli.",
-    "main" : "./index.js",
-    "directories" : {
-        "bin" : "web"
-    },
+    "bin": {
+        "web": "./bin/web"
+     },
     "repository" : {
         "type" : "git",
         "url" : "https://github.com/Marak/web.git"
@@ -14,11 +15,6 @@
         "cli",
         "command"
     ],
-    "author" : {
-        "name" : "Matthew Bergman",
-        "email" : "matt@protovore.com",
-        "url" : "http://mzbphoto.com"
-    },
     "license" : "MIT/X11",
     "engine" : {
         "node" : ">=0.4"
