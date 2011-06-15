@@ -1,0 +1,31 @@
+{
+    "name" : "web",
+    "version" : "0.0.1",
+    "description" : "Drop dead simple web serve cli.",
+    "main" : "./index.js",
+    "directories" : {
+        "bin" : "web"
+    },
+    "dependencies" : {
+        "optimist" : ">=0.2.4", 
+        "colors"   : ">=0.5.0",
+        "eyes"   : ">=0.1.6",  
+    },
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/Marak/web.git"
+    },
+    "keywords" : [
+        "cli",
+        "command"
+    ],
+    "author" : {
+        "name" : "Matthew Bergman",
+        "email" : "matt@protovore.com",
+        "url" : "http://mzbphoto.com"
+    },
+    "license" : "MIT/X11",
+    "engine" : {
+        "node" : ">=0.4"
+    }
+}

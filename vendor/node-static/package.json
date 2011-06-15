@@ -1,0 +1,15 @@
+{
+  "name"          : "node-static",
+  "description"   : "simple, compliant file streaming module for node",
+  "url"           : "http://github.com/cloudhead/node-static",
+  "keywords"      : ["http", "static", "file", "server"],
+  "author"        : "Alexis Sellier <self@cloudhead.net>",
+  "contributors"  : [],
+  "licenses"      : ["MIT"],
+  "dependencies"  : [],
+  "lib"           : "lib",
+  "main"          : "./lib/node-static",
+  "version"       : "0.5.3",
+  "directories"   : { "test": "./test" },
+  "engines"       : { "node": ">= 0.3.0" }
+}
