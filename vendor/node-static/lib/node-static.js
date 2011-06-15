@@ -1,5 +1,4 @@
 var fs = require('fs'),
-    sys = require('sys'),
     events = require('events'),
     buffer = require('buffer'),
     http = require('http'),
@@ -132,7 +131,6 @@ this.Server.prototype.servePath = function (pathname, status, headers, req, res,
         promise = new(events.EventEmitter);
 
     pathname = this.normalize(pathname);
-
     // Only allow GET and HEAD requests
     if (req.method !== 'GET' && req.method !== 'HEAD') {
         finish(405, { 'Allow': 'GET, HEAD' });
@@ -186,7 +184,6 @@ this.Server.prototype.respond = function (pathname, status, _headers, files, sta
     var mtime   = Date.parse(stat.mtime),
         key     = pathname || files[0],
         headers = {};
-
     // Copy default headers
     for (var k in this.options.headers) {  headers[k] = this.options.headers[k] }
 
@@ -219,7 +216,9 @@ this.Server.prototype.respond = function (pathname, status, _headers, files, sta
             finish(status, _headers);
         } else {
             this.stream(pathname, files, new(buffer.Buffer)(stat.size), res, function (e, buffer) {
-                if (e) { return finish(null, {}) }
+                if (e) { 
+                  return finish(200, {});
+                }
                 exports.store[key] = {
                     stat:      stat,
                     buffer:    buffer,
@@ -231,7 +230,9 @@ this.Server.prototype.respond = function (pathname, status, _headers, files, sta
     }
 };
 this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
- var html;
+ var html,
+     self = this,
+     newPath;
  html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"\
  "http://www.w3.org/TR/html4/loose.dtd">\
  <html> \
@@ -241,10 +242,14 @@ this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
   <body> \
  <h1>Index of ' + dirPath + '</h1>';
  html += '<table>';
+  newPath = dirPath.replace(self.root, '');
+  if (newPath[newPath.length - 1] !== '/') {
+    newPath += '/';
+  }
  fs.readdir(dirPath, function(err, result) {
    if (err) { return finish(404, {})}
    result.forEach(function(v, i) {
-     html += ('<tr><td>' + '<a href="/' + encodeURI(dirPath + '/' + v) + '">' + v + '</a></td></tr>');
+     html += ('<tr><td>' + '<a href="' + newPath + v + '">' + v + '</a></td></tr>');
    });
    html += '</table>';
    html += '\
@@ -258,10 +263,15 @@ this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
 this.Server.prototype.stream = function (pathname, files, buffer, res, callback) {
     (function streamFile(files, offset) {
         var file = files.shift();
-
         if (file) {
             // Stream the file to the client
-            fs.createReadStream(path.join(pathname || '.', file), {
+            if (file[0] === '/') {
+              file = '/' + path.join(pathname || '.', file);;
+            }
+            else {
+              file = path.join(pathname || '.', file);
+            }
+            fs.createReadStream(file, {
                 flags: 'r',
                 encoding: 'binary',
                 mode: 0666,
@@ -274,7 +284,7 @@ this.Server.prototype.stream = function (pathname, files, buffer, res, callback)
                 streamFile(files, offset);
             }).addListener('error', function (err) {
                 callback(err);
-                sys.error(err);
+                console.error(err);
             });
         } else {
             res.end();

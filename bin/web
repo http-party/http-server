@@ -2,8 +2,7 @@
 
 require.paths.unshift(require('path').join(__dirname, '..', 'vendor'));
 
-var sys = require('sys'),
-    path = require('path'),
+var path = require('path'),
     eyes = require('eyes'),
     colors = require('colors'),
     static = require('../vendor/node-static/lib/node-static'),
@@ -19,10 +18,9 @@ var help = [
     " -h, --help You're staring at it",
 ].join('\n');
 
-
 function log (message) {
   if (!argv.s && !argv.silent) {
-    sys.puts(message);
+    console.log(message);
   }
 }
 
@@ -33,19 +31,21 @@ function inspect (obj) {
 }
 
 if (argv.h) {
-  return sys.puts(help);
+  return console.log(help);
 }
 
 try {
+    var root = argv._[0] || ".";
     var port = argv.p || 8080;
     var file = new(static.Server)(root, { AutoIndex: true, cache: 3600 }); 
-    var root = argv.root || "."
    //createServer(argv.p || 8080, options);
     log('Starting up static web server for: '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
     try {
         http.createServer(function(request, response) {
-          return request.addListener('end', function() {
-            log('['.grey+'served'.yellow+'] '.grey + request.url.grey);
+          //console.log('Request: ', request);
+          //console.log('Response: ', response);
+          request.on('end', function() {
+            log('['.grey+'served'.yellow+'] '.grey + request.url);
             return file.serve(request, response);
           });
         }).listen(port);
@@ -63,5 +63,5 @@ try {
     
 }
 catch (err) {
-  log(err, sys.inspect(options));
+  log(err, console.dir(options));
 }
