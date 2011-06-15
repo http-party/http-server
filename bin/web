@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require.paths.unshift(require('path').join(__dirname, '..', 'vendor'));
+
 var sys = require('sys'),
     path = require('path'),
     eyes = require('eyes'),
