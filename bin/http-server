@@ -56,7 +56,7 @@ try {
             message: err.message
         });
     }
-    log('http-server successfully started: '.green + host.cyan + ':'.cyan + + port.toString().cyan);
+    log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toString().cyan);
     log('Hit CTRL-C to stop the server')
     process.on('SIGINT', function() {
         log('http-server stopped.'.red);
