@@ -1,7 +1,7 @@
 {
     "name" : "http-server",
     "preferGlobal": "true",
-    "version" : "0.0.1",
+    "version" : "0.1.0",
     "author": "Matthew Bergman <matt@protovore.com>",
     "description" : "Command Line Web Server.",
     "bin": {
@@ -9,7 +9,7 @@
     },
     "repository" : {
         "type" : "git",
-        "url" : "https://github.com/Marak/web.git"
+        "url" : "https://github.com/nodejitsu/http-server.git"
     },
     "keywords" : [
         "cli",
