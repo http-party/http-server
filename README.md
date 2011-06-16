@@ -18,7 +18,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 Example:
 
-     avian@Sanchez:~/web$ bin/http-server ~/handbook -p 9000
+     avian@avian:~/web$ http-server ~/handbook -p 9000
      Starting up http-server, serving /home/avian/handbook on port: 9000
      http-server successfully started: localhost:NaN
      Hit CTRL-C to stop the server 
