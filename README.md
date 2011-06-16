@@ -1,4 +1,4 @@
-# http-server: command-line node.js static web server
+# node-http-server: command-line static web server for node.js
 
 `http-server` is a simple, no-configuration command-line static web server.  It can be used for anything from simple learning and testing to full production use serving static web content.
 
