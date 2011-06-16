@@ -2,6 +2,8 @@
 
 `http-server` is a simple, no-configuration command-line static web server.  It can be used for anything from simple learning and testing to full production use serving static web content.
 
+## Installation:
+
 Installation is via `npm`.  If you don't have `npm` yet:
 
      curl http://npmjs.org/install.sh | sh
