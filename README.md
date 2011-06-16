@@ -12,7 +12,6 @@ Once you have `npm`:
      
 This will install `http-server` globally so that it may be run from the command line.  Now try:
 
-     cd mypath
      http-server /mypath
      
 The entire /mypath tree will now be available at `http://localhost:8080/`.  
