@@ -22,8 +22,12 @@ The entire /mypath tree will now be available at `http://localhost:8080/`.
 
 Available options:
 
-      -p Port to use [8080]
-      -a Address to use [localhost]
-      -s --silent Suppress log messages from output
-      -h --help Print this list and exit.
+`-p` Port to listen for connections on (defaults to 8080)
+
+`-a` Address to bind to (defaults to 'localhost')
+
+`-s` or `--silent` In silent mode, log messages aren't logged to the console.
+
+`-h` or `--help` Displays a list of commands and exits.
+
 
