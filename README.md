@@ -15,11 +15,13 @@ This will install `http-server` globally so that it may be run from the command 
      http-server /mypath
      
 The entire /mypath tree will now be available at `http://localhost:8080/`.  
-For a list of options, try `http-server -h`
 
-     usage: http-server [path] [options]
+## Usage:
 
-     options:
+     http-server [path] [options]
+
+Available options:
+
       -p Port to use [8080]
       -a Address to use [localhost]
       -s --silent Suppress log messages from output
