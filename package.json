@@ -5,8 +5,8 @@
     "author": "Matthew Bergman <matt@protovore.com>",
     "description" : "Command Line Web Server.",
     "bin": {
-        "web": "./bin/http-server"
-     },
+      "http-server": "./bin/http-server"
+    },
     "repository" : {
         "type" : "git",
         "url" : "https://github.com/Marak/web.git"
