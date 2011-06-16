@@ -60,7 +60,7 @@ this.Server.prototype.serveDir = function (pathname, req, res, finish) {
                 // Stream a directory of files as a single file.
                 fs.readFile(path.join(pathname, 'index.json'), function (e, contents) {
                     if (e) {
-                      if (that.options.AutoIndex) {
+                      if (that.options.AutoIndex == "true") {
                         return that.serveAutoIndex(pathname, res, req, finish);
                       } else {
                         return finish(404, {});
@@ -253,7 +253,7 @@ this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
    });
    html += '</table>';
    html += '\
-   <address>Node.js ' + process.version + ' <a href="https://github.com/cloudhead/node-static">node-static</a> server running @ ' + req.headers.host + '</address> \
+   <address>Node.js ' + process.version + ' <a href="https://github.com/nodejitsu/http-server">http-server</a> server running @ ' + req.headers.host + '</address> \
    </body></html>';
    res.writeHead(200, { "Content-Type": "text/html" });
    res.write(html);

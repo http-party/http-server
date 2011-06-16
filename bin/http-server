@@ -38,8 +38,13 @@ if (argv.h) {
 try {
     var root = argv._[0] || ".",
         port = argv.p || 8080,
-        host = argv.a || 'localhost';
-    var file = new(static.Server)(root, { AutoIndex: true, cache: 3600 }); 
+        host = argv.a || 'localhost',
+        cache = argv.c || 3600
+        AutoIndex = argv.i || true;
+        
+        
+        console.log(AutoIndex);
+    var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
    //createServer(argv.p || 8080, options);
     log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
     try {
