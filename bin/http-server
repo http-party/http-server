@@ -10,12 +10,13 @@ var path = require('path'),
     argv = require('optimist').argv;
 
 var help = [
-    "usage: home [options]",
+    "usage: http-server [path] [options]",
     "",
     "options:",
-    " -p Port to run the home on [8080]",
-    " -s --silent Suppress the log messages from the output",
-    " -h, --help You're staring at it",
+    " -p Port to use [8080]",
+    " -a Address to use [localhost]",
+    " -s --silent Suppress log messages from output",
+    " -h --help Print this list and exit.",
 ].join('\n');
 
 function log (message) {
@@ -35,8 +36,9 @@ if (argv.h) {
 }
 
 try {
-    var root = argv._[0] || ".";
-    var port = argv.p || 8080;
+    var root = argv._[0] || ".",
+        port = argv.p || 8080,
+        host = argv.a || 'localhost';
     var file = new(static.Server)(root, { AutoIndex: true, cache: 3600 }); 
    //createServer(argv.p || 8080, options);
     log('Starting up http-server for: '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
@@ -48,7 +50,7 @@ try {
             log('['.grey+'served'.yellow+'] '.grey + request.url);
             return file.serve(request, response);
           });
-        }).listen(port);
+        }).listen(port, host);
     } catch (err) {
         return callback({
             message: err.message
