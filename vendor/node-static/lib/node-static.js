@@ -60,7 +60,7 @@ this.Server.prototype.serveDir = function (pathname, req, res, finish) {
                 // Stream a directory of files as a single file.
                 fs.readFile(path.join(pathname, 'index.json'), function (e, contents) {
                     if (e) {
-                      if (that.options.AutoIndex == "true") {
+                      if (that.options.AutoIndex === true || that.options.AutoIndex === "true") {
                         return that.serveAutoIndex(pathname, res, req, finish);
                       } else {
                         return finish(404, {});

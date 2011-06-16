@@ -15,6 +15,7 @@ var help = [
     "options:",
     " -p Port to use [8080]",
     " -a Address to use [localhost]",
+    " -i Display AutoIndex [true]",
     " -s --silent Suppress log messages from output",
     " -h --help Print this list and exit.",
 ].join('\n');
@@ -41,16 +42,11 @@ try {
         host = argv.a || 'localhost',
         cache = argv.c || 3600
         AutoIndex = argv.i || true;
-        
-        
-        console.log(AutoIndex);
+
     var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
-   //createServer(argv.p || 8080, options);
     log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
     try {
         http.createServer(function(request, response) {
-          //console.log('Request: ', request);
-          //console.log('Response: ', response);
           request.on('end', function() {
             log('['.grey+'served'.yellow+'] '.grey + request.url);
             return file.serve(request, response);
