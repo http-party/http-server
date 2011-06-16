@@ -10,17 +10,25 @@ Once you have `npm`:
 
      npm install http-server -g
      
-This will install `http-server` globally so that it may be run from the command line.  Now try:
-
-     http-server /mypath
-     
-The entire /mypath tree will now be available at `http://localhost:8080/`.  
+This will install `http-server` globally so that it may be run from the command line.
 
 ## Usage:
 
      http-server [path] [options]
 
-Available options:
+Example:
+
+     avian@avian:~/web$ http-server ~/handbook -p 9000
+     Starting up http-server for: /home/avian/handbook on port: 9000
+     http-server successfully started at 9000
+     Hit CTRL-C to stop the server
+      
+     
+The entire /mypath tree will now be available at `http://localhost:8080/`.  
+
+
+
+## Available Options:
 
 `-p` Port to listen for connections on (defaults to 8080)
 
