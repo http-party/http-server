@@ -1,6 +1,7 @@
-# node-http-server: command-line static web server for node.js
 
-`http-server` is a simple, zero-configuration command-line static web server.  It can be used for anything from simple learning and testing to full production use serving static web content.
+# http-server: a command-line http server
+
+`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
 
 ## Installation:
 
@@ -19,15 +20,11 @@ This will install `http-server` globally so that it may be run from the command 
 
      http-server [path] [options]
 
-Example:
-
-     http-server ~/handbook -p 9000
-     Starting up http-server, serving /home/avian/handbook on port: 9000
-     http-server successfully started: localhost:9000
-     Hit CTRL-C to stop the server 
+<img src="https://github.com/Marak/web/raw/master/screenshots/start.png"/></img>
      
-The entire /mypath tree will now be available at `http://localhost:9000/`.  
+The entire /mypath tree will now be available at `http://localhost:8080/`.  
 
+<img src="https://github.com/Marak/web/raw/master/screenshots/directory.png"/></img>
 
 ## Available Options:
 
@@ -40,5 +37,3 @@ The entire /mypath tree will now be available at `http://localhost:9000/`.
 `-s` or `--silent` In silent mode, log messages aren't logged to the console.
 
 `-h` or `--help` Displays a list of commands and exits.
-
-
