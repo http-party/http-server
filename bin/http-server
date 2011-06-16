@@ -41,7 +41,7 @@ try {
         host = argv.a || 'localhost';
     var file = new(static.Server)(root, { AutoIndex: true, cache: 3600 }); 
    //createServer(argv.p || 8080, options);
-    log('Starting up http-server for: '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
+    log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
     try {
         http.createServer(function(request, response) {
           //console.log('Request: ', request);
