@@ -23,7 +23,7 @@ Example:
      http-server successfully started: localhost:9000
      Hit CTRL-C to stop the server 
      
-The entire /mypath tree will now be available at `http://localhost:8080/`.  
+The entire /mypath tree will now be available at `http://localhost:9000/`.  
 
 
 
