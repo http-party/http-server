@@ -3,7 +3,6 @@
 require.paths.unshift(require('path').join(__dirname, '..', 'vendor'));
 
 var path = require('path'),
-    eyes = require('eyes'),
     colors = require('colors'),
     static = require('../vendor/node-static/lib/node-static'),
     http = require('http'),
@@ -26,11 +25,6 @@ function log (message) {
   }
 }
 
-function inspect (obj) {
-  if (!argv.s || !argv.silent) {
-    eyes.inspect(obj);
-  }
-}
 
 if (argv.h) {
   return console.log(help);
