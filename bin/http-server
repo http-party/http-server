@@ -38,16 +38,13 @@ var root = argv._[0] || ".",
 
 var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
 log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
-try {
-  http.createServer(function(request, response) {
-    request.on('end', function() {
-      log('['.grey+'served'.yellow+'] '.grey + request.url);
-      return file.serve(request, response);
-    });
-  }).listen(port, host);
-} catch (err) {
-  console.log(err);
-}
+
+http.createServer(function(request, response) {
+  request.on('end', function() {
+    log('['.grey+'served'.yellow+'] '.grey + request.url);
+    return file.serve(request, response);
+  });
+}).listen(port, host);
 
 log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toString().cyan);
 log('Hit CTRL-C to stop the server')
