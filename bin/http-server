@@ -50,6 +50,6 @@ log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toS
 log('Hit CTRL-C to stop the server')
 
 process.on('SIGINT', function() {
-    log('http-server stopped.'.red);
-    return process.exit();
+  log('http-server stopped.'.red);
+  return process.exit();
 });
