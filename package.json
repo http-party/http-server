@@ -3,7 +3,7 @@
     "preferGlobal": "true",
     "version" : "0.1.0",
     "author": "Matthew Bergman <matt@protovore.com>",
-    "description" : "Command Line Web Server.",
+    "description" : "a simple zero-configuration command-line http server",
     "bin": {
       "http-server": "./bin/http-server"
     },
@@ -15,7 +15,7 @@
         "cli",
         "command"
     ],
-    "license" : "MIT/X11",
+    "license" : "MIT",
     "engine" : {
         "node" : ">=0.4"
     }
