@@ -30,34 +30,29 @@ if (argv.h) {
   return console.log(help);
 }
 
-try {
-    var root = argv._[0] || ".",
-        port = argv.p || 8080,
-        host = argv.a || 'localhost',
-        cache = argv.c || 3600
-        AutoIndex = argv.i || true;
+var root = argv._[0] || ".",
+    port = argv.p || 8080,
+    host = argv.a || 'localhost',
+    cache = argv.c || 3600
+    AutoIndex = argv.i || true;
 
-    var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
-    log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
-    try {
-        http.createServer(function(request, response) {
-          request.on('end', function() {
-            log('['.grey+'served'.yellow+'] '.grey + request.url);
-            return file.serve(request, response);
-          });
-        }).listen(port, host);
-    } catch (err) {
-        return callback({
-            message: err.message
-        });
-    }
-    log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toString().cyan);
-    log('Hit CTRL-C to stop the server')
-    process.on('SIGINT', function() {
-        log('http-server stopped.'.red);
-        return process.exit();
+var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
+log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
+try {
+  http.createServer(function(request, response) {
+    request.on('end', function() {
+      log('['.grey+'served'.yellow+'] '.grey + request.url);
+      return file.serve(request, response);
     });
+  }).listen(port, host);
+} catch (err) {
+  console.log(err);
 }
-catch (err) {
-  log(err, console.dir(options));
-}
+
+log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toString().cyan);
+log('Hit CTRL-C to stop the server')
+
+process.on('SIGINT', function() {
+    log('http-server stopped.'.red);
+    return process.exit();
+});
