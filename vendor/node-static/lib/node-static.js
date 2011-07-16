@@ -132,8 +132,8 @@ this.Server.prototype.servePath = function (pathname, status, headers, req, res,
 
     pathname = this.normalize(pathname);
     // Only allow GET and HEAD requests
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-        finish(405, { 'Allow': 'GET, HEAD' });
+    if (req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'POST') {
+        finish(405, { 'Allow': 'GET, HEAD, POST' });
         return promise;
     }
 
