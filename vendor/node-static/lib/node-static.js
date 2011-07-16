@@ -232,6 +232,7 @@ this.Server.prototype.respond = function (pathname, status, _headers, files, sta
 this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
  var html,
      self = this,
+     urlBase = '',
      newPath;
  html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"\
  "http://www.w3.org/TR/html4/loose.dtd">\
@@ -242,7 +243,10 @@ this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
   <body> \
  <h1>Index of ' + dirPath + '</h1>';
  html += '<table>';
-  newPath = dirPath.replace(self.root, '');
+  urlBase = dirPath.replace(self.root, '');
+  newPath = (urlBase.split('/').length > 1) 
+            ? urlBase.split('/').pop()
+            : urlBase;
   if (newPath[newPath.length - 1] !== '/') {
     newPath += '/';
   }
