@@ -1,8 +1,8 @@
 {
     "name" : "http-server",
     "preferGlobal": "true",
-    "version" : "0.1.2",
-    "author": "Matthew Bergman <matt@protovore.com>",
+    "version" : "0.1.3",
+    "author": "Marak Squires <marak.squires@gmail.com>",
     "description" : "a simple zero-configuration command-line http server",
     "bin": {
       "http-server": "./bin/http-server"
