@@ -46,7 +46,7 @@ http.createServer(function(request, response) {
   });
 }).listen(port, host);
 
-log('http-server successfully started: '.green + host.cyan + ':'.cyan + port.toString().cyan);
+log('http-server successfully started: '.green + 'http://'.cyan + host.cyan + ':'.cyan + port.toString().cyan);
 log('Hit CTRL-C to stop the server')
 
 process.on('SIGINT', function() {
