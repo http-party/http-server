@@ -1,36 +1,8 @@
 #!/usr/bin/env node
 
+var HTTPServer = require('../lib/http-server').HTTPServer;
 
-
-var colors = require('colors'),
-    argv = require('optimist').argv,
-    HTTPServer = require('../lib/http-server').HTTPServer;
-
-var help = [
-    "usage: http-server [path] [options]",
-    "",
-    "options:",
-    " -p Port to use [8080]",
-    " -a Address to use [localhost]",
-    " -i Display AutoIndex [true]",
-    " -s --silent Suppress log messages from output",
-    " -h --help Print this list and exit.",
-].join('\n');
-
-if (argv.h || argv.help) {
-  return console.log(help);
-}
-
-var options = {
-  root: argv._[0] || ".",
-  port: argv.p || 8080,
-  host: argv.a || 'localhost',
-  cache: argv.c || 3600,
-  AutoIndex: argv.i || true,
-  silent: argv.s || argv.silent || false
-};
-
-var httpServer = new HTTPServer(options);
+var httpServer = new HTTPServer();
 
 httpServer.start();
 
