@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-require.paths.unshift(require('path').join(__dirname, '..', 'vendor'));
 
-var path = require('path'),
-    colors = require('colors'),
-    static = require('../vendor/node-static/lib/node-static'),
-    http = require('http'),
-    argv = require('optimist').argv;
+
+var colors = require('colors'),
+    argv = require('optimist').argv,
+    HTTPServer = require('../lib/http-server').HTTPServer;
 
 var help = [
     "usage: http-server [path] [options]",
@@ -19,37 +17,24 @@ var help = [
     " -h --help Print this list and exit.",
 ].join('\n');
 
-function log (message) {
-  if (!argv.s && !argv.silent) {
-    console.log(message);
-  }
-}
-
-
-if (argv.h) {
+if (argv.h || argv.help) {
   return console.log(help);
 }
 
-var root = argv._[0] || ".",
-    port = argv.p || 8080,
-    host = argv.a || 'localhost',
-    cache = argv.c || 3600
-    AutoIndex = argv.i || true;
+var options = {
+  root: argv._[0] || ".",
+  port: argv.p || 8080,
+  host: argv.a || 'localhost',
+  cache: argv.c || 3600,
+  AutoIndex: argv.i || true,
+  silent: argv.s || argv.silent || false
+};
 
-var file = new(static.Server)(root, { AutoIndex: AutoIndex, cache: Number(cache) }); 
-log('Starting up http-server, serving '.yellow + root.cyan + ' on port: '.yellow + port.toString().cyan);
+var httpServer = new HTTPServer(options);
 
-http.createServer(function(request, response) {
-  request.on('end', function() {
-    log('['.grey+'served'.yellow+'] '.grey + request.url);
-    return file.serve(request, response);
-  });
-}).listen(port, host);
-
-log('http-server successfully started: '.green + 'http://'.cyan + host.cyan + ':'.cyan + port.toString().cyan);
-log('Hit CTRL-C to stop the server')
+httpServer.start();
 
 process.on('SIGINT', function() {
-  log('http-server stopped.'.red);
+  httpServer.log('http-server stopped.'.red);
   return process.exit();
 });
