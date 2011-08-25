@@ -37,7 +37,7 @@ The entire /mypath tree will now be available at `http://localhost:8080/`.
 
 `-a` Address to bind to (defaults to 'localhost')
 
-`-i` Display AutoIndex (defaults to 'True')
+`-i` Display autoIndex (defaults to 'True')
 
 `-s` or `--silent` In silent mode, log messages aren't logged to the console.
 
