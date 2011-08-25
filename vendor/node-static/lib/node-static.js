@@ -25,7 +25,7 @@ this.Server = function (root, options) {
 
     this.defaultHeaders  = {};
     this.options.headers = this.options.headers || {};
-    this.options.AutoIndex = this.options.AutoIndex || false;
+    this.options.autoIndex = this.options.autoIndex || false;
 
     if ('cache' in this.options) {
         if (typeof(this.options.cache) === 'number') {
@@ -60,8 +60,8 @@ this.Server.prototype.serveDir = function (pathname, req, res, finish) {
                 // Stream a directory of files as a single file.
                 fs.readFile(path.join(pathname, 'index.json'), function (e, contents) {
                     if (e) {
-                      if (that.options.AutoIndex === true || that.options.AutoIndex === "true") {
-                        return that.serveAutoIndex(pathname, res, req, finish);
+                      if (that.options.autoIndex === true || that.options.autoIndex === "true") {
+                        return that.serveautoIndex(pathname, res, req, finish);
                       } else {
                         return finish(404, {});
                       }
@@ -229,7 +229,7 @@ this.Server.prototype.respond = function (pathname, status, _headers, files, sta
         }
     }
 };
-this.Server.prototype.serveAutoIndex = function (dirPath, res, req, finish) {
+this.Server.prototype.serveautoIndex = function (dirPath, res, req, finish) {
  var html,
      self = this,
      urlBase = '',

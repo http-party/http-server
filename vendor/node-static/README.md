@@ -139,11 +139,11 @@ example: `{ 'X-Hello': 'World!' }`
 
 > Defaults to `{}`
 
-#### `AutoIndex` #
+#### `autoIndex` #
 
 Automatically generates an html index page for directory listings
 
-example: `{ 'AutoIndex': true }`
+example: `{ 'autoIndex': true }`
 
 > Defaults to `false`
 
