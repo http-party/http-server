@@ -1,12 +1,13 @@
 {
     "name" : "http-server",
-    "preferGlobal": "false",
-    "version" : "0.2.0",
+    "preferGlobal": "true",
+    "version" : "0.2.1",
     "author": "Marak Squires <marak.squires@gmail.com>",
     "description" : "a simple zero-configuration command-line http server",
     "bin": {
       "http-server": "./bin/http-server"
     },
+    "main": "./lib/http-server",
     "repository" : {
         "type" : "git",
         "url" : "https://github.com/nodejitsu/http-server.git"
