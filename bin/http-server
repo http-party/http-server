@@ -1,53 +1,12 @@
 #!/usr/bin/env node
 
-var HTTPServer = require('../lib/http-server').HTTPServer,
-    colors = require('colors'),
-    argv = require('optimist').argv;
+var HTTPServer = require('../lib/http-server').HTTPServer;
 
-if (argv.h || argv.help) {
-  return showHelp();
-}
-
-var httpServer = new HTTPServer({
-  root: argv._[0] || ".",
-  port: argv.p || 8080,
-  host: argv.a || 'localhost',
-  cache: argv.c || 3600,
-  autoIndex: argv.i || true,
-  silent: argv.s || argv.silent || false
-});
-
-
-httpServer.log('Starting up http-server, serving '.yellow 
-                + httpServer.root.cyan 
-                + ' on port: '.yellow 
-                + httpServer.port.toString().cyan);
-
+var httpServer = new HTTPServer();
 
 httpServer.start();
-
-httpServer.log('http-server successfully started: '.green 
-                + 'http://'.cyan 
-                + httpServer.host.cyan 
-                + ':'.cyan 
-                + httpServer.port.toString().cyan);
-httpServer.log('Hit CTRL-C to stop the server')
 
 process.on('SIGINT', function() {
   httpServer.log('http-server stopped.'.red);
   return process.exit();
 });
-
-function showHelp() {
-  var help = [
-      "usage: http-server [path] [options]",
-      "",
-      "options:",
-      " -p Port to use [8080]",
-      " -a Address to use [localhost]",
-      " -i Display autoIndex [true]",
-      " -s --silent Suppress log messages from output",
-      " -h --help Print this list and exit.",
-  ].join('\n');
-  console.log(help);
-}
