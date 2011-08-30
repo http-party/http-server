@@ -244,16 +244,10 @@ this.Server.prototype.serveautoIndex = function (dirPath, res, req, finish) {
  <h1>Index of ' + dirPath + '</h1>';
  html += '<table>';
   urlBase = dirPath.replace(self.root, '');
-  newPath = (urlBase.split('/').length > 1) 
-            ? urlBase.split('/').pop()
-            : urlBase;
-  if (newPath[newPath.length - 1] !== '/') {
-    newPath += '/';
-  }
  fs.readdir(dirPath, function(err, result) {
    if (err) { return finish(404, {})}
    result.forEach(function(v, i) {
-     html += ('<tr><td>' + '<a href="' + newPath + v + '">' + v + '</a></td></tr>');
+     html += ('<tr><td>' + '<a href="' + req.url + '/' + v + '">' + v + '</a></td></tr>');
    });
    html += '</table>';
    html += '\
