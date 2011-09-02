@@ -247,7 +247,7 @@ this.Server.prototype.serveautoIndex = function (dirPath, res, req, finish) {
  fs.readdir(dirPath, function(err, result) {
    if (err) { return finish(404, {})}
    result.forEach(function(v, i) {
-     html += ('<tr><td>' + '<a href="' + req.url + '/' + v + '">' + v + '</a></td></tr>');
+     html += ('<tr><td>' + '<a href="' + ((req.url == '/') ? '' : req.url) + '/' + v + '">' + v + '</a></td></tr>');
    });
    html += '</table>';
    html += '\
