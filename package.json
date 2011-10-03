@@ -1,7 +1,7 @@
 {
     "name" : "http-server",
     "preferGlobal": "true",
-    "version" : "0.2.5",
+    "version" : "0.2.6",
     "author": "Marak Squires <marak.squires@gmail.com>",
     "description" : "a simple zero-configuration command-line http server",
     "bin": {
