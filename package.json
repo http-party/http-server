@@ -17,10 +17,12 @@
         "command"
     ],
     "dependencies" : {
+      "eyes": "~0.1.6",
       "colors" : "*",
       "optimist" : "0.2.x"
     },
-    "license" : "MIT",
+  "bundleDependencies" : [ "node-static" ],
+  "license" : "MIT",
     "engine" : {
         "node" : ">=0.4"
     }

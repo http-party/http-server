@@ -14,13 +14,6 @@ Once you have `npm`:
      
 This will install `http-server` globally so that it may be run from the command line.
 
-
-If you cannot install `npm`, you can always clone the source directly:
-
-     git clone git://github.com/nodejitsu/http-server.git
-     cd http-server
-     node bin/http-server
-
 ## Usage:
 
      http-server [path] [options]
