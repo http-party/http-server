@@ -1,33 +1,33 @@
 {
-    "name" : "http-server",
-    "preferGlobal": "true",
-    "version" : "0.2.7",
-    "author": "Marak Squires <marak.squires@gmail.com>",
-    "description" : "a simple zero-configuration command-line http server",
-    "bin": {
-      "http-server": "./bin/http-server"
-    },
-    "main": "./lib/http-server",
-    "repository" : {
-        "type" : "git",
-        "url" : "https://github.com/nodejitsu/http-server.git"
-    },
-    "keywords" : [
-        "cli",
-        "command"
-    ],
-    "dependencies" : {
-      "eyes": "~0.1.6",
-      "colors" : "*",
-      "optimist" : "0.2.x"
-    },
+  "name" : "http-server",
+  "preferGlobal": "true",
+  "version" : "0.2.8",
+  "author": "Marak Squires <marak.squires@gmail.com>",
+  "description" : "a simple zero-configuration command-line http server",
+  "bin": {
+    "http-server": "./bin/http-server"
+  },
+  "main": "./lib/http-server",
+  "repository" : {
+      "type" : "git",
+      "url" : "https://github.com/nodejitsu/http-server.git"
+  },
+  "keywords" : [
+      "cli",
+      "command"
+  ],
+  "dependencies" : {
+    "eyes": "~0.1.6",
+    "colors" : "*",
+    "optimist" : "0.2.x"
+  },
   "devDepencencies": {
     "vows": "0.5.x",
     "request": "2.1.x"
   },
   "bundleDependencies" : [ "node-static" ],
   "license" : "MIT",
-    "engine" : {
-        "node" : ">=0.4"
-    }
+  "engine" : {
+      "node" : ">=0.4"
+  }
 }
