@@ -21,6 +21,10 @@
       "colors" : "*",
       "optimist" : "0.2.x"
     },
+  "devDepencencies": {
+    "vows": "0.5.x",
+    "request": "2.1.x"
+  },
   "bundleDependencies" : [ "node-static" ],
   "license" : "MIT",
     "engine" : {
