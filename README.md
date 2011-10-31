@@ -20,9 +20,9 @@ This will install `http-server` globally so that it may be run from the command 
 
 # Installing as a node app
 
-   mkdir myapp
-   cd myapp/
-   jitsu install http-server
+     mkdir myapp
+     cd myapp/
+     jitsu install http-server
 
 *If you do not have `jitsu` installed you can install it via `npm install jitsu -g`*
 
@@ -30,13 +30,13 @@ This will install `http-server` globally so that it may be run from the command 
 
 ### Starting http-server locally
 
-   node bin/http-server
+     node bin/http-server
 
 *Now you can visit http://localhost:8080 to view your server*
 
 ### Deploy http-server to nodejitsu
 
-   jitsu deploy
+     jitsu deploy
 
 *You will now be prompted for a `subdomain` to deploy your application on*
 
