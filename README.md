@@ -18,11 +18,11 @@ This will install `http-server` globally so that it may be run from the command 
 
      http-server [path] [options]
 
-<img src="https://github.com/nodejitsu/http-server/raw/master/screenshots/start.png"/></img>
+<img src="https://github.com/nodeapps/http-server/raw/master/screenshots/start.png"/></img>
      
 The entire /mypath tree will now be available at `http://localhost:8080/`.  
 
-<img src="https://github.com/nodejitsu/http-server/raw/master/screenshots/directory.png"/></img>
+<img src="https://github.com/nodeapps/http-server/raw/master/screenshots/directory.png"/></img>
 
 ## Available Options:
 
