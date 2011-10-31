@@ -2,9 +2,9 @@
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
 
-## Installation:
+# Installing globally:
 
-Installation is via `npm`.  If you don't have `npm` yet:
+Installation via `npm`.  If you don't have `npm` yet:
 
      curl http://npmjs.org/install.sh | sh
      
@@ -18,11 +18,27 @@ This will install `http-server` globally so that it may be run from the command 
 
      http-server [path] [options]
 
-<img src="https://github.com/nodeapps/http-server/raw/master/screenshots/start.png"/></img>
-     
-The entire /mypath tree will now be available at `http://localhost:8080/`.  
+# Installing as a node app
 
-<img src="https://github.com/nodeapps/http-server/raw/master/screenshots/directory.png"/></img>
+   mkdir myapp
+   cd myapp/
+   jitsu install http-server
+
+*If you do not have `jitsu` installed you can install it via `npm install jitsu -g`*
+
+## Usage
+
+### Starting http-server locally
+
+   node bin/http-server
+
+*Now you can visit http://localhost:8080 to view your server*
+
+### Deploy http-server to nodejitsu
+
+   jitsu deploy
+
+*You will now be prompted for a `subdomain` to deploy your application on*
 
 ## Available Options:
 
