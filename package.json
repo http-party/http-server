@@ -24,6 +24,7 @@
     "colors" : "*",
     "optimist" : "0.2.x"
   },
+  "analyze": false,
   "devDepencencies": {
     "vows": "0.5.x",
     "request": "2.1.x"
