@@ -8,7 +8,8 @@
     "http-server": "./bin/http-server"
   },
   "scripts": {
-    "start": "./bin/http-server"
+    "start": "./bin/http-server",
+    "test": "vows --spec --isolate"
   },
   "main": "./lib/http-server",
   "repository" : {
@@ -25,7 +26,7 @@
     "optimist" : "0.2.x"
   },
   "analyze": false,
-  "devDepencencies": {
+  "devDependencies": {
     "vows": "0.5.x",
     "request": "2.1.x"
   },
