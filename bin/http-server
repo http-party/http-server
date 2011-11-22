@@ -2,9 +2,7 @@
 
 var HTTPServer = require('../lib/http-server').HTTPServer;
 
-var httpServer = new HTTPServer({
-  root: './public'
-});
+var httpServer = new HTTPServer();
 
 httpServer.start();
 
