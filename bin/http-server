@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var HTTPServer = require('../lib/http-server').HTTPServer;
+var HTTPServer = require('../lib/http-server');
 
 var httpServer = new HTTPServer();
 
