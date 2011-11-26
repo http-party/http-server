@@ -20,6 +20,8 @@ This will install `http-server` globally so that it may be run from the command 
 
      http-server [path] [options]
 
+`[path]` defaults to `./public` if the folder exists, and `./` otherwise.
+
 # Installing as a node app
 
      mkdir myapp
