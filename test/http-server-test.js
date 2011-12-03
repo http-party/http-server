@@ -3,18 +3,17 @@ var assert = require('assert'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
-    HTTPServer = require('../lib/http-server').HTTPServer;
+    httpServer = require('../lib/http-server');
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
     topic: function () {
-      var httpServer = new HTTPServer({
+      httpServer.start({
         port: 8080,
         root: root
       });
-      httpServer.start();
       this.callback(null, httpServer);
     },
     'it should serve files from root directory': {

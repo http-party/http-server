@@ -22,8 +22,11 @@
   ],
   "dependencies": {
     "eyes": "~0.1.6",
-    "colors": "*",
-    "optimist": "0.2.x"
+    "colors" : "*",
+    "optimist" : "0.2.x",
+    "flatiron": "0.1.x",
+    "union": "0.1.x",
+    "ecstatic": "0.1.x"
   },
   "analyze": false,
   "devDependencies": {
