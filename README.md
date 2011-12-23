@@ -48,7 +48,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-p` Port to listen for connections on (defaults to 8080)
 
-`-a` Address to bind to (defaults to 'localhost')
+`-a` Address to bind to (defaults to '0.0.0.0')
 
 `-i` Display autoIndex (defaults to 'True')
 
