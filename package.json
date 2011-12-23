@@ -1,7 +1,7 @@
 {
   "name": "http-server",
   "preferGlobal": "true",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "a simple zero-configuration command-line http server",
   "bin": {
