@@ -30,8 +30,8 @@
   },
   "analyze": false,
   "devDependencies": {
-    "vows": "0.5.x",
-    "request": "2.1.x"
+    "vows": "0.6.x",
+    "request": "2.9.x"
   },
   "license": "MIT",
   "engine": {
