@@ -33,9 +33,6 @@
     "vows": "0.5.x",
     "request": "2.1.x"
   },
-  "bundleDependencies": [
-    "node-static"
-  ],
   "license": "MIT",
   "engine": {
     "node": ">=0.4"
