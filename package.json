@@ -14,7 +14,7 @@
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodejitsu/http-server.git"
+    "url": "https://github.com/nodeapps/http-server.git"
   },
   "keywords": [
     "cli",
