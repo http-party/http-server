@@ -10,11 +10,11 @@ var root = path.join(__dirname, 'fixtures', 'root');
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
     topic: function () {
-      new httpServer({
-        port: 8080,
+      var server = httpServer.createServer({
         root: root
-      }).start();
-      this.callback(null, httpServer);
+      });
+      server.listen(8080);
+      this.callback(null, server);
     },
     'it should serve files from root directory': {
       topic: function () {
