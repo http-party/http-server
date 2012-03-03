@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.3.1",
+  "version": "0.4.1",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "a simple zero-configuration command-line http server",
   "main": "./lib/http-server",
@@ -63,7 +63,7 @@
     "request": "2.9.x"
   },
   "engines": {
-    "node": ">=0.4"
+    "node": "~0.6.6"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
