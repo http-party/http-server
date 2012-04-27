@@ -22,8 +22,8 @@ if (argv.h || argv.help) {
 
 var port = argv.p || 8080,
     host = argv.a || '0.0.0.0',
-    argv.u && user = argv.u,
-    argv.g && group = argv.g,
+    (argv.u) && user = argv.u,
+    (argv.g) && group = argv.g,
     log = (argv.s || argv.silent) ? (function () {}) : console.log;
 
 var options = {
