@@ -45,7 +45,7 @@ function onListening() {
         process.setgid(group);
       }
       if (user){
-        console.log('trying to switch to user ' + user)
+        console.log('trying to switch to user ' + user);
         process.setuid(user);
       }
       console.log('New uid: ' + process.getuid() + ' and gid: ' + process.getgid());
