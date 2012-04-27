@@ -48,6 +48,10 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-p` Port to listen for connections on (defaults to 8080)
 
+`-u` User to switch to after starting (useful if starting as root to serve on ports < 1024)
+
+`-g` Group to switch to after starting (useful if starting as root to serve on ports < 1024)
+
 `-a` Address to bind to (defaults to '0.0.0.0')
 
 `-i` Display autoIndex (defaults to 'True')
