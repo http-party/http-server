@@ -22,8 +22,8 @@ if (argv.h || argv.help) {
 
 var port = argv.p || 8080,
     host = argv.a || '0.0.0.0',
-    user = argv.u || process.getuid(),
-    group = argv.g || process.getgid(),
+    argv.u && user = argv.u,
+    argv.g && group = argv.g,
     log = (argv.s || argv.silent) ? (function () {}) : console.log;
 
 var options = {
@@ -38,16 +38,22 @@ function onListening() {
     + ' on port: '.yellow
     + port.toString().cyan);
     
-  try {
-    console.log('trying to switch to user ' + user + ' and group ' + group);
-    process.setgid(group);
-    process.setuid(user);
-    console.log('New uid: ' + process.getuid() + ' and gid: ' + process.getgid());
+  if (user || group) {}
+    try {
+      if (group) {
+        console.log('trying to switch to group ' + group);
+        process.setgid(group);
+      }
+      if (user){
+        console.log('trying to switch to user ' + user)
+        process.setuid(user);
+      }
+      console.log('New uid: ' + process.getuid() + ' and gid: ' + process.getgid());
+    }
+    catch (err) {
+      console.log('failed to switch permissions - if http-server was run as root, it may still have root privileges');
+    }
   }
-  catch (err) {
-    console.log('failed to switch user - if http-server was run as root, it still has root privileges');
-  }
-  
   log('Hit CTRL-C to stop the server');
 }
 
