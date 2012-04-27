@@ -38,7 +38,7 @@ function onListening() {
     + ' on port: '.yellow
     + port.toString().cyan);
     
-  if (user || group) {}
+  if (user || group) {
     try {
       if (group) {
         console.log('trying to switch to group ' + group);
