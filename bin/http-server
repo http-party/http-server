@@ -37,21 +37,24 @@ function onListening() {
     + server.root.cyan
     + ' on port: '.yellow
     + port.toString().cyan);
+    
+  try {
+    console.log('trying to switch to user ' + user + ' and group ' + group);
+    process.setgid(group);
+    process.setuid(user);
+    console.log('New uid: ' + process.getuid() + ' and gid: ' + process.getgid());
+  }
+  catch (err) {
+    console.log('failed to switch user - if http-server was run as root, it still has root privileges');
+  }
+  
   log('Hit CTRL-C to stop the server');
 }
 
 var server = httpServer.createServer(options);
 server.listen(port, host, onListening);
 
-try {
-    console.log('trying to switch to user ' + user + ' and group ' + group);
-    process.setgid(group);
-    process.setuid(user);
-    console.log('New uid: ' + process.getuid() + ' and gid: ' + process.getgid());
-}
-catch (err) {
-    console.log('failed to switch user - if http-server was run as root, it still has root privileges');
-}
+
 
 process.on('SIGINT', function () {
   log('http-server stopped.'.red);
