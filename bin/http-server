@@ -2,7 +2,8 @@
 
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
-    argv = require('optimist').argv;
+    argv = require('optimist').argv,
+    portfinder = require('portfinder')
 
 if (argv.h || argv.help) {
   console.log([
@@ -18,26 +19,35 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || 8080,
+var port = argv.p,
     host = argv.a || '0.0.0.0',
     log = (argv.s || argv.silent) ? (function () {}) : console.log;
 
-var options = {
-  root: argv._[0],
-  autoIndex: argv.i,
-  cache: argv.c
-};
-
-function onListening() {
-  log('Starting up http-server, serving '.yellow
-    + server.root.cyan
-    + ' on port: '.yellow
-    + port.toString().cyan);
-  log('Hit CTRL-C to stop the server');
+if (!argv.p) {
+  portfinder.basePort = 8080;
+  portfinder.getPort(function (err, port) {
+    if (err) throw err;
+    listen(port);
+  })
+} else {
+  listen(port);
 }
 
-var server = httpServer.createServer(options);
-server.listen(port, host, onListening);
+function listen(port) {
+  var options = {
+    root: argv._[0],
+    autoIndex: argv.i,
+    cache: argv.c
+  };
+  var server = httpServer.createServer(options);
+  server.listen(port, host, function() {
+    log('Starting up http-server, serving '.yellow
+      + server.root.cyan
+      + ' on port: '.yellow
+      + port.toString().cyan);
+    log('Hit CTRL-C to stop the server');
+  });
+}
 
 if (process.platform !== 'win32') {
   //
