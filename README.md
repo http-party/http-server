@@ -1,6 +1,6 @@
 # http-server: a command-line http server
 
-`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
+`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning. This version has been modified to allow the server to drop privileges after startup (for example when started as root).
 
 ![](https://github.com/nodeapps/http-server/raw/master/screenshots/public.png)
 
