@@ -1,6 +1,8 @@
 # http-server: a command-line http server
 
-`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
+`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning. 
+
+This version has been modified to allow the server to drop privileges after startup (for example when started as root).
 
 ![](https://github.com/nodeapps/http-server/raw/master/screenshots/public.png)
 
@@ -47,6 +49,10 @@ This will install `http-server` globally so that it may be run from the command 
 ## Available Options:
 
 `-p` Port to listen for connections on (defaults to 8080)
+
+`-u` User to switch to after starting (useful if starting as root to serve on ports < 1024)
+
+`-g` Group to switch to after starting (useful if starting as root to serve on ports < 1024)
 
 `-a` Address to bind to (defaults to '0.0.0.0')
 
