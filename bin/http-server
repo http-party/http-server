@@ -39,7 +39,12 @@ function onListening() {
 var server = httpServer.createServer(options);
 server.listen(port, host, onListening);
 
-process.on('SIGINT', function () {
-  log('http-server stopped.'.red);
-  process.exit();
-});
+if (process.platform !== 'win32') {
+  //
+  // Signal handlers don't work on Windows.
+  //
+  process.on('SIGINT', function () {
+    log('http-server stopped.'.red);
+    process.exit();
+  });
+}
