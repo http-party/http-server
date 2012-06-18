@@ -53,7 +53,6 @@
   "dependencies": {
     "colors": "*",
     "optimist": "0.2.x",
-    "flatiron": "0.1.x",
     "union": "0.1.x",
     "ecstatic": "0.1.x"
   },
