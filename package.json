@@ -60,9 +60,6 @@
     "vows": "0.6.x",
     "request": "2.9.x"
   },
-  "engines": {
-    "node": "~0.6.6"
-  },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
   },
