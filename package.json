@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "a simple zero-configuration command-line http server",
   "main": "./lib/http-server",
