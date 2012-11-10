@@ -13,6 +13,7 @@ if (argv.h || argv.help) {
     "  -p                 Port to use [8080]",
     "  -a                 Address to use [0.0.0.0]",
     "  -i                 Display autoIndex [true]",
+    "  -e --ext           Default file extension if none supplied [none]",
     "  -s --silent        Suppress log messages from output",
     "  -h --help          Print this list and exit.",
   ].join('\n'));
@@ -34,12 +35,13 @@ if (!argv.p) {
 }
 
 function listen(port) {
-  var options = {
+  var server = httpServer.createServer({
     root: argv._[0],
     autoIndex: argv.i,
-    cache: argv.c
-  };
-  var server = httpServer.createServer(options);
+    cache: argv.c,
+    ext: argv.e || argv.ext
+  });
+
   server.listen(port, host, function() {
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
