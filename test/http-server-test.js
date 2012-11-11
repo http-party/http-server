@@ -11,7 +11,11 @@ vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
     topic: function () {
       var server = httpServer.createServer({
-        root: root
+        root: root,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        }
       });
       server.listen(8080);
       this.callback(null, server);
@@ -52,7 +56,15 @@ vows.describe('http-server').addBatch({
         assert.include(body, '/file');
         assert.include(body, '/canYouSeeMe');
       }
+    },
+    'and options include custom set http-headers': {
+      topic: function () {
+        request('http://127.0.0.1:8080/', this.callback);
+      },
+      'should respond with headers set in options': function (err, res, body) {
+        assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(res.headers['access-control-allow-credentials'], 'true');
+      }
     }
   }
 }).export(module);
-
