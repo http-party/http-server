@@ -63,7 +63,7 @@ vows.describe('http-server').addBatch({
       },
       'should respond with headers set in options': function (err, res, body) {
         assert.equal(res.headers['access-control-allow-origin'], '*');
-        assert.equal(res.headers['access-control-allow-credentials'], 'true')
+        assert.equal(res.headers['access-control-allow-credentials'], 'true');
       }
     }
   }
