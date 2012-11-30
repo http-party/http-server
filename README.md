@@ -52,7 +52,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-i` Display autoIndex (defaults to 'True')
 
-`-e` or `--ext` Default file extension if none supplied [none]
+`-e` or `--ext` Default file extension (defaults to 'html')
 
 `-s` or `--silent` In silent mode, log messages aren't logged to the console.
 
