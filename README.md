@@ -57,3 +57,5 @@ This will install `http-server` globally so that it may be run from the command 
 `-s` or `--silent` In silent mode, log messages aren't logged to the console.
 
 `-h` or `--help` Displays a list of commands and exits.
+
+`-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds. To disable caching, use -c-1.
