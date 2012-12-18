@@ -12,7 +12,6 @@
     "cli",
     "command"
   ],
-  "homepage": "http://nodeapps.github.com/http-server",
   "scripts": {
     "start": "node ./bin/http-server",
     "test": "vows --spec --isolate"
