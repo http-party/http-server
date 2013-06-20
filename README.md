@@ -1,3 +1,9 @@
+/* REV EDIT */
+`http-server-cgi` extends [nodeapps/http-server](http://github.com/nodeapps/http-server) to support CGI scripts written in Perl. The script file must have the '.cgi' extension and be placed either in the root directy where `http-server` is invoked, or in the subdirectories 'cgi', 'cgi-bin' or 'scripts'. Perl is invoked with the -T switch (taint mode), so query parameters must be cleaned by regex before being assigned to variables in the script. 
+
+Right now this is all handled by an anonymous function and the only request methods supported are "GET" and "POST". The enctype "multipart/form-data" is NOT supported. Eventually I may replace this function with [Express](http://expressjs.com/), then I will be able to test and support "multipart/form-data" (i.e. file uploads).
+/* END EDIT */
+
 # http-server: a command-line http server
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
