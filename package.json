@@ -50,11 +50,11 @@
     }
   ],
   "dependencies": {
-    "colors": "*",
-    "optimist": "0.2.x",
-    "union": "0.1.x",
-    "ecstatic": "0.1.x",
-    "portfinder": "~0.2.1"
+    "colors": "0.6.x",
+    "optimist": "0.5.x",
+    "union": "0.3.x",
+    "ecstatic": "0.4.x",
+    "portfinder": "0.2.x"
   },
   "devDependencies": {
     "vows": "0.6.x",
