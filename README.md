@@ -50,6 +50,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-a` Address to bind to (defaults to '0.0.0.0')
 
+`-d` Show directory listings (defaults to 'True')
+
 `-i` Display autoIndex (defaults to 'True')
 
 `-e` or `--ext` Default file extension (defaults to 'html')
