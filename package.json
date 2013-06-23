@@ -57,8 +57,8 @@
     "portfinder": "0.2.x"
   },
   "devDependencies": {
-    "vows": "0.6.x",
-    "request": "2.9.x"
+    "vows": "0.7.x",
+    "request": "2.21.x"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
