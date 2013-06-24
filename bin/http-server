@@ -3,7 +3,7 @@
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
-    portfinder = require('portfinder')
+    portfinder = require('portfinder');
 
 if (argv.h || argv.help) {
   console.log([
@@ -12,12 +12,13 @@ if (argv.h || argv.help) {
     "options:",
     "  -p                 Port to use [8080]",
     "  -a                 Address to use [0.0.0.0]",
+    "  -d                 Show directory listings [true]",
     "  -i                 Display autoIndex [true]",
     "  -e --ext           Default file extension if none supplied [none]",
     "  -s --silent        Suppress log messages from output",
     "  -h --help          Print this list and exit.",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
-    "                     To disable caching, use -c-1.",
+    "                     To disable caching, use -c-1."
   ].join('\n'));
   process.exit();
 }
@@ -31,7 +32,7 @@ if (!argv.p) {
   portfinder.getPort(function (err, port) {
     if (err) throw err;
     listen(port);
-  })
+  });
 } else {
   listen(port);
 }
@@ -39,8 +40,9 @@ if (!argv.p) {
 function listen(port) {
   var server = httpServer.createServer({
     root: argv._[0],
-    autoIndex: argv.i,
     cache: argv.c,
+    showDir: argv.d,
+    autoIndex: argv.i,
     ext: argv.e || argv.ext
   });
 
