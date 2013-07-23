@@ -8,7 +8,7 @@
 
 Installation via `npm`.  If you don't have `npm` yet:
 
-     curl http://npmjs.org/install.sh | sh
+     curl https://npmjs.org/install.sh | sh
      
 Once you have `npm`:
 
