@@ -3,7 +3,9 @@
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
-    portfinder = require('portfinder');
+    portfinder = require('portfinder'),
+    Open = require('open');
+
 
 if (argv.h || argv.help) {
   console.log([
@@ -37,6 +39,7 @@ if (!argv.p) {
   listen(port);
 }
 
+
 function listen(port) {
   var server = httpServer.createServer({
     root: argv._[0],
@@ -51,6 +54,9 @@ function listen(port) {
       + server.root.cyan
       + ' on port: '.yellow
       + port.toString().cyan);
+
+    Open('http://localhost:'+port+ '?'+ Math.floor((Math.random()*999999)+1));
+
     log('Hit CTRL-C to stop the server');
   });
 }
