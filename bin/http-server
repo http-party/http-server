@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-var util = require('util'),
-    colors = require('colors'),
+var colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
     portfinder = require('portfinder');
@@ -29,7 +28,7 @@ var port = argv.p,
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     requestLogger;
 
- if( log ) {
+ if (log) {
    requestLogger = function(req) {
       var d = new Date();
       log('[%s] "%s %s" "%s"', (new Date).toUTCString(), req.method.cyan, req.url.cyan, req.headers['user-agent']);
