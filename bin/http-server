@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var colors = require('colors'),
+var util = require('util'),
+    colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
     portfinder = require('portfinder');
@@ -25,7 +26,15 @@ if (argv.h || argv.help) {
 
 var port = argv.p,
     host = argv.a || '0.0.0.0',
-    log = (argv.s || argv.silent) ? (function () {}) : console.log;
+    log = (argv.s || argv.silent) ? (function () {}) : console.log,
+    requestLogger;
+
+ if( log ) {
+   requestLogger = function(req) {
+      var d = new Date();
+      log('[%s] "%s %s" "%s"', (new Date).toUTCString(), req.method.cyan, req.url.cyan, req.headers['user-agent']);
+   }
+ }
 
 if (!argv.p) {
   portfinder.basePort = 8080;
@@ -43,7 +52,8 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
-    ext: argv.e || argv.ext
+    ext: argv.e || argv.ext,
+    logFn: requestLogger
   });
 
   server.listen(port, host, function() {
