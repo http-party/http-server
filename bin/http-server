@@ -18,7 +18,8 @@ if (argv.h || argv.help) {
     "  -s --silent        Suppress log messages from output",
     "  -h --help          Print this list and exit.",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
-    "                     To disable caching, use -c-1."
+    "                     To disable caching, use -c-1.",
+    "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header"
   ].join('\n'));
   process.exit();
 }
@@ -38,13 +39,19 @@ if (!argv.p) {
 }
 
 function listen(port) {
-  var server = httpServer.createServer({
+  var options = {
     root: argv._[0],
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
     ext: argv.e || argv.ext
-  });
+  };
+
+  if (argv.cors) {
+    options.headers = { 'Access-Control-Allow-Origin': '*' };
+  }
+
+  var server = httpServer.createServer(options);
 
   server.listen(port, host, function() {
     log('Starting up http-server, serving '.yellow
