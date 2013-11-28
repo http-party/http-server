@@ -3,7 +3,8 @@
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
-    portfinder = require('portfinder');
+    portfinder = require('portfinder'),
+    opener = require('opener');
 
 if (argv.h || argv.help) {
   console.log([
@@ -18,6 +19,7 @@ if (argv.h || argv.help) {
     "  -s --silent        Suppress log messages from output",
     "  -h --help          Print this list and exit.",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
+    "  -o                 Open browser window after staring the server",
     "                     To disable caching, use -c-1."
   ].join('\n'));
   process.exit();
@@ -52,6 +54,10 @@ function listen(port) {
       + ' on port: '.yellow
       + port.toString().cyan);
     log('Hit CTRL-C to stop the server');
+
+    if (argv.o) {
+      opener('http://127.0.0.1:' + port.toString());
+    }
   });
 }
 
