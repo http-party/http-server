@@ -3,7 +3,8 @@
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
     argv = require('optimist').argv,
-    portfinder = require('portfinder');
+    portfinder = require('portfinder'),
+    opener = require('opener');
 
 if (argv.h || argv.help) {
   console.log([
@@ -16,10 +17,11 @@ if (argv.h || argv.help) {
     "  -i                 Display autoIndex [true]",
     "  -e --ext           Default file extension if none supplied [none]",
     "  -s --silent        Suppress log messages from output",
-    "  -h --help          Print this list and exit.",
+    "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header"
+    "  -o                 Open browser window after staring the server",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
-    "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header"
+    "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
 }
@@ -66,6 +68,10 @@ function listen(port) {
       + ' on port: '.yellow
       + port.toString().cyan);
     log('Hit CTRL-C to stop the server');
+
+    if (argv.o) {
+      opener('http://127.0.0.1:' + port.toString());
+    }
   });
 }
 
