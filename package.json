@@ -54,7 +54,8 @@
     "optimist": "0.5.x",
     "union": "0.3.x",
     "ecstatic": "0.4.x",
-    "portfinder": "0.2.x"
+    "portfinder": "0.2.x",
+    "http-auth": "~2.0.9"
   },
   "devDependencies": {
     "vows": "0.7.x",

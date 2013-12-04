@@ -15,6 +15,8 @@ if (argv.h || argv.help) {
     "  -d                 Show directory listings [true]",
     "  -i                 Display autoIndex [true]",
     "  -e --ext           Default file extension if none supplied [none]",
+    "  --user             User name for basic authenication [none]",
+    "  --pass             Password for basic authenication [none]",
     "  -s --silent        Suppress log messages from output",
     "  -h --help          Print this list and exit.",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
@@ -43,7 +45,9 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
-    ext: argv.e || argv.ext
+    ext: argv.e || argv.ext,
+    user: argv.user,
+    pass: argv.pass
   });
 
   server.listen(port, host, function() {

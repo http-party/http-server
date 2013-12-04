@@ -56,8 +56,20 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-e` or `--ext` Default file extension (defaults to 'html')
 
+`--user` User name for basic authentication
+
+`--pass` Password for basic authentication
+
 `-s` or `--silent` In silent mode, log messages aren't logged to the console.
 
 `-h` or `--help` Displays a list of commands and exits.
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds. To disable caching, use -c-1.
+
+### Authenication
+
+**Warning**: please note that your user name and password are sent as plain
+text because `http-server` does not currently support HTTPS. Therefore we
+recommend you use a unique, one-time password each time you run the server. The
+feature is **not** intended for real security.
+
