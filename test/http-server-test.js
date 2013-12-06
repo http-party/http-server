@@ -28,7 +28,7 @@ vows.describe('http-server').addBatch({
           auth: {
             'user': 'bert',
             'pass': 'bertington',
-            'sendImmediately': false
+            'sendImmediately': true
           }
         }, this.callback);
       },

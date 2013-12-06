@@ -55,8 +55,8 @@
     "union": "0.3.x",
     "ecstatic": "0.4.x",
     "portfinder": "0.2.x",
-    "http-auth": "~2.0.9",
-    "opener": "~1.3.0"
+    "opener": "~1.3.0",
+    "basic-auth-parser": "0.0.2"
   },
   "devDependencies": {
     "vows": "0.7.x",
