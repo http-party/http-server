@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "a simple zero-configuration command-line http server",
   "main": "./lib/http-server",
@@ -55,7 +55,8 @@
     "union": "0.3.x",
     "ecstatic": "0.4.x",
     "portfinder": "0.2.x",
-    "http-auth": "~2.0.9"
+    "http-auth": "~2.0.9",
+    "opener": "~1.3.0"
   },
   "devDependencies": {
     "vows": "0.7.x",
