@@ -29,12 +29,11 @@ var port = argv.p,
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     requestLogger;
 
- if (log) {
-   requestLogger = function(req) {
-      var d = new Date();
-      log('[%s] "%s %s" "%s"', (new Date).toUTCString(), req.method.cyan, req.url.cyan, req.headers['user-agent']);
-   }
- }
+if (!argv.s && !argv.silent) {
+  requestLogger = function(req) {
+    log('[%s] "%s %s" "%s"', (new Date).toUTCString(), req.method.cyan, req.url.cyan, req.headers['user-agent']);
+  }
+}
 
 if (!argv.p) {
   portfinder.basePort = 8080;
