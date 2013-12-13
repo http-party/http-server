@@ -5,6 +5,8 @@ var colors = require('colors'),
     argv = require('optimist').argv,
     portfinder = require('portfinder'),
     opener = require('opener');
+    os = require('os');
+    ifaces = os.networkInterfaces();
 
 if (argv.h || argv.help) {
   console.log([
@@ -67,6 +69,17 @@ function listen(port) {
       + server.root.cyan
       + ' on port: '.yellow
       + port.toString().cyan);
+
+    log('\nAvailable on:'.yellow);
+
+    for (var dev in ifaces) {
+      ifaces[dev].forEach(function(details){
+        if (details.family=='IPv4') {
+          log(("    http://" + details.address + ":" + port.toString()).green);
+        }
+      });
+    }
+
     log('Hit CTRL-C to stop the server');
 
     if (argv.o) {
