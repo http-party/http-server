@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var colors = require('colors'),
+var colors     = require('colors'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener = require('opener'),
@@ -30,6 +30,7 @@ if (argv.h || argv.help) {
     "  -C --cert          Path to ssl cert file (default: cert.pem).",
     "  -K --key           Path to ssl key file (default: key.pem).",
     "",
+    "  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
@@ -69,6 +70,7 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
+    robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: requestLogger,
     proxy: proxy

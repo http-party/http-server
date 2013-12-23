@@ -62,6 +62,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-o` Open browser window after staring the server
 
+`-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds (defaults to '3600'). To disable caching, use -c-1.
+
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
 `-S` or `--ssl` Enable https.
@@ -70,7 +72,6 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
-`-h` or `--help` Print this list and exit.
+`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
-`-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds
-(defaults to '3600'). To disable caching, use -c-1.
+`-h` or `--help` Print this list and exit.
