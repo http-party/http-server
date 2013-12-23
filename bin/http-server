@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-var colors = require('colors'),
+var colors     = require('colors'),
     httpServer = require('../lib/http-server'),
-    argv = require('optimist').argv,
+    argv       = require('optimist').argv,
     portfinder = require('portfinder'),
-    opener = require('opener');
+    opener     = require('opener');
 
 if (argv.h || argv.help) {
   console.log([
@@ -21,6 +21,7 @@ if (argv.h || argv.help) {
     "  -o                 Open browser window after staring the server",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
+	"  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
@@ -53,6 +54,7 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
+	robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: requestLogger
   };
