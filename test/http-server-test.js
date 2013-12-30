@@ -15,7 +15,8 @@ vows.describe('http-server').addBatch({
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Credentials': 'true'
-        }
+        },
+        robots : true,
       });
       server.listen(8080);
       this.callback(null, server);
@@ -55,6 +56,14 @@ vows.describe('http-server').addBatch({
         assert.equal(res.statusCode, 200);
         assert.include(body, '/file');
         assert.include(body, '/canYouSeeMe');
+      }
+    },
+    'when robots options is activated' :{
+      topic: function () {
+        request('http://127.0.0.1:8080/', this.callback);
+      },
+      'should respond with status code 200 to /robots.txt' : function (res){
+        assert.equal(res.statusCode, 200);
       }
     },
     'and options include custom set http-headers': {
