@@ -46,18 +46,22 @@ This will install `http-server` globally so that it may be run from the command 
 
 ## Available Options:
 
-`-p` Port to listen for connections on (defaults to 8080)
+`-p` Port to use (defaults to 8080)
 
-`-a` Address to bind to (defaults to '0.0.0.0')
+`-a` Address to use (defaults to 0.0.0.0)
 
 `-d` Show directory listings (defaults to 'True')
 
 `-i` Display autoIndex (defaults to 'True')
 
-`-e` or `--ext` Default file extension (defaults to 'html')
+`-e` or `--ext` Default file extension if none supplied (defaults to 'html')
 
-`-s` or `--silent` In silent mode, log messages aren't logged to the console.
+`-s` or `--silent` Suppress log messages from output
 
-`-h` or `--help` Displays a list of commands and exits.
+`--cors` Enable CORS via the `Access-Control-Allow-Origin` header
+
+`-o` Open browser window after staring the server
+
+`-h` or `--help` Print this list and exit.
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds. To disable caching, use -c-1.
