@@ -21,6 +21,8 @@ if (argv.h || argv.help) {
     "  -o                 Open browser window after staring the server",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
+    "  -H --header        Send the specified header with responses,",
+    "                     e.g. -H 'X-MY-HEADER: foo'",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
@@ -47,6 +49,14 @@ if (!port) {
   listen(port);
 }
 
+function addHeader(headers, header) {
+  if (!header || !header.indexOf) return;
+  var idx = header.indexOf(':'),
+      key = header.substring(0, idx),
+      val = header.substring(idx + 1).trim();
+  headers[key] = val;
+}
+
 function listen(port) {
   var options = {
     root: argv._[0],
@@ -54,12 +64,15 @@ function listen(port) {
     showDir: argv.d,
     autoIndex: argv.i,
     ext: argv.e || argv.ext,
+    headers: {},
     logFn: requestLogger
   };
 
   if (argv.cors) {
-    options.headers = { 'Access-Control-Allow-Origin': '*' };
+    options.headers['Access-Control-Allow-Origin'] = '*';
   }
+
+  addHeader(options.headers, argv.H || argv.header);
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
