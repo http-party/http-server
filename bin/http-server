@@ -18,7 +18,7 @@ if (argv.h || argv.help) {
     "  -e --ext           Default file extension if none supplied [none]",
     "  -s --silent        Suppress log messages from output",
     "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header",
-    "  -o                 Open browser window after staring the server",
+    "  -o                 Open browser window after starting the server",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
     "  -h --help          Print this list and exit."
