@@ -16,7 +16,7 @@ Right now this is all handled by an anonymous function and the only request meth
 
 Installation via `npm`.  If you don't have `npm` yet:
 
-     curl http://npmjs.org/install.sh | sh
+     curl https://npmjs.org/install.sh | sh
      
 Once you have `npm`:
 
@@ -57,6 +57,8 @@ This will install `http-server` globally so that it may be run from the command 
 `-p` Port to listen for connections on (defaults to 8080)
 
 `-a` Address to bind to (defaults to '0.0.0.0')
+
+`-d` Show directory listings (defaults to 'True')
 
 `-i` Display autoIndex (defaults to 'True')
 
