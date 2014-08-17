@@ -63,14 +63,15 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
+    var uri = ['http://', host, ':', port].join('');
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
-      + ' on port: '.yellow
-      + port.toString().cyan);
+      + ' on: '.yellow
+      + uri.cyan);
     log('Hit CTRL-C to stop the server');
 
     if (argv.o) {
-      opener('http://127.0.0.1:' + port.toString());
+      opener(uri);
     }
   });
 }
