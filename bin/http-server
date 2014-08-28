@@ -21,6 +21,11 @@ if (argv.h || argv.help) {
     "  -o                 Open browser window after staring the server",
     "  -c                 Set cache time (in seconds). e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
+    "",
+    "  -S --ssl           Enable https.",
+    "  -C --cert          Path to ssl cert file (default: cert.pem).",
+    "  -K --key           Path to ssl key file (default: key.pem).",
+    "",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
@@ -29,6 +34,7 @@ if (argv.h || argv.help) {
 var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
+    ssl = !!argv.S,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -61,10 +67,18 @@ function listen(port) {
     options.headers = { 'Access-Control-Allow-Origin': '*' };
   }
 
+  if (argv.S) {
+    options.https = {
+      cert: argv.C || 'cert.pem',
+      key: argv.K || 'key.pem'
+    };
+  }
+
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
+      + ((ssl) ? ' through'.yellow + ' https'.cyan : '')
       + ' on port: '.yellow
       + port.toString().cyan);
     log('Hit CTRL-C to stop the server');
