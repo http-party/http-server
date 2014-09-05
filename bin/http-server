@@ -2,9 +2,11 @@
 
 var colors = require('colors'),
     httpServer = require('../lib/http-server'),
-    argv = require('optimist').argv,
     portfinder = require('portfinder'),
-    opener = require('opener');
+    opener = require('opener'),
+    argv = require('optimist')
+      .boolean('cors')
+      .argv;
 
 if (argv.h || argv.help) {
   console.log([
