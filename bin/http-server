@@ -81,7 +81,7 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
-    var uri = [ssl ? 'http' : 'https', '://', host, ':', port].join('');
+    var uri = [ssl ? 'https' : 'http', '://', host, ':', port].join('');
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
       + ((ssl) ? ' through'.yellow + ' https'.cyan : '')
