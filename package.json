@@ -47,6 +47,10 @@
     {
       "name": "Travis Person",
       "email": "travis.person@gmail.com"
+    },
+    {
+      "name": "Jinkwon Lee",
+      "email" : "master@bdyne.net"
     }
   ],
   "dependencies": {
@@ -73,6 +77,7 @@
   "analyze": false,
   "preferGlobal": "true",
   "bin": {
-    "http-server": "./bin/http-server"
+    "http-server": "./bin/http-server",
+    "hs" : "./bin/http-server"
   }
 }
