@@ -36,7 +36,7 @@ if (argv.h || argv.help) {
 var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
-    ssl = !!argv.S,
+    ssl = !!argv.S || !!argv.ssl,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -72,10 +72,10 @@ function listen(port) {
     };
   }
 
-  if (argv.S) {
+  if (ssl) {
     options.https = {
-      cert: argv.C || 'cert.pem',
-      key: argv.K || 'key.pem'
+      cert: argv.C || argv.cert || 'cert.pem',
+      key: argv.K || argv.key || 'key.pem'
     };
   }
 
