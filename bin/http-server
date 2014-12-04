@@ -82,11 +82,12 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
     var uri = [ssl ? 'https' : 'http', '://', host, ':', port].join('');
-    log('Starting up http-server, serving '.yellow
-      + server.root.cyan
-      + ((ssl) ? ' through'.yellow + ' https'.cyan : '')
-      + ' on: '.yellow
-      + uri.cyan);
+    log([
+        'Starting up http-server, serving '.yellow,
+        server.getRootDir().cyan,
+        ((ssl) ? ' through'.yellow + ' https'.cyan : ''),
+        ' on: '.yellow,
+        uri.cyan].join(''));
 
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
