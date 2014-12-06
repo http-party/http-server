@@ -1,7 +1,6 @@
 {
   "name": "http-server",
   "version": "0.7.3",
-  "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "a simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
@@ -18,6 +17,10 @@
     "test": "vows --spec --isolate"
   },
   "contributors": [
+    {
+      "name": "Charlie Robbins",
+      "email": "charlie.robbins@gmail.com"
+    },
     {
       "name": "Marak Squires",
       "email": "marak.squires@gmail.com"
@@ -55,16 +58,16 @@
     }
   ],
   "dependencies": {
-    "colors": "0.6.x",
-    "optimist": "0.5.x",
-    "union": "0.3.x",
+    "colors": "1.0.3",
+    "optimist": "0.6.x",
+    "union": "~0.4.3",
     "ecstatic": "~0.5.6",
     "portfinder": "0.2.x",
-    "opener": "~1.3.0"
+    "opener": "~1.4.0"
   },
   "devDependencies": {
     "vows": "0.7.x",
-    "request": "2.21.x",
+    "request": "2.49.x",
     "stylezero": "2.1.1"
   },
   "bugs": {
