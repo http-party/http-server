@@ -62,6 +62,12 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-o` Open browser window after staring the server
 
+`-S` or `--ssl` Enable https.
+
+`-C` or `--cert` Path to ssl cert file (default: cert.pem).
+
+`-K` or `--key` Path to ssl key file (default: key.pem).
+
 `-h` or `--help` Print this list and exit.
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds
