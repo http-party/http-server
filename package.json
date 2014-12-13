@@ -65,7 +65,8 @@
     "portfinder": "0.2.x",
     "opener": "~1.4.0",
     "fashion-show": "^2.0.0",
-    "vows": "^0.8.1"
+    "vows": "^0.8.1",
+    "ip": "^0.3.2"
   },
   "devDependencies": {
     "vows": "0.7.x",

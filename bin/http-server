@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var colors = require('colors'),
+var ip = require('ip'),
+    colors = require('colors'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener = require('opener'),
@@ -81,12 +82,18 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function() {
-    var uri = [ssl ? 'https' : 'http', '://', host, ':', port].join('');
+    var uri = [ssl ? 'https' : 'http', '://', host, ':', port].join(''),
+        externalUri = [ssl ? 'https' : 'http', '://', ip.address(), ':', port].join('');
+
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
       + ((ssl) ? ' through'.yellow + ' https'.cyan : '')
       + ' on: '.yellow
-      + uri.cyan);
+      + uri.cyan
+      + ' (External on: '.yellow
+      + externalUri.blue
+      + ')'.yellow
+    );
 
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
