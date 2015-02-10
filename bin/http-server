@@ -105,12 +105,16 @@ function listen(port) {
   });
 }
 
-if (process.platform !== 'win32') {
-  //
-  // Signal handlers don't work on Windows.
-  //
-  process.on('SIGINT', function () {
-    log('http-server stopped.'.red);
-    process.exit();
+if (process.platform === 'win32') {
+  require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+  }).on('SIGINT', function () {
+    process.emit('SIGINT');
   });
 }
+
+process.on('SIGINT', function() {
+  log('http-server stopped.'.red);
+  process.exit();
+});
