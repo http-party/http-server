@@ -96,17 +96,17 @@ function listen(port) {
 }
 
 if (process.platform === 'win32') {
-  var readLine = require ('readline');
+  var readLine = require('readline');
   var rl = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
   });
-  rl.on ('SIGINT', function() {
-    process.emit ('SIGINT');
+  rl.on('SIGINT', function() {
+    process.emit('SIGINT');
   });
 }
 
-process.on('SIGINT', function () {
+process.on('SIGINT', function() {
   log('http-server stopped.'.red);
   process.exit();
 });
