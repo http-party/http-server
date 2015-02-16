@@ -61,7 +61,7 @@
     "colors": "1.0.3",
     "optimist": "0.6.x",
     "union": "~0.4.3",
-    "ecstatic": "~0.5.6",
+    "ecstatic": "~0.6.0",
     "portfinder": "0.2.x",
     "opener": "~1.4.0"
   },
