@@ -63,7 +63,8 @@
     "union": "~0.4.3",
     "ecstatic": "~0.5.6",
     "portfinder": "0.2.x",
-    "opener": "~1.4.0"
+    "opener": "~1.4.0",
+    "http-proxy": "~1.8.1"
   },
   "devDependencies": {
     "vows": "0.7.x",
