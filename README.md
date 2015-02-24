@@ -68,6 +68,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
+`-f` or `--forward` Forward to proxy server if static file is not found e.g. -f http://localhost:5000/.
+
 `-h` or `--help` Print this list and exit.
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds

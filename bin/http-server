@@ -28,6 +28,7 @@ if (argv.h || argv.help) {
     "  -C --cert          Path to ssl cert file (default: cert.pem).",
     "  -K --key           Path to ssl key file (default: key.pem).",
     "",
+    "  -f --forward       Forward to proxy server if static file is not found",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
@@ -37,6 +38,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     ssl = !!argv.S || !!argv.ssl,
+    proxy = argv.f || argv.forward,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -62,7 +64,8 @@ function listen(port) {
     showDir: argv.d,
     autoIndex: argv.i,
     ext: argv.e || argv.ext,
-    logFn: requestLogger
+    logFn: requestLogger,
+    proxy: proxy
   };
 
   if (argv.cors) {
@@ -88,6 +91,9 @@ function listen(port) {
       + ' on: '.yellow
       + uri.cyan);
 
+    if(proxy){
+        log('Forwarding non static requests to '+proxy);
+    }
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(uri);
