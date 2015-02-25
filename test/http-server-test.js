@@ -3,9 +3,8 @@ var assert = require('assert'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
-    httpServer = require('../lib/http-server');
-
-var root = path.join(__dirname, 'fixtures', 'root');
+    httpServer = require('../lib/http-server'),
+    root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {

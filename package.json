@@ -54,7 +54,7 @@
     },
     {
       "name": "Jinkwon Lee",
-      "email" : "master@bdyne.net"
+      "email": "master@bdyne.net"
     }
   ],
   "dependencies": {
@@ -63,7 +63,8 @@
     "union": "~0.4.3",
     "ecstatic": "~0.6.0",
     "portfinder": "0.2.x",
-    "opener": "~1.4.0"
+    "opener": "~1.4.0",
+    "ip": "^0.3.2"
   },
   "devDependencies": {
     "vows": "0.7.x",
@@ -83,6 +84,6 @@
   "preferGlobal": "true",
   "bin": {
     "http-server": "./bin/http-server",
-    "hs" : "./bin/http-server"
+    "hs": "./bin/http-server"
   }
 }
