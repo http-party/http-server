@@ -24,6 +24,8 @@ if (argv.h || argv.help) {
     "  -c                 Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
     "",
+    "  -P --proxy         Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com",
+    "",
     "  -S --ssl           Enable https.",
     "  -C --cert          Path to ssl cert file (default: cert.pem).",
     "  -K --key           Path to ssl key file (default: key.pem).",
@@ -37,6 +39,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     ssl = !!argv.S || !!argv.ssl,
+    proxy = argv.P || argv.proxy,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -62,7 +65,8 @@ function listen(port) {
     showDir: argv.d,
     autoIndex: argv.i,
     ext: argv.e || argv.ext,
-    logFn: requestLogger
+    logFn: requestLogger,
+    proxy: proxy
   };
 
   if (argv.cors) {
@@ -87,6 +91,10 @@ function listen(port) {
       + ((ssl) ? ' through'.yellow + ' https'.cyan : '')
       + ' on: '.yellow
       + uri.cyan);
+
+    if (typeof proxy === 'string') {
+      log('Unhandled requests will be served from: ' + proxy);
+    }
 
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
