@@ -86,16 +86,15 @@ function listen(port) {
   }
 
   var server = httpServer.createServer(options);
-  server.listen(port, host, function() {
-    var protocol = ssl ? 'https:' : 'http:';
-    var canonical_host = host === "0.0.0.0" ? "127.0.0.1" : host;
-    var uri = protocol + '//' + host + ':' + port;
-    var canonical_uri = protocol + '//' + canonical_host + ':' + port;
+  server.listen(port, host, function () {
+    var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
+        protocol      = ssl ? 'https:' : 'http:';
+
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
-      + (ssl ? ' through'.yellow + ' https'.cyan : '')
+      + (ssl ? (' through'.yellow + ' https'.cyan) : '')
       + ' on: '.yellow
-      + uri.cyan);
+      + (protocol + '//' + host + ':' + port).cyan);
 
     if (typeof proxy === 'string') {
       log('Unhandled requests will be served from: ' + proxy);
@@ -103,7 +102,7 @@ function listen(port) {
 
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
-      opener(canonical_uri);
+      opener(protocol + '//' + canonicalHost + ':' + port);
     }
   });
 }
