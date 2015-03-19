@@ -1,11 +1,11 @@
 {
   "name": "http-server",
   "version": "0.7.5",
-  "description": "a simple zero-configuration command-line http server",
+  "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodeapps/http-server.git"
+    "url": "git://github.com/indexzero/http-server.git"
   },
   "keywords": [
     "cli",
@@ -81,7 +81,6 @@
       "url": "https://github.com/nodeapps/http-server/raw/master/LICENSE"
     }
   ],
-  "analyze": false,
   "preferGlobal": "true",
   "bin": {
     "http-server": "./bin/http-server",
