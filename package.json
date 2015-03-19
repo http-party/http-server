@@ -61,16 +61,16 @@
     "colors": "1.0.3",
     "optimist": "0.6.x",
     "union": "~0.4.3",
-    "ecstatic": "~0.6.1",
+    "ecstatic": "~0.7.0",
     "http-proxy": "^1.8.1",
-    "portfinder": "0.2.x",
+    "portfinder": "0.4.x",
     "opener": "~1.4.0",
     "corser": "~2.0.0"
   },
   "devDependencies": {
     "vows": "0.7.x",
     "request": "2.49.x",
-    "stylezero": "2.1.1"
+    "stylezero": "2.2.0"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
