@@ -103,13 +103,13 @@ function listen(port) {
 
     log('\nAvailable on:'.yellow);
 
-    for (var dev in ifaces) {
+    Object.keys(ifaces).forEach(function (dev) {
       ifaces[dev].forEach(function(details){
         if (details.family=='IPv4') {
           log(("    http://" + details.address + ":" + port.toString()).green);
         }
       });
-    }
+    });
 
     if (typeof proxy === 'string') {
       log('Unhandled requests will be served from: ' + proxy);
