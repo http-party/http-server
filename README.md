@@ -74,4 +74,6 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
+`-m` or `--mimetype` Define custom mime-type(s) by path to [.types](http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types) file
+
 `-h` or `--help` Print this list and exit.

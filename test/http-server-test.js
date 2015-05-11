@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert'),
     path = require('path'),
     fs = require('fs'),
@@ -148,6 +150,51 @@ vows.describe('http-server').addBatch({
       },
       'status code should be 204': function (err, res, body) {
         assert.equal(res.statusCode, 204);
+      }
+    }
+  },
+  'When using custom mime-types from a .types file': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        mimeType: 'fixtures/root/mime.types'
+      });
+      
+      server.listen(8083, '127.0.0.1', this.callback);
+    },
+    'and when asked for a .test file': {
+      topic: function () {
+        // give http-server an extra second before requesting
+        // to not get ECONNREFUSED
+        var cb = this.callback.bind(this);
+        setTimeout(function () {
+          request('http://127.0.0.1:8083/mime.test', cb);
+        }, 2000);
+      },
+      'it should answer with text/prs.test': function (err, res, body) {
+        assert.isNull(err);
+        assert.equal(res.headers['content-type'], 'text/prs.test; charset=UTF-8');
+      }
+    }
+  },
+  'When custom mime-types are added as an option': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        mimeType: {
+          'text/prs.test2': ['test']
+        }
+      });
+      server.listen(8084);
+      return server;
+    },
+    'and when asked for a .test file': {
+      topic: function () {
+        request('http://127.0.0.1:8084/mime.test', this.callback);
+      },
+      'it should answer with text/prs.test2': function (err, res, body) {
+        assert.isNull(err);
+        assert.equal(res.headers['content-type'], 'text/prs.test2; charset=UTF-8');
       }
     }
   }

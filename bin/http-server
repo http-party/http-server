@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var colors     = require('colors'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
-    opener = require('opener'),
-    argv = require('optimist')
+    opener     = require('opener'),
+    path       = require('path'),
+    argv       = require('optimist')
       .boolean('cors')
       .argv;
 
@@ -31,13 +34,14 @@ if (argv.h || argv.help) {
     "  -K --key           Path to ssl key file (default: key.pem).",
     "",
     "  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]",
+    "  -m --mimetype      Define custom mime-type(s) [Content-Type: custom-mime-type]",
     "  -h --help          Print this list and exit."
   ].join('\n'));
   process.exit();
 }
 
 var port = argv.p || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
+    host = argv.a || process.env.IP || '0.0.0.0', // TODO: remove process.env.IP - just for debugging on c9
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
@@ -73,11 +77,13 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: requestLogger,
-    proxy: proxy
+    proxy: proxy,
+    mimeType: argv.m || argv.mimetype,
+    cors: !!argv.cors
   };
-
-  if (argv.cors) {
-    options.cors = true;
+  
+  if(options.mimeType && typeof options.mimeType === 'string') {
+    options.mimeType = path.resolve(options.mimeType);
   }
 
   if (ssl) {
@@ -87,7 +93,13 @@ function listen(port) {
     };
   }
 
-  var server = httpServer.createServer(options);
+  var server;
+  try {
+    server = httpServer.createServer(options);
+  } catch (e) {
+    log(e.message.red);
+    process.exit(1);
+  }
   server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
         protocol      = ssl ? 'https:' : 'http:';

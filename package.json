@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
@@ -54,23 +54,27 @@
     },
     {
       "name": "Jinkwon Lee",
-      "email" : "master@bdyne.net"
+      "email": "master@bdyne.net"
+    },
+    {
+      "name": "Jon Ege Ronnenberg",
+      "email": "jon.ronnenberg@gmail.com"
     }
   ],
   "dependencies": {
     "colors": "1.0.3",
-    "optimist": "0.6.x",
-    "union": "~0.4.3",
-    "ecstatic": "~0.7.0",
+    "corser": "~2.0.0",
+    "ecstatic":"dotnetCarpenter/node-ecstatic",
     "http-proxy": "^1.8.1",
-    "portfinder": "0.4.x",
     "opener": "~1.4.0",
-    "corser": "~2.0.0"
+    "optimist": "0.6.x",
+    "portfinder": "0.4.x",
+    "union": "~0.4.3"
   },
   "devDependencies": {
-    "vows": "0.7.x",
     "request": "2.49.x",
-    "stylezero": "2.2.0"
+    "stylezero": "2.2.0",
+    "vows": "0.7.x"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
@@ -81,9 +85,9 @@
       "url": "https://github.com/nodeapps/http-server/raw/master/LICENSE"
     }
   ],
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "bin": {
     "http-server": "./bin/http-server",
-    "hs" : "./bin/http-server"
+    "hs": "./bin/http-server"
   }
 }
