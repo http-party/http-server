@@ -159,7 +159,7 @@ vows.describe('http-server').addBatch({
         root: root,
         mimeType: 'fixtures/root/mime.types'
       });
-      
+
       server.listen(8083, '127.0.0.1', this.callback);
     },
     'and when asked for a .test file': {
