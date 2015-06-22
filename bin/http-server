@@ -28,6 +28,7 @@ if (argv.h || argv.help) {
     "                     To disable caching, use -c-1.",
     "",
     "  -P --proxy         Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com",
+    "  -f --forward       Enable X-Forward-* Headers for proxy requests. Only available with proxy setting. [false]",
     "",
     "  -S --ssl           Enable https.",
     "  -C --cert          Path to ssl cert file (default: cert.pem).",
@@ -44,6 +45,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+    xForward = proxy ? !!argv.f || !!argv.forward : false,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -76,7 +78,8 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: requestLogger,
-    proxy: proxy
+    proxy: proxy,
+    xForward: xForward
   };
 
   if (argv.cors) {
