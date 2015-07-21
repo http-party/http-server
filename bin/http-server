@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+"use strict";
 var colors     = require('colors'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
@@ -44,6 +44,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     log = (argv.s || argv.silent) ? (function () {}) : console.log,
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+    livereload =  argv.w || false,
     requestLogger;
 
 if (!argv.s && !argv.silent) {
@@ -56,6 +57,8 @@ if (!argv.s && !argv.silent) {
     }
   };
 }
+
+
 
 if (!port) {
   portfinder.basePort = 8080;
@@ -76,11 +79,16 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: requestLogger,
-    proxy: proxy
+    proxy: proxy,
+    livereload:false
   };
 
   if (argv.cors) {
     options.cors = true;
+  }
+
+  if(livereload){
+    options.livereload = true;
   }
 
   if (ssl) {

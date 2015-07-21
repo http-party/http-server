@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "vows": "0.7.x",
+    "livereload": "^0.3.7",
     "request": "2.49.x",
     "stylezero": "2.2.0"
   },
