@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "pretest": "stylezero bin/ lib/ test",
+    "pretest": "stylezero bin/http-server lib/ test",
     "test": "vows --spec --isolate"
   },
   "contributors": [

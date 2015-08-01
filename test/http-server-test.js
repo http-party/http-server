@@ -71,7 +71,7 @@ vows.describe('http-server').addBatch({
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
-      'should respond with headers set in options': function (err, res, body) {
+      'should respond with headers set in options': function (err, res) {
         assert.equal(res.headers['access-control-allow-origin'], '*');
         assert.equal(res.headers['access-control-allow-credentials'], 'true');
       }
@@ -146,7 +146,7 @@ vows.describe('http-server').addBatch({
           }
         }, this.callback);
       },
-      'status code should be 204': function (err, res, body) {
+      'status code should be 204': function (err, res) {
         assert.equal(res.statusCode, 204);
       }
     }
