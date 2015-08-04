@@ -138,3 +138,8 @@ process.on('SIGINT', function() {
   log('http-server stopped.'.red);
   process.exit();
 });
+
+process.on('SIGTERM', function() {
+  log('http-server stopped.'.red);
+  process.exit();
+});
