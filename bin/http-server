@@ -21,6 +21,7 @@ if (argv.h || argv.help) {
     "  -d                 Show directory listings [true]",
     "  -i                 Display autoIndex [true]",
     "  -e --ext           Default file extension if none supplied [none]",
+    "  -E --errors        Output only error messages",
     "  -s --silent        Suppress log messages from output",
     "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header",
     "  -o [path]          Open browser window after starting the server",
@@ -51,7 +52,7 @@ if (!argv.s && !argv.silent) {
     var date = (new Date).toUTCString();
     if (error) {
       log('[%s] "%s %s" Error (%s): "%s"', date, req.method.red, req.url.red, error.status.toString().red, error.message.red);
-    } else {
+    } else if (!argv.E && !argv.errors) {
       log('[%s] "%s %s" "%s"', date, req.method.cyan, req.url.cyan, req.headers['user-agent']);
     }
   };
