@@ -24,6 +24,7 @@ if (argv.h || argv.help) {
     "  -s --silent        Suppress log messages from output",
     "  --cors             Enable CORS via the 'Access-Control-Allow-Origin' header",
     "  -o [path]          Open browser window after starting the server",
+    "  -u                 Url to display in the opened browser (in case you have an alias to your localhost)",
     "  -c                 Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.",
     "                     To disable caching, use -c-1.",
     "",
@@ -93,7 +94,8 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
-        protocol      = ssl ? 'https:' : 'http:';
+        protocol      = ssl ? 'https:' : 'http:',
+        url = argv.u || canonicalHost;
 
     log('Starting up http-server, serving '.yellow
       + server.root.cyan
@@ -118,7 +120,7 @@ function listen(port) {
     log('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(
-        protocol + '//' + canonicalHost + ':' + port,
+        protocol + '//' + url + ':' + port,
         { command: argv.o !== true ? argv.o : null }
       );
     }
