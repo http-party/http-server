@@ -75,12 +75,7 @@
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/nodeapps/http-server/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "preferGlobal": "true",
   "bin": {
     "http-server": "./bin/http-server",
