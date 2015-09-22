@@ -115,12 +115,12 @@ function listen(port) {
       + ' on: '.yellow
       + (protocol + '//' + host + ':' + port).cyan);
 
-    log('\nAvailable on:'.yellow);
+    logger.info('\nAvailable on:'.yellow);
 
     Object.keys(ifaces).forEach(function (dev) {
       ifaces[dev].forEach(function (details) {
         if (details.family === 'IPv4') {
-          log(('    http://' + details.address + ':' + port.toString()).green);
+          logger.info(('    http://' + details.address + ':' + port.toString()).green);
         }
       });
     });
@@ -154,6 +154,6 @@ process.on('SIGINT', function () {
 });
 
 process.on('SIGTERM', function () {
-  log('http-server stopped.'.red);
+  logger.info('http-server stopped.'.red);
   process.exit();
 });
