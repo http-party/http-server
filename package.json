@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "pretest": "stylezero bin/http-server lib/ test",
+    "pretest": "common bin/http-server lib/ test",
     "test": "vows --spec --isolate"
   },
   "contributors": [
@@ -54,7 +54,7 @@
     },
     {
       "name": "Jinkwon Lee",
-      "email" : "master@bdyne.net"
+      "email": "master@bdyne.net"
     }
   ],
   "dependencies": {
@@ -68,9 +68,9 @@
     "corser": "~2.0.0"
   },
   "devDependencies": {
-    "vows": "0.7.x",
+    "common-style": "^3.0.0",
     "request": "2.49.x",
-    "stylezero": "2.2.0"
+    "vows": "0.7.x"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
@@ -79,6 +79,6 @@
   "preferGlobal": "true",
   "bin": {
     "http-server": "./bin/http-server",
-    "hs" : "./bin/http-server"
+    "hs": "./bin/http-server"
   }
 }
