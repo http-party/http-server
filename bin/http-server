@@ -8,17 +8,17 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
-    argv       = require('optimist')
-      .boolean('cors')
-      .boolean('log-ip')
-      .argv,
+    config     = require('nconf').argv({
+      cors: { boolean: true },
+      'log-ip': { boolean: true }
+    }),
     pjson      = require('../package.json');
 
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
 
-if (argv.h || argv.help) {
+if (config.get('h') || config.get('help')) {
   console.log([
     'usage: http-server [path] [options]',
     '',
@@ -62,20 +62,20 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
-    ssl = argv.S || argv.ssl,
-    proxy = argv.P || argv.proxy,
-    utc = argv.U || argv.utc,
+var port = config.get('p') || config.get('port') || parseInt(process.env.PORT, 10),
+    host = config.get('a') || '0.0.0.0',
+    ssl = config.get('S') || config.get('ssl'),
+    proxy = config.get('P') || config.get('proxy'),
+    utc = config.get('U') || config.get('utc'),
     logger,
     version = pjson.version;
 
-if (!argv.s && !argv.silent) {
+if (!config.get('s') && !config.get('silent')) {
   logger = {
     info: console.log,
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
-      var ip = argv['log-ip']
+      var ip = config.get('log-ip')
           ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
           : '';
       if (error) {
@@ -113,40 +113,40 @@ else {
   listen(port);
 }
 
-if (argv.v || argv.version) {
+if (config.get('v') || config.get('version')) {
   console.log(version);
   process.exit();
 }
 
 function listen(port) {
   var options = {
-    root: argv._[0],
-    cache: argv.c,
-    timeout: argv.t,
-    showDir: argv.d,
-    autoIndex: argv.i,
-    gzip: argv.g || argv.gzip,
-    brotli: argv.b || argv.brotli,
-    robots: argv.r || argv.robots,
-    ext: argv.e || argv.ext,
+    root: config.get('_')[0],
+    cache: config.get('c'),
+    timeout: config.get('t'),
+    showDir: config.get('d'),
+    autoIndex: config.get('i'),
+    gzip: config.get('g') || config.get('gzip'),
+    brotli: config.get('b') || config.get('brotli'),
+    robots: config.get('r') || config.get('robots'),
+    ext: config.get('e') || config.get('ext'),
     logFn: logger.request,
     proxy: proxy,
-    showDotfiles: argv.dotfiles,
-    username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    showDotfiles: config.get('dotfiles'),
+    username: config.get('username') || process.env.NODE_HTTP_SERVER_USERNAME,
+    password: config.get('password') || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
-  if (argv.cors) {
+  if (config.get('cors')) {
     options.cors = true;
-    if (typeof argv.cors === 'string') {
-      options.corsHeaders = argv.cors;
+    if (typeof config.get('cors') === 'string') {
+      options.corsHeaders = config.get('cors');
     }
   }
 
   if (ssl) {
     options.https = {
-      cert: argv.C || argv.cert || 'cert.pem',
-      key: argv.K || argv.key || 'key.pem'
+      cert: config.get('C') || config.get('cert') || 'cert.pem',
+      key: config.get('K') || config.get('key') || 'key.pem'
     };
     try {
       fs.lstatSync(options.https.cert);
@@ -175,7 +175,7 @@ function listen(port) {
       colors.yellow('\nAvailable on:')
     ].join(''));
 
-    if (argv.a && host !== '0.0.0.0') {
+    if (config.get('a') && host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
     }
     else {
@@ -193,10 +193,11 @@ function listen(port) {
     }
 
     logger.info('Hit CTRL-C to stop the server');
-    if (argv.o) {
+    var o = config.get('o');
+    if (o) {
       var openUrl = protocol + canonicalHost + ':' + port;
-      if (typeof argv.o === 'string') {
-        openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
+      if (typeof o === 'string') {
+        openUrl += o[0] === '/' ? o : '/' + o;
       }
       logger.info('open: ' + openUrl);
       opener(openUrl);
