@@ -81,6 +81,18 @@ Using `npx` you can run the script without installing it first:
 
 `-v` or `--version` Print the version and exit.
 
+### Configuration file
+
+In addition to command line options, `http-server` will look for options in an `.httpserverrc` file:
+
+    {
+        "p": "8888",
+        "a": "localhost",
+        "silent": true
+    }
+
+The search for `.httpserverrc` starts in the directory to be served, traversing up the directory tree until one is found.
+
 ## Magic Files
 
 - `index.html` will be served as the default file to any directory requests.

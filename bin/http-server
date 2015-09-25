@@ -8,13 +8,15 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
-    config     = require('nconf').argv({
+    nconf      = require('nconf'),
+    path       = require('path'),
+    pjson      = require('../package.json');
+
+var config = nconf.argv({
       cors: { boolean: true },
       'log-ip': { boolean: true }
     }),
-    pjson      = require('../package.json');
-
-var ifaces = os.networkInterfaces();
+    ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
 
@@ -61,6 +63,24 @@ if (config.get('h') || config.get('help')) {
   ].join('\n'));
   process.exit();
 }
+
+var root = config.get('_')[0];
+
+if (!root) {
+  try {
+    fs.lstatSync('./public');
+    root = './public';
+  }
+  catch (err) {
+    root = './';
+  }
+}
+
+config.file({
+  file: '.httpserverrc',
+  dir: path.resolve(root),
+  search: true
+});
 
 var port = config.get('p') || config.get('port') || parseInt(process.env.PORT, 10),
     host = config.get('a') || '0.0.0.0',
