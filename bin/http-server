@@ -29,6 +29,7 @@ if (argv.h || argv.help) {
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
+    '  -ip          Enable client IP logging',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
@@ -46,25 +47,34 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+<<<<<<< HEAD
     utc = argv.U || argv.utc,
+=======
+    showIP = !!argv.ip,
+>>>>>>> Add option which enables client IP logging
     logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
     request: function (req, res, error) {
+<<<<<<< HEAD
       var date = utc ? new Date().toUTCString() : new Date();
+=======
+      var date = new Date().toUTCString();
+      var ip = showIP ? req.headers['x-forwarded-for'] || req.connection.remoteAddress + " " : '';
+>>>>>>> Add option which enables client IP logging
       if (error) {
         logger.info(
-          '[%s] "%s %s" Error (%s): "%s"',
-          date, req.method.red, req.url.red,
+          '[%s] %s"%s %s" Error (%s): "%s"',
+          date, ip, req.method.red, req.url.red,
           error.status.toString().red, error.message.red
         );
       }
       else {
         logger.info(
-          '[%s] "%s %s" "%s"',
-          date, req.method.cyan, req.url.cyan,
+          '[%s] %s"%s %s" "%s"',
+          date, ip, req.method.cyan, req.url.cyan,
           req.headers['user-agent']
         );
       }
