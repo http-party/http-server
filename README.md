@@ -64,6 +64,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds (defaults to '3600'). To disable caching, use -c-1.
 
+`-U` or `--utc` Use UTC time format in log messages.
+
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
 `-S` or `--ssl` Enable https.
