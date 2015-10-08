@@ -113,7 +113,7 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
-        protocol      = ssl ? 'https:' : 'http:';
+        protocol      = ssl ? 'https://' : 'http://';
 
     logger.info(['Starting up http-server, serving '.yellow,
       server.root.cyan,
@@ -136,7 +136,7 @@ function listen(port) {
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(
-        protocol + '//' + canonicalHost + ':' + port,
+        protocol + canonicalHost + ':' + port,
         { command: argv.o !== true ? argv.o : null }
       );
     }
