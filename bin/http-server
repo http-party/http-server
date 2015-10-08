@@ -28,6 +28,7 @@ if (argv.h || argv.help) {
     '  -o [path]    Open browser window after starting the server',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
+    '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
@@ -45,13 +46,14 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+    utc = argv.U || argv.utc,
     logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
     request: function (req, res, error) {
-      var date = new Date().toUTCString();
+      var date = utc ? new Date().toUTCString() : new Date();
       if (error) {
         logger.info(
           '[%s] "%s %s" Error (%s): "%s"',
