@@ -130,7 +130,7 @@ vows.describe('http-server').addBatch({
       var server = httpServer.createServer({
         root: root,
         cors: true,
-        cors_headers: 'X-Test'
+        corsHeaders: 'X-Test'
       });
       server.listen(8082);
       this.callback(null, server);
