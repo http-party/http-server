@@ -24,7 +24,8 @@ if (argv.h || argv.help) {
     '  -i           Display autoIndex [true]',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
-    '  --cors       Enable CORS via the "Access-Control-Allow-Origin" header',
+    "  --cors[=headers]   Enable CORS via the 'Access-Control-Allow-Origin' header",
+    "                     Optionally provide CORS headers list separated by commas",
     '  -o [path]    Open browser window after starting the server',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
@@ -103,10 +104,9 @@ function listen(port) {
 
   if (argv.cors) {
     options.cors = true;
-  }
-
-  if (argv.corsheaders) {
-    options.cors_headers = argv.corsheaders;
+    if (typeof argv.cors === 'string') {
+      options.cors_headers = argv.cors;
+    }
   }
 
   if (ssl) {
