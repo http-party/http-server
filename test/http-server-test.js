@@ -150,8 +150,9 @@ vows.describe('http-server').addBatch({
       'status code should be 204': function (err, res) {
         assert.equal(res.statusCode, 204);
       },
-      'response Access-Control-Allow-Headers should contain X-Test': function (err, res, body) {
-        assert.ok(res.headers['Access-Control-Allow-Headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
+        console.dir(res.headers);
+        assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
   }
