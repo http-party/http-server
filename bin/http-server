@@ -47,7 +47,6 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
-    pushState = argv['push-state'] || false,
     logger;
 
 if (!argv.s && !argv.silent) {
@@ -99,9 +98,16 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy,
-    pushState: pushState
+    proxy: proxy
   };
+
+  if (argv['push-state']) {
+    options.pushState = true;
+
+    if (options.proxy || options.autoIndex) {
+      logger.info('Proxy and Auto Indexing are not supported with Push State.'.red);
+    }
+  }
 
   if (argv.cors) {
     options.cors = true;
@@ -135,6 +141,10 @@ function listen(port) {
 
     if (typeof proxy === 'string') {
       logger.info('Unhandled requests will be served from: ' + proxy);
+    }
+
+    if (options.pushState) {
+      logger.info('HTML5 Push State is enabled, all URLs will be changed to the index page.');
     }
 
     logger.info('Hit CTRL-C to stop the server');
