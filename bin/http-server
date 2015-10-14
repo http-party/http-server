@@ -47,7 +47,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
-    pushState = argv["push-state"] || false,
+    pushState = argv['push-state'] || false,
     logger;
 
 if (!argv.s && !argv.silent) {

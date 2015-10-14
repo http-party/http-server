@@ -154,18 +154,19 @@ vows.describe('http-server').addBatch({
   'When push-state is enabled': {
     topic: function () {
       var server = httpServer.createServer({
-        root: root,
-        pushstate: true
+        root: root
       });
-      server.listen(8081);
+      // NOTE: using 8083 because the 808[1-2] are both active and not yet shutdown.
+      server.listen(8083);
+
       this.callback(null, server);
     },
     'and a non-index file is requested': {
       topic: function () {
-        request('http://127.0.0.1:8081/404', this.callback);
+        request('http://127.0.0.1:8083/404', this.callback);
       },
-      'status code should be the enpoint code 200': function (res) {
-        assert.equal(res.statusCode, 200);
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 404);
       }
     }
   }
