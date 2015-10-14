@@ -170,6 +170,19 @@ vows.describe('http-server').addBatch({
       },
       'status code should be 200': function (res) {
         assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          var pushStateRoot = path.join(__dirname, 'fixtures', 'pushStateRoot');
+
+          fs.readFile(path.join(pushStateRoot, 'index.html'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
       }
     }
   }
