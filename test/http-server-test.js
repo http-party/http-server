@@ -153,8 +153,11 @@ vows.describe('http-server').addBatch({
   },
   'When push-state is enabled': {
     topic: function () {
+      var pushStateRoot = path.join(__dirname, 'fixtures', 'pushStateRoot');
+
       var server = httpServer.createServer({
-        root: root
+        root: pushStateRoot,
+        pushState: true
       });
       // NOTE: using 8083 because the 808[1-2] are both active and not yet shutdown.
       server.listen(8083);
@@ -166,7 +169,7 @@ vows.describe('http-server').addBatch({
         request('http://127.0.0.1:8083/404', this.callback);
       },
       'status code should be 200': function (res) {
-        assert.equal(res.statusCode, 404);
+        assert.equal(res.statusCode, 200);
       }
     }
   }
