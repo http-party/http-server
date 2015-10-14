@@ -150,5 +150,23 @@ vows.describe('http-server').addBatch({
         assert.equal(res.statusCode, 204);
       }
     }
+  },
+  'When push-state is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        pushstate: true
+      });
+      server.listen(8081);
+      this.callback(null, server);
+    },
+    'and a non-index file is requested': {
+      topic: function () {
+        request('http://127.0.0.1:8081/404', this.callback);
+      },
+      'status code should be the enpoint code 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      }
+    }
   }
 }).export(module);
