@@ -164,7 +164,7 @@ vows.describe('http-server').addBatch({
 
       this.callback(null, server);
     },
-    'and a non-index file is requested': {
+    'and a non-existant file is requested': {
       topic: function () {
         request('http://127.0.0.1:8083/404', this.callback);
       },
@@ -177,6 +177,24 @@ vows.describe('http-server').addBatch({
           var pushStateRoot = path.join(__dirname, 'fixtures', 'pushStateRoot');
 
           fs.readFile(path.join(pushStateRoot, 'index.html'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'and a file exists': {
+      topic: function () {
+        request('http://127.0.0.1:8083/app.js', this.callback);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          var pushStateRoot = path.join(__dirname, 'fixtures', 'pushStateRoot');
+
+          fs.readFile(path.join(pushStateRoot, 'app.js'), 'utf8', function (err, data) {
             self.callback(err, data, body);
           });
         },
