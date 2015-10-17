@@ -129,7 +129,8 @@ vows.describe('http-server').addBatch({
     topic: function () {
       var server = httpServer.createServer({
         root: root,
-        cors: true
+        cors: true,
+        corsHeaders: 'X-Test'
       });
       server.listen(8082);
       this.callback(null, server);
@@ -148,6 +149,9 @@ vows.describe('http-server').addBatch({
       },
       'status code should be 204': function (err, res) {
         assert.equal(res.statusCode, 204);
+      },
+      'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
+        assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
   }
