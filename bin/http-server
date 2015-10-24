@@ -9,6 +9,7 @@ var colors     = require('colors'),
     opener     = require('opener'),
     argv       = require('optimist')
       .boolean('cors')
+      .boolean('proxy-pass')
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -32,6 +33,7 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxy-pass Prevents the proxy from changing host header',
     '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
@@ -99,7 +101,8 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy
+    proxy: proxy,
+    proxyPass: argv['proxy-pass']
   };
 
   if (argv.cors) {
