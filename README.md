@@ -6,11 +6,7 @@
 
 # Installing globally:
 
-Installation via `npm`.  If you don't have `npm` yet:
-
-     curl https://npmjs.org/install.sh | sh
-
-Once you have `npm`:
+Installation via `npm`:
 
      npm install http-server -g
 
