@@ -154,5 +154,36 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When fallback property is set': {
+    topic: function() {
+      var server = httpServer.createServer({
+        root: root,
+        fallback: {
+          address: "file"
+        }
+      });
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'when requesting non-existent file': {
+      topic: function() {
+        request('http://127.0.0.1:8083/404', this.callback);
+      },
+      'status code should be 200': function(res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function(res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function(err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of fallback served file': function(err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
   }
 }).export(module);
