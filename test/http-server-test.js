@@ -156,31 +156,31 @@ vows.describe('http-server').addBatch({
     }
   },
   'When fallback property is set': {
-    topic: function() {
+    topic: function () {
       var server = httpServer.createServer({
         root: root,
         fallback: {
-          address: "file"
+          address: 'file'
         }
       });
       server.listen(8083);
       this.callback(null, server);
     },
     'when requesting non-existent file': {
-      topic: function() {
+      topic: function () {
         request('http://127.0.0.1:8083/404', this.callback);
       },
-      'status code should be 200': function(res) {
+      'status code should be 200': function (res) {
         assert.equal(res.statusCode, 200);
       },
       'and file content': {
-        topic: function(res, body) {
+        topic: function (res, body) {
           var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function(err, data) {
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
             self.callback(err, data, body);
           });
         },
-        'should match content of fallback served file': function(err, file, body) {
+        'should match content of fallback served file': function (err, file, body) {
           assert.equal(body.trim(), file.trim());
         }
       }
