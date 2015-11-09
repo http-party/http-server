@@ -61,7 +61,7 @@
     "colors": "1.0.3",
     "optimist": "0.6.x",
     "union": "~0.4.3",
-    "ecstatic": "~0.7.0",
+    "ecstatic": "~1.2",
     "http-proxy": "^1.8.1",
     "portfinder": "0.4.x",
     "opener": "~1.4.0",
