@@ -129,7 +129,8 @@ function listen(port) {
 
     if (argv.a && host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
-    } else {
+    }
+    else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
