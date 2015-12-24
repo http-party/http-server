@@ -130,7 +130,7 @@ function listen(port) {
     Object.keys(ifaces).forEach(function (dev) {
       ifaces[dev].forEach(function (details) {
         if (details.family === 'IPv4') {
-          logger.info(('  ' + protocol + details.address + ':' + port.toString()).green);
+          logger.info(('  ' + protocol + '//' + details.address + ':' + port.toString()).green);
         }
       });
     });
