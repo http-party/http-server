@@ -50,6 +50,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-i` Display autoIndex (defaults to 'True')
 
+`-j` or  `--jade` precompile jade lang files
+
 `-e` or `--ext` Default file extension if none supplied (defaults to 'html')
 
 `-s` or `--silent` Suppress log messages from output
@@ -69,6 +71,7 @@ This will install `http-server` globally so that it may be run from the command 
 `-C` or `--cert` Path to ssl cert file (default: cert.pem).
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
+
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
