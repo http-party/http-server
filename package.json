@@ -62,7 +62,7 @@
     "optimist": "0.6.x",
     "union": "~0.4.3",
     "ecstatic": "~1.2",
-    "http-proxy": "^1.8.1",
+    "http-proxy": "^v1.11.1",
     "portfinder": "0.4.x",
     "opener": "~1.4.0",
     "corser": "~2.0.0"
