@@ -72,4 +72,6 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
+`--serverHeader` Show the server headers from ecstatic (defaults to 'True')
+
 `-h` or `--help` Print this list and exit.
