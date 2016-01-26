@@ -7,6 +7,8 @@ var colors     = require('colors'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+    util       = require('util'),
+    fs         = require('fs'),
     argv       = require('optimist')
       .boolean('cors')
       .argv;
@@ -37,6 +39,9 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
+    '  -l --logfile Write log to file instead of console, won\'t work is silent option is activated',
+    '               You can clear the log file by request /clear-log',
+    '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  -h --help    Print this list and exit.'
   ].join('\n'));
@@ -48,11 +53,39 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
+    logfile = (function () {
+      var file = argv.logfile || argv.l;
+      if (!file) {
+        return '';
+      }
+
+      try {
+        var stat = fs.statSync(file);
+        if (!stat.isFile() || fs.accessSync(file, fs.W_OK)) {
+          console.error('Can\'t write to file ' + logfile + ', not a valid file !');
+          return;
+        }
+      }
+      catch (e) {
+        fs.writeFileSync(file, '', { flag: 'a' });
+      }
+
+      return file;
+    })(),
     logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
-    info: console.log,
+    info: !logfile ? console.log : function () {
+      // Format string as console.log would do it !
+      var str = util.format.apply(util, arguments);
+
+      fs.writeFile(logfile, str, { flag: 'a' }, function (err) {
+        if (err) {
+          console.error('error writing log to ' + logfile + ' (' + str + ')');
+        }
+      });
+    },
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       if (error) {
@@ -99,7 +132,8 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy
+    proxy: proxy,
+    logfile: logfile
   };
 
   if (argv.cors) {

@@ -70,6 +70,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
+`-l` or `--logfile` Write log to file instead of console, won't work is silent option is activated. You can clear the log file by request /clear-log
+
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
 `-h` or `--help` Print this list and exit.
