@@ -127,13 +127,18 @@ function listen(port) {
       '\nAvailable on:'.yellow
     ].join(''));
 
-    Object.keys(ifaces).forEach(function (dev) {
-      ifaces[dev].forEach(function (details) {
-        if (details.family === 'IPv4') {
-          logger.info(('  ' + protocol + details.address + ':' + port.toString()).green);
-        }
+    if (argv.a && host !== '0.0.0.0') {
+      logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
+    }
+    else {
+      Object.keys(ifaces).forEach(function (dev) {
+        ifaces[dev].forEach(function (details) {
+          if (details.family === 'IPv4') {
+            logger.info(('  ' + protocol + details.address + ':' + port.toString()).green);
+          }
+        });
       });
-    });
+    }
 
     if (typeof proxy === 'string') {
       logger.info('Unhandled requests will be served from: ' + proxy);
