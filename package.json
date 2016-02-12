@@ -66,6 +66,7 @@
     }
   ],
   "dependencies": {
+    "basic-auth": "^1.0.3",
     "colors": "1.0.3",
     "corser": "~2.0.0",
     "ecstatic": "^2.0.0",

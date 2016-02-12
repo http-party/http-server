@@ -34,6 +34,9 @@ if (argv.h || argv.help) {
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
+    '  --username   Username for basic authentication [none]',
+    '  --password   Password for basic authentication [none]',
+    '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
@@ -103,7 +106,9 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
-    showDotfiles: argv.dotfiles
+    showDotfiles: argv.dotfiles,
+    username: argv.username,
+    password: argv.password
   };
 
   if (argv.cors) {

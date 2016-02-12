@@ -154,5 +154,137 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When http-server is listening on 8083 with username "good_username" and password "good_password"': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        robots: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        },
+        username: 'good_username',
+        password: 'good_password'
+      });
+
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'and the user requests an existent file with no auth details': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with incorrect username': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'wrong_username',
+            pass: 'good_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with incorrect password': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'good_username',
+            pass: 'wrong_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests a non-existent file with incorrect password': {
+      topic: function () {
+        request('http://127.0.0.1:8083/404', {
+          auth: {
+            user: 'good_username',
+            pass: 'wrong_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with correct auth details': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'good_username',
+            pass: 'good_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
   }
 }).export(module);

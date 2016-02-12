@@ -51,6 +51,10 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
+`--username` Username for basic authentication [none]
+
+`--password` Password for basic authentication [none]
+
 `-S` or `--ssl` Enable https.
 
 `-C` or `--cert` Path to ssl cert file (default: cert.pem).
