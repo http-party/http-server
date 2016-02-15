@@ -9,6 +9,7 @@ var colors     = require('colors'),
     opener     = require('opener'),
     argv       = require('optimist')
       .boolean('cors')
+      .boolean('auto')
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -32,6 +33,7 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --auto       Set proxy autoRewrite flag for proxy, handling 301/302 responses',
     '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
@@ -107,6 +109,10 @@ function listen(port) {
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+
+  if (argv.auto) {
+    options.autoRewrite = true;
   }
 
   if (ssl) {
