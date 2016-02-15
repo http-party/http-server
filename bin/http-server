@@ -38,6 +38,7 @@ if (argv.h || argv.help) {
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  --no-dotfiles  Do not show dotfiles',
     '  -h --help    Print this list and exit.'
   ].join('\n'));
   process.exit();
@@ -99,7 +100,8 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy
+    proxy: proxy,
+    showDotfiles: argv.dotfiles
   };
 
   if (argv.cors) {
