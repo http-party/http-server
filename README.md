@@ -34,12 +34,6 @@ This will install `http-server` globally so that it may be run from the command 
 
 *Now you can visit http://localhost:8080 to view your server*
 
-### Deploy http-server to nodejitsu
-
-     jitsu deploy
-
-*You will now be prompted for a `subdomain` to deploy your application on*
-
 ## Available Options:
 
 `-p` Port to use (defaults to 8080)
