@@ -150,7 +150,7 @@ function listen(port) {
       if (typeof argv.o === 'string') {
         openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
       }
-      logger.info('open: '+openUrl);
+      logger.info('open: ' + openUrl);
       opener(openUrl);
     }
   });
