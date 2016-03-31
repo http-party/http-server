@@ -139,13 +139,19 @@ function listen(port) {
       logger.info('Unhandled requests will be served from: ' + proxy);
     }
 
-    logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
-      opener(
-        protocol + '//' + canonicalHost + ':' + port,
-        { command: argv.o !== true ? argv.o : null }
-      );
+      var hostUrl = protocol + canonicalHost + ':' + port;
+      if (typeof argv.o === 'string') {
+        hostUrl += argv.o.charAt(0) === '/' ? argv.o : '/' + argv.o;
+        opener(hostUrl);
+      }
+      else {
+        opener(hostUrl, { command: argv.o !== true ? argv.o : null });
+      }
+      logger.info('Opened browser:'.yellow);
+      logger.info(('  ' + hostUrl).green);
     }
+    logger.info('Hit CTRL-C to stop the server');
   });
 }
 
