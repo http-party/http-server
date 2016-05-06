@@ -67,3 +67,7 @@ This will install `http-server` globally so that it may be run from the command 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
 `-h` or `--help` Print this list and exit.
+
+## Tutorial
+
+[Setup Web Server in 3 Minutes with http-server](https://youtu.be/oa9m8321_nw)
