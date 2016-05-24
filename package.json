@@ -59,6 +59,7 @@
   ],
   "dependencies": {
     "colors": "1.0.3",
+    "columnify": "^1.5.4",
     "corser": "~2.0.0",
     "ecstatic": "^1.4.0",
     "http-proxy": "^1.8.1",

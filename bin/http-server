@@ -7,6 +7,7 @@ var colors     = require('colors'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+    columnify  = require('columnify'),
     argv       = require('optimist')
       .boolean('cors')
       .argv;
@@ -38,6 +39,7 @@ if (argv.h || argv.help) {
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  -v --verbose Log out the full headers of each request along with the typical content',
     '  -h --help    Print this list and exit.'
   ].join('\n'));
   process.exit();
@@ -68,6 +70,14 @@ if (!argv.s && !argv.silent) {
           date, req.method.cyan, req.url.cyan,
           req.headers['user-agent']
         );
+        if (argv.v || argv.verbose) {
+          var headerString = columnify(req.headers,
+                                       { columns: ['Header', 'Value'] });
+          logger.info(
+            '%s',
+            headerString
+          );
+        }
       }
     }
   };
