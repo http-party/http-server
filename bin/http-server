@@ -109,12 +109,13 @@ function listen(port) {
       options.corsHeaders = argv.cors;
     }
   }
-  
+
   var extraHeaders = argv.H || argv.header;
-  if(extraHeaders) {
-    if (typeof extraHeaders === 'array') {
+  if (extraHeaders) {
+    if (Array.isArray(extraHeaders)) {
       options.extraHeaders = extraHeaders;
-    } else {
+    }
+    else {
       options.extraHeaders = [extraHeaders];
     }
   }
