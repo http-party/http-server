@@ -44,6 +44,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-i` Display autoIndex (defaults to 'True')
 
+`-g` or `--gzip` When enabled (defaults to 'False') it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding.
+
 `-e` or `--ext` Default file extension if none supplied (defaults to 'html')
 
 `-s` or `--silent` Suppress log messages from output
