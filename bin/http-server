@@ -21,6 +21,7 @@ if (argv.h || argv.help) {
     '  -p           Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
+    '  -b           Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -e --ext     Default file extension if none supplied [none]',
@@ -50,6 +51,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
+    baseDir = argv.b,
     logger;
 
 if (!argv.s && !argv.silent) {
@@ -97,6 +99,7 @@ function listen(port) {
     root: argv._[0],
     cache: argv.c,
     showDir: argv.d,
+    baseDir: baseDir,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     robots: argv.r || argv.robots,
@@ -123,7 +126,8 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
-        protocol      = ssl ? 'https://' : 'http://';
+        protocol      = ssl ? 'https://' : 'http://',
+        path          = baseDir ? '/' + baseDir.replace(/^\//, '') : '';
 
     logger.info([colors.yellow('Starting up http-server, serving '),
       colors.cyan(server.root),
@@ -151,7 +155,7 @@ function listen(port) {
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(
-        protocol + canonicalHost + ':' + port,
+        protocol + canonicalHost + ':' + port + path,
         { command: argv.o !== true ? argv.o : null }
       );
     }

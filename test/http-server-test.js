@@ -154,5 +154,45 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When baseDir is specified': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        baseDir: '/test'
+      });
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'it should serve files at the specified baseDir': {
+      topic: function () {
+        request('http://127.0.0.1:8083/test/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'it should not serve files at the root': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', this.callback);
+      },
+      'status code should be 403': function (res) {
+        assert.equal(res.statusCode, 403);
+      },
+      'and file content should be empty': function (res) {
+        assert.equal(res.body, '');
+      }
+    }
   }
 }).export(module);
