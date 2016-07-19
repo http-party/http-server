@@ -27,6 +27,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
+    '  --baseDir    Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
@@ -73,6 +74,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
+    baseDir = argv.baseDir || argv.basedir,
     logger;
 
 var proxyOptionsBooleanProps = [
@@ -142,6 +144,7 @@ function listen(port) {
     cache: argv.c,
     timeout: argv.t,
     showDir: argv.d,
+    baseDir: baseDir,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     brotli: argv.b || argv.brotli,
@@ -216,7 +219,8 @@ function listen(port) {
       ([chalk.yellow('AutoIndex: '), argv.i ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
       ([chalk.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? chalk.cyan('true') : chalk.red('false')].join('')),
       ([chalk.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? chalk.cyan('true') : chalk.red('false')].join('')),
-      ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join(''))
+      ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join('')),
+      ([chalk.yellow('Base directory: '), baseDir ? chalk.cyan(baseDir) : chalk.cyan('/')].join(''))
     ].join('\n'));
 
     logger.info(chalk.yellow('\nAvailable on:'));
