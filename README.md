@@ -39,6 +39,8 @@ Using `npx` you can run the script without installing it first:
 
 `-a` Address to use (defaults to 0.0.0.0)
 
+`-b` Base path to serve files from (defaults /)
+
 `-d` Show directory listings (defaults to `true`)
 
 `-i` Display autoIndex (defaults to `true`)

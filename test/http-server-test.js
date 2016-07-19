@@ -1,9 +1,9 @@
 var assert = require('assert'),
-    path = require('path'),
-    fs = require('fs'),
-    vows = require('vows'),
-    request = require('request'),
-    httpServer = require('../lib/http-server');
+  path = require('path'),
+  fs = require('fs'),
+  vows = require('vows'),
+  request = require('request'),
+  httpServer = require('../lib/http-server');
 
 // Prevent vows from swallowing errors
 process.on('uncaughtException', console.error);
@@ -340,6 +340,46 @@ vows.describe('http-server').addBatch({
         'should match content of served file': function (err, file, body) {
           assert.equal(body.trim(), file.trim());
         }
+      }
+    }
+  },
+  'When baseDir is specified': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        baseDir: '/test'
+      });
+      server.listen(8086);
+      this.callback(null, server);
+    },
+    'it should serve files at the specified baseDir': {
+      topic: function () {
+        request('http://127.0.0.1:8086/test/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'it should not serve files at the root': {
+      topic: function () {
+        request('http://127.0.0.1:8086/file', this.callback);
+      },
+      'status code should be 403': function (res) {
+        assert.equal(res.statusCode, 403);
+      },
+      'and file content should be empty': function (res) {
+        assert.equal(res.body, '');
       }
     }
   }
