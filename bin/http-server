@@ -30,6 +30,8 @@ if (argv.h || argv.help) {
     '  -o [path]    Open browser window after starting the server',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
+    '  -t           Connections timeout in seconds [120], e.g. -t60 for 1 minute.',
+    '               To disable timeout, use -t0',
     '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
@@ -95,6 +97,7 @@ function listen(port) {
   var options = {
     root: argv._[0],
     cache: argv.c,
+    timeout: argv.t,
     showDir: argv.d,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
