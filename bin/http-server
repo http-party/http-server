@@ -149,7 +149,7 @@ function listen(port) {
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(
-        protocol + '//' + canonicalHost + ':' + port,
+        protocol + canonicalHost + ':' + port,
         { command: argv.o !== true ? argv.o : null }
       );
     }
