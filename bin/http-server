@@ -127,7 +127,7 @@ function listen(port) {
       '\nAvailable on:'.yellow
     ].join(''));
 
-    if (argv.a || host !== '0.0.0.0') {
+    if (host === '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
     }
     else {
