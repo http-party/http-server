@@ -11,8 +11,6 @@ var colors     = require('colors'),
       .boolean('cors')
       .argv;
 
-var ifaces = os.networkInterfaces();
-
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
@@ -129,10 +127,12 @@ function listen(port) {
       '\nAvailable on:'.yellow
     ].join(''));
 
-    if (argv.a && host !== '0.0.0.0') {
+    if (argv.a || host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
     }
     else {
+      var ifaces = os.networkInterfaces();
+
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
