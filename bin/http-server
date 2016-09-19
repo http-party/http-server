@@ -2,7 +2,7 @@
 
 'use strict';
 
-var colors     = require('colors'),
+var colors     = require('colors/safe'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
