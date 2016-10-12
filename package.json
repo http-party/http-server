@@ -16,6 +16,10 @@
     "pretest": "common bin/http-server lib/ test",
     "test": "vows --spec --isolate"
   },
+  "files": [
+    "lib",
+    "bin"
+  ],
   "contributors": [
     {
       "name": "Charlie Robbins",
