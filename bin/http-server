@@ -107,7 +107,7 @@ function listen(port) {
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
-      options.corsHeaders = argv.cors;
+      options.headers = argv.cors;
     }
   }
 
