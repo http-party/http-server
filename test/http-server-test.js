@@ -89,7 +89,7 @@ vows.describe('http-server').addBatch({
         topic: function () {
           request('http://127.0.0.1:8081/root/file', this.callback);
         },
-        'status code should be the enpoint code 200': function (res) {
+        'status code should be the endpoint code 200': function (res) {
           assert.equal(res.statusCode, 200);
         },
         'and file content': {
@@ -108,7 +108,7 @@ vows.describe('http-server').addBatch({
         topic: function () {
           request('http://127.0.0.1:8081/file', this.callback);
         },
-        'status code should be the enpoint code 200': function (res) {
+        'status code should be the endpoint code 200': function (res) {
           assert.equal(res.statusCode, 200);
         },
         'and file content': {
