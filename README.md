@@ -1,3 +1,8 @@
+[![build status](https://img.shields.io/travis/indexzero/http-server.svg)](https://travis-ci.org/indexzero/http-server)
+[![dependencies status](https://img.shields.io/david/indexzero/http-server.svg)](https://david-dm.org/indexzero/http-server)
+[![npm](https://img.shields.io/npm/v/http-server.svg)](https://www.npmjs.com/package/http-server)
+[![license](https://img.shields.io/github/license/indexzero/http-server.svg)](https://github.com/indexzero/http-server)
+
 # http-server: a command-line http server
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
