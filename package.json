@@ -55,6 +55,10 @@
     {
       "name": "Jinkwon Lee",
       "email": "master@bdyne.net"
+    },
+    {
+      "name": "BigBlueHat",
+      "email": "byoung@bigbluehat.com"
     }
   ],
   "dependencies": {
