@@ -42,7 +42,7 @@ if (argv.h || argv.help) {
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  -R --reroute Reroute file. json array with objects containing match, replace, abortOnMatch[true]',
     '                  match should contain two keys: regexp (regexp string) and flags (string with flags)',
-    '  -h --help    Print this list and exit.',
+    '  -h --help    Print this list and exit.'
   ].join('\n'));
   process.exit();
 }
@@ -99,22 +99,22 @@ else {
   listen(port);
 }
 
-if(argv.R || argv.reroute){
+if (argv.R || argv.reroute) {
   reroutes = JSON.parse(fs.readFileSync(argv.R || argv.reroute));
-  if(!Array.isArray(reroutes)){
-    throw "Reroute file must be an array.";
+  if (!Array.isArray(reroutes)) {
+    throw new Error('Reroute file must be an array.');
   }
-  reroutes.forEach(function(elem){
-    if(elem.match && elem.replace){
-      elem.match = new RegExp(elem.match.regexp, elem.match.flags || "");
-      if(elem.replace.charAt(0) != "/" && !argv.s && !argv.silent){
+  reroutes.forEach(function (elem) {
+    if (elem.match && elem.replace) {
+      elem.match = new RegExp(elem.match.regexp, elem.match.flags || '');
+      if (elem.replace.charAt(0) !== '/' && !argv.s && !argv.silent) {
         logger.info(colors.red("URL:s not starting with slash won't be found: " + elem.replace));
       }
     }
-    else{
-      throw "Each reroute must have the match key and replace key";
+    else {
+      throw new Error('Each reroute must have the match key and replace key');
     }
-    if(typeof elem.abortOnMatch === 'undefined'){
+    if (typeof elem.abortOnMatch === 'undefined') {
       elem.abortOnMatch = true;
     }
   });
