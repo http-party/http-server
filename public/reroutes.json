@@ -1,0 +1,6 @@
+[
+  {
+    "match": {"regexp":"/img/([a-z]+).png", "flags":"i"},
+    "replace": "/img/$1_reroute.png"
+  }
+]

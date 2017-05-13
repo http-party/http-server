@@ -59,6 +59,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
+`-R` or `--reroute` Reroute file. json array with objects containing `match`, `replace`, `abortOnMatch` [`true`], match should contain two keys: `regexp` (regexp string) and `flags` (string with flags)
+
 `-h` or `--help` Print this list and exit.
 
 # Development
