@@ -159,7 +159,7 @@ vows.describe('http-server').addBatch({
     topic: function () {
       var server = httpServer.createServer({
         root: root,
-        defaultUrlPath: '/file'
+        fallback: '/file'
       });
       server.listen(4000);
       this.callback(null, server);
