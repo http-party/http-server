@@ -155,7 +155,7 @@ vows.describe('http-server').addBatch({
       }
     }
   },
-  'When a default file is configured': {
+  'When a fallback file is configured': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
