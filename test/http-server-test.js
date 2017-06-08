@@ -166,7 +166,7 @@ vows.describe('http-server').addBatch({
     },
     'and a non existent file requested': {
       topic: function () {
-        request('http://127.0.0.1:4000/404', this.callback);
+        request('http://127.0.0.1:4000/does-not-exist.html', this.callback);
       },
       'status code should be 200': function (err, res) {
         assert.equal(res.statusCode, 200);
