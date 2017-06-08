@@ -34,6 +34,7 @@ if (argv.h || argv.help) {
     '',
     '  -P --proxy     Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '  -f --fallback  Default url path to serve if the request cannot be resolved. e.g.: /index.html',
+    '                 (Fallback will only be used for GET requests for .htm and .html files.)',
     '',
     '  -S --ssl       Enable https.',
     '  -C --cert      Path to ssl cert file (default: cert.pem).',
