@@ -51,7 +51,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
-`-f` or `--fallback` Default url path to serve if the request cannot be resolved. e.g.: /index.html (Fallback will only be used for GET requests for .htm and .html files.)
+`-f` or `--fallback` Default url path to serve if the request cannot be resolved. e.g.: /index.html (Fallback will only be used for GET requests with an URL ending with `/`, `.htm` or `.html`.)
 
 `-S` or `--ssl` Enable https.
 
