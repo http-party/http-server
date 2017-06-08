@@ -55,13 +55,19 @@ var port = argv.p || parseInt(process.env.PORT, 10),
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
-    request: function (req, res, error) {
+    request: function (req, res, error, fallback) {
       var date = utc ? new Date().toUTCString() : new Date();
       if (error) {
         logger.info(
           '[%s] "%s %s" Error (%s): "%s"',
           date, colors.red(req.method), colors.red(req.url),
           colors.red(error.status.toString()), colors.red(error.message)
+        );
+      }
+      else if (fallback) {
+        logger.info(
+          '[%s] %s %s not found, serving %s instead',
+          date, colors.magenta("Fallback:"), req.url, fallback
         );
       }
       else {
