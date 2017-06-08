@@ -67,8 +67,9 @@ if (!argv.s && !argv.silent) {
       }
       else if (fallback) {
         logger.info(
-          '[%s] %s %s not found, serving %s instead',
-          date, colors.magenta("Fallback:"), req.url, fallback
+          '[%s] "%s %s" Fallback: serving %s instead',
+          date, colors.magenta(req.method), colors.magenta(req.url),
+          fallback
         );
       }
       else {
