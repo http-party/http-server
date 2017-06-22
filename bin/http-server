@@ -18,28 +18,30 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p           Port to use [8080]',
-    '  -a           Address to use [0.0.0.0]',
-    '  -d           Show directory listings [true]',
-    '  -i           Display autoIndex [true]',
-    '  -g --gzip    Serve gzip files when possible [false]',
-    '  -e --ext     Default file extension if none supplied [none]',
-    '  -s --silent  Suppress log messages from output',
+    '  -p             Port to use [8080]',
+    '  -a             Address to use [0.0.0.0]',
+    '  -d             Show directory listings [true]',
+    '  -i             Display autoIndex [true]',
+    '  -g --gzip      Serve gzip files when possible [false]',
+    '  -e --ext       Default file extension if none supplied [none]',
+    '  -s --silent    Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
-    '  -o [path]    Open browser window after starting the server',
-    '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
-    '               To disable caching, use -c-1.',
-    '  -U --utc     Use UTC time format in log messages.',
+    '  -o [path]      Open browser window after starting the server',
+    '  -c             Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
+    '                 To disable caching, use -c-1.',
+    '  -U --utc       Use UTC time format in log messages.',
     '',
-    '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  -P --proxy     Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  -f --fallback  Default url path to serve if the request cannot be resolved. e.g.: /index.html',
+    '                 (Fallback will only be used for GET requests with an URL ending with a path segment without an extension or with one of the extensions .htm or .html.)',
     '',
-    '  -S --ssl     Enable https.',
-    '  -C --cert    Path to ssl cert file (default: cert.pem).',
-    '  -K --key     Path to ssl key file (default: key.pem).',
+    '  -S --ssl       Enable https.',
+    '  -C --cert      Path to ssl cert file (default: cert.pem).',
+    '  -K --key       Path to ssl key file (default: key.pem).',
     '',
-    '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
-    '  -h --help    Print this list and exit.'
+    '  -r --robots    Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  -h --help      Print this list and exit.'
   ].join('\n'));
   process.exit();
 }
@@ -54,13 +56,20 @@ var port = argv.p || parseInt(process.env.PORT, 10),
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
-    request: function (req, res, error) {
+    request: function (req, res, error, fallback) {
       var date = utc ? new Date().toUTCString() : new Date();
       if (error) {
         logger.info(
           '[%s] "%s %s" Error (%s): "%s"',
           date, colors.red(req.method), colors.red(req.url),
           colors.red(error.status.toString()), colors.red(error.message)
+        );
+      }
+      else if (fallback) {
+        logger.info(
+          '[%s] "%s %s" Fallback: serving %s instead',
+          date, colors.magenta(req.method), colors.magenta(req.url),
+          fallback
         );
       }
       else {
@@ -101,7 +110,8 @@ function listen(port) {
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy
+    proxy: proxy,
+    fallback: argv.f || argv.fallback
   };
 
   if (argv.cors) {

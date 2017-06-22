@@ -154,5 +154,53 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When a fallback file is configured': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        fallback: '/file'
+      });
+      server.listen(4000);
+      this.callback(null, server);
+    },
+    'and a non existent file requested': {
+      topic: function () {
+        request('http://127.0.0.1:4000/does-not-exist.html', this.callback);
+      },
+      'status code should be 200': function (err, res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'the content of the default file': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match the content of the response': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'and an existing file requested': {
+      topic: function () {
+        request('http://127.0.0.1:4000/canYouSeeMe', this.callback);
+      },
+      'status code should be 200': function (err, res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'the content of the requested file': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'canYouSeeMe'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match the content of the response': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
   }
 }).export(module);
