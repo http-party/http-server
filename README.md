@@ -59,6 +59,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
+`-f` or `--fallback` Provide a fallback url if response returns 404 - useful for SPA frameworks
+
 `-h` or `--help` Print this list and exit.
 
 # Development
