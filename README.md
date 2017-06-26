@@ -1,3 +1,8 @@
+[![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
+[![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
+[![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server)
+[![license](https://img.shields.io/github/license/indexzero/http-server.svg?style=flat-square)](https://github.com/indexzero/http-server)
+
 # http-server: a command-line http server
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
@@ -18,27 +23,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `[path]` defaults to `./public` if the folder exists, and `./` otherwise.
 
-# Installing as a node app
-
-     mkdir myapp
-     cd myapp/
-     jitsu install http-server
-
-*If you do not have `jitsu` installed you can install it via `npm install jitsu -g`*
-
-## Usage
-
-### Starting http-server locally
-
-     node bin/http-server
-
 *Now you can visit http://localhost:8080 to view your server*
-
-### Deploy http-server to nodejitsu
-
-     jitsu deploy
-
-*You will now be prompted for a `subdomain` to deploy your application on*
 
 ## Available Options:
 
@@ -49,6 +34,8 @@ This will install `http-server` globally so that it may be run from the command 
 `-d` Show directory listings (defaults to 'True')
 
 `-i` Display autoIndex (defaults to 'True')
+
+`-g` or `--gzip` When enabled (defaults to 'False') it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding.
 
 `-e` or `--ext` Default file extension if none supplied (defaults to 'html')
 
@@ -75,3 +62,17 @@ This will install `http-server` globally so that it may be run from the command 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
 `-h` or `--help` Print this list and exit.
+
+# Development
+
+Checkout this repository locally, then:
+
+```sh
+$ npm i
+$ node bin/http-server
+```
+
+*Now you can visit http://localhost:8080 to view your server*
+
+You should see the turtle image in the screenshot above hosted at that URL. See
+the `./public` folder for demo content.

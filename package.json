@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.8.5",
+  "version": "0.10.0",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
@@ -16,6 +16,10 @@
     "pretest": "common bin/http-server lib/ test",
     "test": "vows --spec --isolate"
   },
+  "files": [
+    "lib",
+    "bin"
+  ],
   "contributors": [
     {
       "name": "Charlie Robbins",
@@ -55,17 +59,21 @@
     {
       "name": "Jinkwon Lee",
       "email": "master@bdyne.net"
+    },
+    {
+      "name": "BigBlueHat",
+      "email": "byoung@bigbluehat.com"
     }
   ],
   "dependencies": {
     "colors": "1.0.3",
-    "optimist": "0.6.x",
-    "union": "~0.4.3",
-    "ecstatic": "~1.2",
     "http-proxy": "^v1.11.1",
-    "portfinder": "0.4.x",
+    "corser": "~2.0.0",
+    "ecstatic": "^2.0.0",
     "opener": "~1.4.0",
-    "corser": "~2.0.0"
+    "optimist": "0.6.x",
+    "portfinder": "^1.0.13",
+    "union": "~0.4.3"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
