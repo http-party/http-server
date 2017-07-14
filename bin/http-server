@@ -25,6 +25,7 @@ if (argv.h || argv.help) {
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --showserverinfo   must use with -s, just show serverinfo',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
     '  -o [path]    Open browser window after starting the server',
@@ -75,10 +76,17 @@ if (!argv.s && !argv.silent) {
   };
 }
 else if (colors) {
-  logger = {
-    info: function () {},
-    request: function () {}
-  };
+  if (argv.showserverinfo) {
+    logger = {
+      info: console.log,
+      request: function () {}
+    };
+  }else{
+    logger = {
+      info: function () {},
+      request: function () {}
+    };
+  }
 }
 
 if (!port) {
