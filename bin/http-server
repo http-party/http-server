@@ -81,7 +81,8 @@ else if (colors) {
       info: console.log,
       request: function () {}
     };
-  }else{
+  }
+  else {
     logger = {
       info: function () {},
       request: function () {}

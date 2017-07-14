@@ -41,7 +41,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-s` or `--silent` Suppress log messages from output
 
-`--showserverinfo` must use with -s, just show serverinfo
+`--showserverinfo` must use with `-s`, just show serverinfo
 
 `--cors` Enable CORS via the `Access-Control-Allow-Origin` header
 
