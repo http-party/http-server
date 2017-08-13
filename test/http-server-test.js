@@ -1,6 +1,7 @@
 var assert = require('assert'),
     path = require('path'),
     fs = require('fs'),
+    spawn = require('child_process').spawn,
     vows = require('vows'),
     request = require('request'),
     httpServer = require('../lib/http-server');
@@ -21,6 +22,19 @@ vows.describe('http-server').addBatch({
 
       server.listen(8080);
       this.callback(null, server);
+    },
+    'it should bind 8081 by when --find-port specified': {
+      topic: function () {
+        var self = this;
+        var proc = spawn('node', ['./bin/http-server', '--find-port']);
+        request('http://127.0.0.1:8081/file', function (err, res) {
+          proc.kill('SIGINT');
+          self.callback(err, res);
+        });
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      }
     },
     'it should serve files from root directory': {
       topic: function () {
@@ -84,6 +98,19 @@ vows.describe('http-server').addBatch({
         });
         proxyServer.listen(8081);
         this.callback(null, proxyServer);
+      },
+      'it should bind next available port when --find-port specified': {
+        topic: function () {
+          var self = this;
+          var proc = spawn('node', ['-p', '8081', './bin/http-server', '--find-port']);
+          request('http://127.0.0.1:8082/file', function (err, res) {
+            proc.kill('SIGINT');
+            self.callback(err, res);
+          });
+        },
+        'status code should be 200': function (res) {
+          assert.equal(res.statusCode, 200);
+        }
       },
       'it should serve files from the proxy server root directory': {
         topic: function () {
