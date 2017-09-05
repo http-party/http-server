@@ -18,6 +18,7 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
+    '  -b           Base path [/]',
     '  -p           Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
@@ -94,6 +95,7 @@ else {
 
 function listen(port) {
   var options = {
+    baseDir: argv.b,
     root: argv._[0],
     cache: argv.c,
     showDir: argv.d,
