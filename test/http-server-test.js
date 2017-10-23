@@ -379,5 +379,105 @@ vows.describe('http-server').addBatch({
     teardown: function (server) {
       server.close();
     }
-  }
+  },
+  'When cache time is enabled': {
+        topic: function () {
+          var server = httpServer.createServer({
+            root: root,
+            cache: '10'
+          });
+          server.listen(8086);
+          this.callback(null, server);
+        },
+        'and given GET request': {
+          topic: function () {
+            request('http://127.0.0.1:8086/file', this.callback);
+          },
+          'cache max-age should be 10': function (res) {
+            assert.equal(res.headers['cache-control'], 'max-age=10');
+          }
+        },
+        teardown: function (server) {
+          server.close();
+        }
+      },
+  'When inline cache function is enabled': {
+      topic: function () {
+        var server = httpServer.createServer({
+          root: root,
+          cache: '((path) => /.*file.*/.test(path) ? 10 : 20)'
+        });
+        server.listen(8087);
+        this.callback(null, server);
+      },
+      'and given GET /file request': {
+        topic: function () {
+          request('http://127.0.0.1:8087/file', this.callback);
+        },
+        'cache max-age should be 10': function (res) {
+          assert.equal(res.headers['cache-control'], 'max-age=10');
+        }
+      },
+      'and given GET /canYouSeeMe request': {
+          topic: function () {
+            request('http://127.0.0.1:8087/canYouSeeMe', this.callback);
+          },
+          'cache max-age should be 20': function (res) {
+            assert.equal(res.headers['cache-control'], 'max-age=20');
+          }
+        },
+      teardown: function (server) {
+        server.close();
+      }
+    },
+  'When cache string is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        cache: 'max-age=1'
+      });
+      server.listen(8088);
+      this.callback(null, server);
+    },
+    'and given GET request': {
+      topic: function () {
+        request('http://127.0.0.1:8088/file', this.callback);
+      },
+      'cache max-age should be 1': function (res) {
+        assert.equal(res.headers['cache-control'], 'max-age=1');
+      }
+    },
+    teardown: function (server) {
+      server.close();
+    }
+  },
+  'When cache function import is enabled': {
+      topic: function () {
+        var server = httpServer.createServer({
+          root: root,
+          cache: '../test/cachefunc'
+        });
+        server.listen(8089);
+        this.callback(null, server);
+      },
+      'and given GET /file request': {
+        topic: function () {
+          request('http://127.0.0.1:8089/file', this.callback);
+        },
+        'cache max-age should be 10': function (res) {
+           assert.equal(res.headers['cache-control'], 'max-age=5');
+         }
+      },
+      'and given GET /canYouSeeMe request': {
+          topic: function () {
+            request('http://127.0.0.1:8089/canYouSeeMe', this.callback);
+          },
+          'cache max-age should be 20': function (res) {
+            assert.equal(res.headers['cache-control'], 'max-age=30');
+          }
+        },
+      teardown: function (server) {
+        server.close();
+      }
+    }
 }).export(module);

@@ -35,7 +35,7 @@ if (argv.h || argv.help) {
     '  -o [path]    Open browser window after starting the server.',
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
-    '               To disable caching, use -c-1.',
+    '               To disable caching, use -c-1. Also supports a cache function, which can be an inline function or a path to an external module. https://github.com/jfhbrook/node-ecstatic#optscache',
     '  -t           Connections timeout in seconds [120], e.g. -t60 for 1 minute.',
     '               To disable timeout, use -t0',
     '  -U --utc     Use UTC time format in log messages.',
