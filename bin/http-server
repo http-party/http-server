@@ -40,7 +40,8 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles  Do not show dotfiles',
-    '  -h --help    Print this list and exit.'
+    '  -h --help    Print this list and exit.',
+    '  -F --fallback  404 serves from the given file (relative to [path]). Doesn\'t work simultaneously with proxy'
   ].join('\n'));
   process.exit();
 }
@@ -50,6 +51,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
+    fallback = argv.F || argv.fallback,
     logger;
 
 if (!argv.s && !argv.silent) {
@@ -103,7 +105,8 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
-    showDotfiles: argv.dotfiles
+    showDotfiles: argv.dotfiles,
+    fallback: fallback
   };
 
   if (argv.cors) {

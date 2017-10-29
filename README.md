@@ -57,9 +57,11 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
-`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
+`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /').
 
 `-h` or `--help` Print this list and exit.
+
+`-F` or `--fallback` 404 serves from the given file (relative to [path]). Doesn\'t work simultaneously with proxy
 
 # Development
 
