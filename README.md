@@ -1,3 +1,12 @@
+# http-server-spa-e2e
+
+This is modification for http-server that allow to serve single page applications. Developed for e2e testing.
+
+If I understand correctly it will never be merged, so I registered it on npm and you can install it like:
+
+`npm install http-server-spa-e2e`
+
+
 [![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
 [![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server)
@@ -13,7 +22,7 @@
 
 Installation via `npm`:
 
-     npm install http-server -g
+     npm install http-server-spa-e2e -g
 
 This will install `http-server` globally so that it may be run from the command line.
 

@@ -1,11 +1,11 @@
 {
-  "name": "http-server",
+  "name": "http-server-spa-e2e",
   "version": "0.10.0",
-  "description": "A simple zero-configuration command-line http server",
+  "description": "A simple zero-configuration command-line http server modified to serve SPA",
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "git://github.com/indexzero/http-server.git"
+    "url": "git://github.com/DKurilo/http-server.git"
   },
   "keywords": [
     "cli",
@@ -21,6 +21,10 @@
     "bin"
   ],
   "contributors": [
+    {
+      "name": "Dima Kurilo",
+      "email": "dkurilo@gmail.com"
+    },
     {
       "name": "Charlie Robbins",
       "email": "charlie.robbins@gmail.com"
@@ -81,7 +85,7 @@
     "vows": "0.7.x"
   },
   "bugs": {
-    "url": "https://github.com/nodeapps/http-server/issues"
+    "url": "https://github.com/DKurilo/http-server/issues"
   },
   "license": "MIT",
   "preferGlobal": "true",
