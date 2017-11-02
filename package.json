@@ -1,6 +1,6 @@
 {
   "name": "http-server-spa-e2e",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "A simple zero-configuration command-line http server modified to serve SPA",
   "main": "./lib/http-server",
   "repository": {
