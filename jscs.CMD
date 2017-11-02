@@ -1,0 +1,1 @@
+node ./node_modules/jscs/bin/jscs %*

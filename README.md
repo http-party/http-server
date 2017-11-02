@@ -1,12 +1,15 @@
-# http-server-spa-e2e
+[![build status](https://img.shields.io/travis/DKurilo/http-server-spa-e2e.svg?style=flat-square)](https://travis-ci.org/DKurilo/http-server-spa-e2e/)
+[![dependencies status](https://img.shields.io/david/DKurilo/http-server-spa-e2e.svg?style=flat-square)](https://david-dm.org/DKurilo/http-server-spa-e2e)
+[![npm](https://img.shields.io/npm/v/http-server-spa-e2e.svg?style=flat-square)](https://www.npmjs.com/package/http-server-spa-e2e)
+[![license](https://img.shields.io/github/license/DKurilo/http-server-spa-e2e.svg?style=flat-square)](https://github.com/DKurilo/http-server-spa-e2e)
+
+# http-server-spa-e2e: a command-line http server with SPA support
 
 This is modification for http-server that allow to serve single page applications. Developed for e2e testing.
 
 If I understand correctly it will never be merged, so I registered it on npm and you can install it like:
 
 `npm install http-server-spa-e2e`
-
-# http-server: a command-line http server
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
 

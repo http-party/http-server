@@ -5,7 +5,7 @@
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "git://github.com/DKurilo/http-server.git"
+    "url": "git://github.com/DKurilo/http-server-spa-e2e.git"
   },
   "keywords": [
     "cli",
@@ -70,22 +70,22 @@
     }
   ],
   "dependencies": {
-    "colors": "1.0.3",
-    "corser": "~2.0.0",
-    "ecstatic": "^2.0.0",
-    "http-proxy": "^1.8.1",
-    "opener": "~1.4.0",
+    "colors": "1.1.2",
+    "corser": "~2.0.1",
+    "ecstatic": "^3.0.0",
+    "http-proxy": "^1.16.2",
+    "opener": "~1.4.3",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
-    "union": "~0.4.3"
+    "union": "~0.4.6"
   },
   "devDependencies": {
-    "common-style": "^3.0.0",
-    "request": "2.49.x",
-    "vows": "0.7.x"
+    "common-style": "^3.1.0",
+    "request": "2.83.x",
+    "vows": "0.8.x"
   },
   "bugs": {
-    "url": "https://github.com/DKurilo/http-server/issues"
+    "url": "https://github.com/DKurilo/http-server-spa-e2e/issues"
   },
   "license": "MIT",
   "preferGlobal": "true",
