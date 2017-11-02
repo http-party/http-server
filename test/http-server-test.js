@@ -85,6 +85,11 @@ vows.describe('http-server').addBatch({
         proxyServer.listen(8081);
         this.callback(null, proxyServer);
       },
+      'terminate proxy server': function (err, server) {
+        setTimeout(function () {
+          server.close();
+        }, 1000);
+      },
       'it should serve files from the proxy server root directory': {
         topic: function () {
           request('http://127.0.0.1:8081/root/file', this.callback);
@@ -123,6 +128,11 @@ vows.describe('http-server').addBatch({
           }
         }
       }
+    },
+    'terminate server': function (err, server) {
+      setTimeout(function () {
+        server.close();
+      }, 1000);
     }
   },
   'When cors is enabled': {
@@ -153,6 +163,12 @@ vows.describe('http-server').addBatch({
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
+    },
+    'terminate server': function (err, server) {
+      setTimeout(function () {
+        server.close();
+      }, 1000);
     }
+
   }
 }).export(module);
