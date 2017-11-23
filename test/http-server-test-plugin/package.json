@@ -1,0 +1,17 @@
+{
+  "name": "http-server-poet",
+  "version": "1.0.0",
+  "author": "Assaf Moldavsky",
+  "license": "MIT",
+  "description": "A dummy plugin for testing",
+  "main": "plugin.js",
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "extensions": {
+    "http-server": {
+      "htto-server-poet": "./plugin.js"
+    }
+  }
+}
