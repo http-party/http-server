@@ -163,7 +163,7 @@ vows.describe('http-server').addBatch({
           _this.callbacks.forEach(function (cb) {
             cb.apply(this, arguments);
           });
-        }
+        };
       }
       Logger.prototype.callbacks = [];
       var logger = new Logger();
