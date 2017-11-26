@@ -1,0 +1,17 @@
+{
+  "name": "http-server-robots",
+  "version": "1.0.0",
+  "author": "http-server",
+  "license": "MIT",
+  "description": "robots file support for http-server",
+  "main": "plugin.js",
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "extensions": {
+    "http-server": {
+      "htto-server-robots": "./plugin.js"
+    }
+  }
+}
