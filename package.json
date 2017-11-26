@@ -14,9 +14,7 @@
   "scripts": {
     "start": "node ./bin/http-server",
     "pretest": "common bin/http-server lib/ test",
-    "test": "vows --spec --isolate test/*-test.js",
-    "assaf-test": "node $NODE_DEBUG_OPTION test/http-server-test.js",
-    "assaf-events-test": "node $NODE_DEBUG_OPTION test/http-server-events-test.js"
+    "test": "vows --spec --isolate test/*-test.js"
   },
   "files": [
     "lib",
