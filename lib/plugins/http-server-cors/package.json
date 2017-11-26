@@ -1,0 +1,17 @@
+{
+  "name": "http-server-cors",
+  "version": "1.0.0",
+  "author": "http-server",
+  "license": "MIT",
+  "description": "CORS support for http-server",
+  "main": "plugin.js",
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "extensions": {
+    "http-server": {
+      "htto-server-cors": "./plugin.js"
+    }
+  }
+}
