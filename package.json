@@ -13,7 +13,6 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "assaf": "node $NODE_DEBUG_OPTION test/http-server-plugins-test.js",
     "pretest": "common bin/http-server lib/ test",
     "test": "vows --spec --isolate test/*-test.js"
   },
