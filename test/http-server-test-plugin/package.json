@@ -11,7 +11,7 @@
   },
   "extensions": {
     "http-server": {
-      "htto-server-poet": "./plugin.js"
+      "htto-server-test": "./plugin.js"
     }
   }
 }
