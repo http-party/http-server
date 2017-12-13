@@ -3,38 +3,39 @@ var assert = require('assert'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
-    httpServer = require('../lib/http-server');
+    httpServer = require('../lib/http-server'),
+    testPluginSchema = require('../test/http-server-test-plugin/package.json');
 
-// TODO: fix test for test plugin
-/*var root = path.join(__dirname, 'fixtures', 'root');
+var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server-plugins').addBatch({
   'When http-server starts': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
-        robots: true,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': 'true'
-        }
+        pluginDirs: [__dirname + '/']
       });
 
       var _this = this;
-      server.listen({ port: 8080 }, function () {
+      server.listen({ port: 8100 }, function () {
         _this.callback(null, server);
       });
     },
-    'local plugin should be registered': {
-      topic: function () {
-        request('http://127.0.0.1:8080/', this.callback);
+    'a plugin': {
+      topic: function (server) {
+        var _this = this;
+        console.log(server.plugins);
+        this.callback(server, server.plugins);
       },
-      'should respond with index': function (err, res, body) {
-        assert.equal(true, true);
-        // assert.equal(res.statusCode, 200);
-        // assert.include(body, '/file');
-        // assert.include(body, '/canYouSeeMe');
+      'should be registered': function (server, plugins) {
+        var pluginName = null;
+        for (var key in testPluginSchema.extensions['http-server']) {
+          pluginName = key;
+          break;
+        }
+
+        assert.isTrue(!!plugins[pluginName]);
       }
     }
   }
-}).export(module);*/
+}).export(module);

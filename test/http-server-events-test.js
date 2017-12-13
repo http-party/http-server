@@ -31,9 +31,9 @@ vows.describe('http-server-events').addBatch({
         server.events.on(httpServer.EVENTS.INIT_DONE, function (options, instance) {
           console.log('caught ' + httpServer.EVENTS.INIT_DONE);
         });
-        server.listen({ port: 8080 }, function () {
+        server.listen({ port: 8090 }, function () {
           console.log('firing request');
-          request('http://127.0.0.1:8080/', _this.callback);
+          request('http://127.0.0.1:8090/', _this.callback);
         });
       },
       'should respond with index': function (server) {
