@@ -40,7 +40,6 @@ vows.describe('http-server-plugins').addBatch({
   },
   'When our test plugin is registered': {
     topic: function () {
-
       // tracks responses from our callbacks
       var callbackResponses = {};
       callbackResponses[httpServer.EVENTS.INIT] = null;

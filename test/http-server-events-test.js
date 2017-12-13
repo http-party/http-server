@@ -38,9 +38,6 @@ vows.describe('http-server-events').addBatch({
       },
       'should respond with index': function (server) {
         assert.equal(true, true);
-        // assert.equal(res.statusCode, 200);
-        // assert.include(body, '/file');
-        // assert.include(body, '/canYouSeeMe');
       }
     }
   }

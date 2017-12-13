@@ -17,15 +17,21 @@ function plugin(data, host) {
 
 function onInitTest(options, unionOptions) {
   unionOptions.before.unshift(requestInterecptor);
-  module.exports.onInitCallback && module.exports.onInitCallback(options, unionOptions);
+  if (typeof module.exports.onInitCallback === 'function') {
+    module.exports.onInitCallback(options, unionOptions);
+  }
 }
 
 function onInitDoneTest(options, unionOptions, server) {
-  module.exports.onInitDoneCallback && module.exports.onInitDoneCallback(options, unionOptions, server);
+  if (typeof module.exports.onInitDoneCallback === 'function') {
+    module.exports.onInitDoneCallback(options, unionOptions, server);
+  }
 }
 
 function requestInterecptor(req, res) {
-  module.exports.onRequestCallback && module.exports.onRequestCallback(req,res);
+  if (typeof module.exports.onRequestCallback === 'function') {
+    module.exports.onRequestCallback(req, res);
+  }
   res.emit('next');
 }
 
