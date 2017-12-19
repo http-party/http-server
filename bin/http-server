@@ -38,9 +38,10 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
-    '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
-    '  --no-dotfiles  Do not show dotfiles',
-    '  -h --help    Print this list and exit.'
+    '  -r --robots      Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  --no-dotfiles    Do not show dotfiles',
+    '  -m --middleware  Filepath to extra middleware functions',
+    '  -h --help        Print this list and exit.'
   ].join('\n'));
   process.exit();
 }
@@ -100,6 +101,7 @@ function listen(port) {
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     robots: argv.r || argv.robots,
+    extraMiddleware: argv.m || argv.middleware,
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,

@@ -154,5 +154,24 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When adding extra middleware file': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        extraMiddleware: path.join(root, 'extra_middleware_222.js')
+      });
+
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'it should response with a 222 response as the "middleware" file behaves': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', this.callback);
+      },
+      'status code should 222': function (err, res) {
+        assert.equal(res.statusCode, 222);
+      }
+    }
   }
 }).export(module);

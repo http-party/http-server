@@ -59,6 +59,18 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
+`-m` or `--middleware` Provide a filepath (single or multiple file paths through multiple '-f or --function' parameters) to a JS file that exports a function to be used as middleware for each request before anything else happens (or any other middleware is called). e.g. ./my_middldeware.js
+
+```js
+// my_middldeware.js
+module.exports = function(req, res, next) {
+  console.log('This was a request to the server!');
+
+  // same as res.emit('next');, which goes to the next middleware
+  next();
+}
+```
+
 `-h` or `--help` Print this list and exit.
 
 # Development
