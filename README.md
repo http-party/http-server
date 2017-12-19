@@ -57,9 +57,9 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
-`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
+`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /').
 
-`-m` or `--middleware` Provide a filepath (single or multiple file paths through multiple '-f or --function' parameters) to a JS file that exports a function to be used as middleware for each request before anything else happens (or any other middleware is called). e.g. ./my_middldeware.js
+`-m` or `--middleware` Provide a filepath (single or multiple file paths through multiple '-m or --middleware' parameters) to a JS file that exports a function to be used as middleware for each request before anything else happens (or any other middleware is called). e.g. `./my_middldeware.js`
 
 ```js
 // my_middldeware.js
