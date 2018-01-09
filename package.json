@@ -68,7 +68,7 @@
   "dependencies": {
     "colors": "1.0.3",
     "corser": "~2.0.0",
-    "ecstatic": "^2.0.0",
+    "ecstatic": "^3.0.0",
     "http-proxy": "^1.8.1",
     "opener": "~1.4.0",
     "optimist": "0.6.x",
