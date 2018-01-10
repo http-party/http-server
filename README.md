@@ -25,6 +25,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 *Now you can visit http://localhost:8080 to view your server*
 
+**Note:** Caching is on by default. Add `-c-1` as an option to disable caching.
+
 ## Available Options:
 
 `-p` Port to use (defaults to 8080)
