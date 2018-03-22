@@ -152,6 +152,43 @@ vows.describe('http-server').addBatch({
       },
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      },
+      'response Access-Control-Allow-Credentials should not be presented': function (err, res) {
+        assert.equal(res.headers['access-control-allow-credentials'], undefined);
+      }
+    }
+  },
+  'When credentials is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        credentials: true,
+        corsHeaders: 'X-Test'
+      });
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'and given OPTIONS request': {
+      topic: function () {
+        request({
+          method: 'OPTIONS',
+          uri: 'http://127.0.0.1:8083/',
+          headers: {
+            'Access-Control-Request-Method': 'GET',
+            Origin: 'http://example.com',
+            'Access-Control-Request-Headers': 'Foobar',
+            Cookie: 'cookie'
+          }
+        }, this.callback);
+      },
+      'status code should be 204': function (err, res) {
+        assert.equal(res.statusCode, 204);
+      },
+      'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
+        assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      },
+      'response Access-Control-Allow-Credentials should be true': function (err, res) {
+        assert.equal(res.headers['access-control-allow-credentials'], 'true');
       }
     }
   }
