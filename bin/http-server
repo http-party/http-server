@@ -37,6 +37,7 @@ if (argv.h || argv.help) {
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
+    '  -P --passphrase     Pass phrase to decrypt the key (optional)',
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles  Do not show dotfiles',
@@ -118,6 +119,9 @@ function listen(port) {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
     };
+    if (argv.P || argv.passphrase) {
+      options.https['passphrase'] = argv.P || argv.passphrase;
+    }
   }
 
   var server = httpServer.createServer(options);
