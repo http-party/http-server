@@ -120,7 +120,7 @@ function listen(port) {
       key: argv.K || argv.key || 'key.pem'
     };
     if (argv.P || argv.passphrase) {
-      options.https['passphrase'] = argv.P || argv.passphrase;
+      options.https.passphrase = argv.P || argv.passphrase;
     }
   }
 
