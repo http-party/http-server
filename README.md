@@ -59,6 +59,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-K` or `--key` Path to ssl key file (default: key.pem).
 
+ `-P` or `--passphrase` Pass phrase to decrypt the key (optional).
+
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /')
 
 `-h` or `--help` Print this list and exit.
