@@ -45,7 +45,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `--cors` Enable CORS via the `Access-Control-Allow-Origin` header
 
-`--credentials` Cookie credentials can be transferred as part of a CORS request (enables --cors automatically)
+`--credentials` Cookie credentials can be transferred as part of a CORS request (enables `--cors` automatically)
 
 `-o` Open browser window after starting the server
 
