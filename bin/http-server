@@ -33,6 +33,7 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  -U           Path for which proxy is enabled. e.g.: /api/ ['']',
     '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
@@ -49,6 +50,7 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+    proxyPath = argv.U || '',
     utc = argv.U || argv.utc,
     logger;
 
@@ -103,6 +105,7 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
+    proxyPath: proxyPath,
     showDotfiles: argv.dotfiles
   };
 
