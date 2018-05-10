@@ -7,6 +7,7 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+    qrcode     = require('qrcode-terminal'),
     argv       = require('optimist')
       .boolean('cors')
       .argv;
@@ -133,12 +134,14 @@ function listen(port) {
 
     if (argv.a && host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+      qrcode.generate(protocol + canonicalHost + ':' + port.toString(), { small: true });
     }
     else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
             logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            qrcode.generate(protocol + details.address + ':' + port.toString(), { small: true });
           }
         });
       });
