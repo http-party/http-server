@@ -154,5 +154,63 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When logger is given': {
+    topic: function () {
+      function Logger() {
+        var _this = this;
+        this.log = function (/* arguments */) {
+          _this.callbacks.forEach(function (cb) {
+            cb.apply(this, arguments);
+          });
+        };
+      }
+      Logger.prototype.callbacks = [];
+      var logger = new Logger();
+      var server = httpServer.createServer({
+        root: root,
+        logFn: logger.log
+      });
+      var _this = this;
+      server.listen({ port: 8083 }, function () {
+        _this.callback(null, server, logger);
+      });
+    },
+    'for a well formed request': {
+      topic: function (server, logger) {
+        var loggerResp = { isCalled: false };
+        logger.callbacks.push(function () {
+          loggerResp.isCalled = true;
+        });
+        var _this = this;
+        request({
+          method: 'OPTIONS',
+          uri: 'http://127.0.0.1:8083/'
+        }, function () {
+          _this.callback(null, loggerResp);
+        });
+      },
+      'logger should be called': function (loggerResp) {
+        assert.equal(loggerResp.isCalled, true);
+      }
+    },
+    'for a bad request': {
+      topic: function (server, logger) {
+        var loggerResp = { err: false };
+        logger.callbacks.push(function (req, res, err) {
+          loggerResp.err = err;
+        });
+        var _this = this;
+        request({
+          method: 'BOO',
+          uri: 'http://127.0.0.1:8083/'
+        }, function () {
+          _this.callback(null, loggerResp);
+        });
+      },
+      'error should be logged': function (loggerResp) {
+        assert.equal(!!loggerResp.err, true);
+      }
+    }
   }
 }).export(module);

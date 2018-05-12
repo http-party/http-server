@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node ./bin/http-server",
     "pretest": "common bin/http-server lib/ test",
-    "test": "vows --spec --isolate"
+    "test": "vows --spec --isolate test/*-test.js"
   },
   "files": [
     "lib",
@@ -73,7 +73,8 @@
     "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
-    "union": "~0.4.3"
+    "union": "~0.4.3",
+    "js-plugins": "0.0.3"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
