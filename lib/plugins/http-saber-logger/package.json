@@ -1,0 +1,17 @@
+{
+  "name": "http-saber-logger",
+  "version": "1.0.0",
+  "author": "http-saber",
+  "license": "MIT",
+  "description": "logging support for http-saber",
+  "main": "plugin.js",
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "extensions": {
+    "http-saber": {
+      "htto-saber-logger": "./plugin.js"
+    }
+  }
+}

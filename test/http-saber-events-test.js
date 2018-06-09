@@ -3,7 +3,7 @@ var assert = require('assert'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
-    httpServer = require('../lib/http-server');
+    httpServer = require('../lib/http-saber');
 
 var root = path.join(__dirname, 'fixtures', 'root');
 

@@ -2,7 +2,7 @@
   "name": "http-saber",
   "version": "0.1.0",
   "description": "A simple, lean, and extensible http server",
-  "main": "./lib/http-server",
+  "main": "./lib/http-saber",
   "repository": {
     "type": "git",
     "url": "git://github.com/amoldavsky/http-saber.git"
@@ -16,8 +16,8 @@
     "moo"
   ],
   "scripts": {
-    "start": "node ./bin/http-server",
-    "pretest": "common bin/http-server lib/ test",
+    "start": "node ./bin/http-saber",
+    "pretest": "common bin/http-saber lib/ test",
     "test": "vows --spec --isolate test/*-test.js"
   },
   "files": [
@@ -48,7 +48,7 @@
   "license": "MIT",
   "preferGlobal": "true",
   "bin": {
-    "http-server": "./bin/http-server",
-    "hs": "./bin/http-server"
+    "http-saber": "./bin/http-saber",
+    "hs": "./bin/http-saber"
   }
 }

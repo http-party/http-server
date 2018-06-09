@@ -3,9 +3,9 @@ var assert = require('assert'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
-    httpServer = require('../lib/http-server'),
-    testplugin = require('../test/http-server-test-plugin/plugin'),
-    testPluginSchema = require('../test/http-server-test-plugin/package.json');
+    httpServer = require('../lib/http-saber'),
+    testplugin = require('./http-saber-test-plugin/plugin'),
+    testPluginSchema = require('./http-saber-test-plugin/package.json');
 
 var root = path.join(__dirname, 'fixtures', 'root');
 

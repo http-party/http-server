@@ -1,5 +1,5 @@
 {
-  "name": "http-server-poet",
+  "name": "http-saber-poet",
   "version": "1.0.0",
   "author": "Assaf Moldavsky",
   "license": "MIT",
@@ -10,8 +10,8 @@
   "dependencies": {
   },
   "extensions": {
-    "http-server": {
-      "htto-server-test": "./plugin.js"
+    "http-saber": {
+      "htto-saber-test": "./plugin.js"
     }
   }
 }

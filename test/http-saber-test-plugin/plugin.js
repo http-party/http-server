@@ -1,8 +1,8 @@
 /**
- * A test plugin for http-server
+ * A test plugin for http-saber
  * @author Assaf Moldavsky
  */
-var httpServer = require('../../lib/http-server');
+var httpServer = require('../../lib/http-saber');
 
 module.exports = plugin;
 module.exports.onInitCallback = null;
