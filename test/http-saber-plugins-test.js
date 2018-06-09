@@ -9,8 +9,8 @@ var assert = require('assert'),
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
-vows.describe('http-server-plugins').addBatch({
-  'When http-server starts': {
+vows.describe('http-saber-plugins').addBatch({
+  'When http-saber starts': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
@@ -29,7 +29,7 @@ vows.describe('http-server-plugins').addBatch({
       },
       'should be found and registered': function (server, plugins) {
         var pluginName = null;
-        for (var key in testPluginSchema.extensions['http-server']) {
+        for (var key in testPluginSchema.extensions['http-saber']) {
           pluginName = key;
           break;
         }

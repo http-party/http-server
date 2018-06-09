@@ -7,8 +7,8 @@ var assert = require('assert'),
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
-vows.describe('http-server-events').addBatch({
-  'http-server should fire': {
+vows.describe('http-saber-events').addBatch({
+  'http-saber should fire': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
