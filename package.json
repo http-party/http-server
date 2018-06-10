@@ -24,23 +24,24 @@
     "lib",
     "bin"
   ],
-  "contributors": [
-  ],
+  "contributors": [],
   "dependencies": {
     "colors": "1.0.3",
     "corser": "~2.0.0",
     "ecstatic": "^2.0.0",
-    "http-proxy": "^1.8.1",
+    "http-proxy": "^1.17.0",
+    "http-saber-poet": "file:test/http-saber-test-plugin",
+    "js-plugins": "0.0.3",
     "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
-    "union": "~0.4.3",
-    "js-plugins": "0.0.3"
+    "union": "~0.4.3"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
     "request": "2.49.x",
-    "vows": "0.7.x"
+    "vows": "0.7.x",
+    "http-saber-test-plugin": "file:./test/http-saber-test-plugin"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"

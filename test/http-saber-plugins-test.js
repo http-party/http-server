@@ -13,8 +13,7 @@ vows.describe('http-saber-plugins').addBatch({
   'When http-saber starts': {
     topic: function () {
       var server = httpServer.createServer({
-        root: root,
-        pluginDirs: [__dirname + '/']
+        root: root
       });
 
       var _this = this;
@@ -61,8 +60,7 @@ vows.describe('http-saber-plugins').addBatch({
     'a callback should be called': {
       topic: function (pluginCBResponses) {
         var server = httpServer.createServer({
-          root: root,
-          pluginDirs: [__dirname + '/']
+          root: root
         });
 
         var _this = this;
