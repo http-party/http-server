@@ -1,0 +1,5 @@
+logger, robots, cors, and proxy externalized into plugins
+
+plugin support for cli added
+
+externalized usage help test into each of the plugins

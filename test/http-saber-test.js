@@ -1,16 +1,16 @@
-var assert = require('assert'),
-    path = require('path'),
-    fs = require('fs'),
-    vows = require('vows'),
-    request = require('request'),
-    httpServer = require('../lib/http-saber');
+var assert = require('assert');
+var path = require('path');
+var fs = require('fs');
+var vows = require('vows');
+var request = require('request');
+var httpSaber = require('../lib/http-saber');
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-saber').addBatch({
   'When http-saber is listening on 8080': {
     topic: function () {
-      var server = httpServer.createServer({
+      var server = httpSaber.createServer({
         root: root,
         robots: true,
         headers: {
@@ -78,7 +78,7 @@ vows.describe('http-saber').addBatch({
     },
     'When http-saber is proxying from 8081 to 8080': {
       topic: function () {
-        var proxyServer = httpServer.createServer({
+        var proxyServer = httpSaber.createServer({
           proxy: 'http://127.0.0.1:8080/',
           root: path.join(__dirname, 'fixtures')
         });
@@ -127,7 +127,7 @@ vows.describe('http-saber').addBatch({
   },
   'When cors is enabled': {
     topic: function () {
-      var server = httpServer.createServer({
+      var server = httpSaber.createServer({
         root: root,
         cors: true,
         corsHeaders: 'X-Test'
@@ -167,7 +167,7 @@ vows.describe('http-saber').addBatch({
       }
       Logger.prototype.callbacks = [];
       var logger = new Logger();
-      var server = httpServer.createServer({
+      var server = httpSaber.createServer({
         root: root,
         logFn: logger.log
       });
