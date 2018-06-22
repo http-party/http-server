@@ -200,7 +200,8 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var protocol = tls ? 'https://' : 'http://';
+    var protocol = tls ? 'https://' : 'http://',
+      path = baseDir ? '/' + baseDir.replace(/^\//, '') : '';
 
     logger.info([
       chalk.yellow('Starting up http-server, serving '),
@@ -226,12 +227,12 @@ function listen(port) {
     logger.info(chalk.yellow('\nAvailable on:'));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
+      logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
+            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString()) + path));
           }
         });
       });
