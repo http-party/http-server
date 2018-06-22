@@ -136,13 +136,13 @@ function listen(port) {
     ].join(''));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString()) + path));
     }
     else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString()) + path));
           }
         });
       });
