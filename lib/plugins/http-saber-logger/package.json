@@ -11,7 +11,7 @@
   },
   "extensions": {
     "http-saber": {
-      "htto-saber-logger": "./plugin.js"
+      "http-saber-logger": "./plugin.js"
     }
   }
 }

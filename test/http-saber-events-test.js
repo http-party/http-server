@@ -10,18 +10,22 @@ var root = path.join(__dirname, 'fixtures', 'root');
 vows.describe('http-saber-events').addBatch({
   'http-saber should fire': {
     topic: function () {
+      var _this = this;
       var server = httpServer.createServer({
-        root: root,
-        robots: true,
+        // root: root,
+        // robots: true,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Credentials': 'true'
         }
       });
 
-      this.callback(null, server);
+      server.listen({ port: 8090 }, function () {
+        console.log('firing request');
+        _this.callback(null, server);
+      });
     },
-    'fire "request:received" when a request is received': {
+    '"request:received" when a request is received': {
       topic: function (server) {
         var _this = this;
         console.log('register ' + httpServer.EVENTS.REQUEST_RECEIVED);
@@ -31,10 +35,8 @@ vows.describe('http-saber-events').addBatch({
         server.events.on(httpServer.EVENTS.INIT_DONE, function (options, instance) {
           console.log('caught ' + httpServer.EVENTS.INIT_DONE);
         });
-        server.listen({ port: 8090 }, function () {
-          console.log('firing request');
-          request('http://127.0.0.1:8090/', _this.callback);
-        });
+
+        request('http://127.0.0.1:8090/', _this.callback);
       },
       'should respond with index': function (server) {
         assert.equal(true, true);

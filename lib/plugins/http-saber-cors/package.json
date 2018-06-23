@@ -11,7 +11,7 @@
   },
   "extensions": {
     "http-saber": {
-      "htto-saber-cors": "./plugin.js"
+      "http-saber-cors": "./plugin.js"
     }
   }
 }

@@ -10,9 +10,19 @@ module.exports.onInitDoneCallback = null;
 module.exports.onRequestCallback = null;
 
 function plugin(data, host) {
+  return {
+    usage: usage,
+    init: init
+  };
+}
+
+function usage() {
+  // nothing
+}
+
+function init(host) {
   host.events.on(httpServer.EVENTS.INIT, onInitTest);
   host.events.on(httpServer.EVENTS.INIT, onInitDoneTest);
-  return {};
 }
 
 function onInitTest(options, unionOptions) {

@@ -11,7 +11,7 @@
   },
   "extensions": {
     "http-saber": {
-      "htto-saber-test": "./plugin.js"
+      "http-saber-test": "./plugin.js"
     }
   }
 }

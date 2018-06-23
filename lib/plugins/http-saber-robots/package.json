@@ -11,7 +11,7 @@
   },
   "extensions": {
     "http-saber": {
-      "htto-saber-robots": "./plugin.js"
+      "http-saber-robots": "./plugin.js"
     }
   }
 }
