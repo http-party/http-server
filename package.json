@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "request": "2.49.x",
-    "vows": "^0.8.2",
     "mocha": "^5.2.0",
     "chai": "^4.1.2",
     "http-saber-test-plugin": "file:./test/http-saber-test-plugin"
