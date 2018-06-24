@@ -1,13 +1,11 @@
-var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
-var vows = require('vows');
 var request = require('request');
 var httpSaber = require('../lib/http-saber');
 var chai = require('chai');
+var expect = chai.expect;
+var should = chai.should();
 var assert = require('assert');
-var expect = require('chai').expect;
-var should = require('chai').should();
 var testplugin = require('./http-saber-test-plugin/plugin');
 var testPluginSchema = require('./http-saber-test-plugin/package.json');
 
@@ -41,7 +39,7 @@ describe( 'http-saber-plugins', function() {
                 break;
             }
 
-            assert.isTrue( !!server.plugins[ pluginName ] );
+            assert.equal( true, !!server.plugins[ pluginName ] );
             done();
         });
 
@@ -93,16 +91,16 @@ describe( 'http-saber-plugins', function() {
         });
 
         it('on init', function (done) {
-            assert.isTrue(callbackResponses[httpSaber.EVENTS.INIT]);
+            assert.equal(true, callbackResponses[httpSaber.EVENTS.INIT]);
             done();
         });
         it('on init_done', function (done) {
-            assert.isTrue(callbackResponses[httpSaber.EVENTS.INIT_DONE]);
+            assert.equal(true, callbackResponses[httpSaber.EVENTS.INIT_DONE]);
             done();
         });
         it('on request', function (done) {
             request('http://127.0.0.1:8080/', function () {
-                assert.isTrue(callbackResponses[httpSaber.EVENTS.REQUEST_RECEIVED]);
+                assert.equal(true, callbackResponses[httpSaber.EVENTS.REQUEST_RECEIVED]);
                 done();
             });
         });

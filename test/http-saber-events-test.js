@@ -1,46 +1,41 @@
-var assert = require('assert'),
-    path = require('path'),
-    fs = require('fs'),
-    vows = require('vows'),
-    request = require('request'),
-    httpServer = require('../lib/http-saber');
+var path = require('path');
+var request = require('request');
+var httpSaber = require('../lib/http-saber');
+var chai = require('chai');
+var assert = require('assert');
+var expect = require('chai').expect;
+var should = require('chai').should();
+
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
-vows.describe('http-saber-events').addBatch({
-  'http-saber should fire': {
-    topic: function () {
-      var _this = this;
-      var server = httpServer.createServer({
-        // root: root,
-        // robots: true,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': 'true'
-        }
-      });
+describe('http-saber-events', function () {
 
-      server.listen({ port: 8090 }, function () {
-        console.log('firing request');
-        _this.callback(null, server);
-      });
-    },
-    '"request:received" when a request is received': {
-      topic: function (server) {
-        var _this = this;
-        console.log('register ' + httpServer.EVENTS.REQUEST_RECEIVED);
-        server.events.on(httpServer.EVENTS.REQUEST_RECEIVED, function (req, res) {
-          console.log('caught ' + httpServer.EVENTS.REQUEST_RECEIVED);
-        });
-        server.events.on(httpServer.EVENTS.INIT_DONE, function (options, instance) {
-          console.log('caught ' + httpServer.EVENTS.INIT_DONE);
+    describe('http-saber should fire', function () {
+
+        var server = null;
+        before(function () {
+            server = httpSaber.createServer({});
+            return new Promise(function (resolve, reject) {
+                server.listen(8080, resolve);
+            });
         });
 
-        request('http://127.0.0.1:8090/', _this.callback);
-      },
-      'should respond with index': function (server) {
-        assert.equal(true, true);
-      }
-    }
-  }
-}).export(module);
+        after(function () {
+            server.close();
+        });
+
+        it('request:received', function (done) {
+            var isEventRecieved = false;
+            server.events.on(httpSaber.EVENTS.REQUEST_RECEIVED, function (req, res) {
+                console.log('caught ' + httpSaber.EVENTS.REQUEST_RECEIVED);
+                isEventRecieved = true;
+            });
+
+            request('http://127.0.0.1:8080/', function () {
+                assert.equal(true, isEventRecieved);
+                done();
+            });
+        });
+    });
+});

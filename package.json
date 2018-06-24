@@ -17,8 +17,7 @@
   ],
   "scripts": {
     "start": "node ./bin/http-saber",
-    "pretest": "common bin/http-saber lib/ test",
-    "test": "vows --spec --isolate test/*-test.js"
+    "test": "mocha --ui bdd test/**/*-test.js"
   },
   "files": [
     "lib",
@@ -41,7 +40,6 @@
     "http-saber-ronots": "file:./lib/plugins/http-saber-robots"
   },
   "devDependencies": {
-    "common-style": "^3.0.0",
     "request": "2.49.x",
     "vows": "^0.8.2",
     "mocha": "^5.2.0",
@@ -56,5 +54,8 @@
   "bin": {
     "http-saber": "./bin/http-saber",
     "hs": "./bin/http-saber"
+  },
+  "engines": {
+    "node": ">=6.4.0"
   }
 }

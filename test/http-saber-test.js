@@ -274,12 +274,12 @@ describe( 'http-saber', function() {
             var isCalled = false;
             logger.callbacks.push(function() {
                 isCalled = true;
-                done();
+                // done();
             });
             request('http://127.0.0.1:8080/file', function (err, res, body) {
                 assert.equal(isCalled, true, 'logger was called');
                 logger.callbacks.pop();
-                // done();
+                done();
             });
         });
 
