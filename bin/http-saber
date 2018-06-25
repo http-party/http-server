@@ -2,9 +2,10 @@
 
 'use strict';
 
+var pluginManager = new (require('js-plugins'))();
 var colors     = require('colors/safe'),
     os         = require('os'),
-    httpServer = require('../lib/http-server'),
+    httpServer = require('../lib/http-saber'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     argv       = require('optimist')
@@ -13,9 +14,11 @@ var colors     = require('colors/safe'),
 
 var ifaces = os.networkInterfaces();
 
+pluginManager.scan(); // scan all dependencies
+
 if (argv.h || argv.help) {
   console.log([
-    'usage: http-server [path] [options]',
+    'usage: http-saber [path] [options]',
     '',
     'options:',
     '  -p           Port to use [8080]',
@@ -25,22 +28,22 @@ if (argv.h || argv.help) {
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
-    '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
-    '                     Optionally provide CORS headers list separated by commas',
     '  -o [path]    Open browser window after starting the server',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
-    '  -U --utc     Use UTC time format in log messages.',
-    '',
-    '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
-    '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles  Do not show dotfiles',
-    '  -h --help    Print this list and exit.'
+    '  --plugins    displays all registered plugins',
+    '               usage: http-saber [plugin] --help.',
+    '',
+    '  -h --help    Print this list and exit.',
+    '',
+    '',
+    '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com'
   ].join('\n'));
   process.exit();
 }
@@ -125,7 +128,7 @@ function listen(port) {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
         protocol      = ssl ? 'https://' : 'http://';
 
-    logger.info([colors.yellow('Starting up http-server, serving '),
+    logger.info([colors.yellow('Starting up http-saber, serving '),
       colors.cyan(server.root),
       ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
       colors.yellow('\nAvailable on:')
@@ -168,11 +171,11 @@ if (process.platform === 'win32') {
 }
 
 process.on('SIGINT', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.info(colors.red('http-saber stopped.'));
   process.exit();
 });
 
 process.on('SIGTERM', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.info(colors.red('http-saber stopped.'));
   process.exit();
 });

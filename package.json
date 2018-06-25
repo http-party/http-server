@@ -1,85 +1,49 @@
 {
-  "name": "http-server",
-  "version": "0.10.0",
-  "description": "A simple zero-configuration command-line http server",
-  "main": "./lib/http-server",
+  "name": "http-saber",
+  "version": "0.1.0",
+  "description": "A simple, lean, and extensible http server",
+  "main": "./lib/http-saber",
   "repository": {
     "type": "git",
-    "url": "git://github.com/indexzero/http-server.git"
+    "url": "git://github.com/amoldavsky/http-saber.git"
   },
   "keywords": [
     "cli",
-    "command"
+    "command",
+    "http",
+    "server",
+    "web",
+    "moo"
   ],
   "scripts": {
-    "start": "node ./bin/http-server",
-    "pretest": "common bin/http-server lib/ test",
-    "test": "vows --spec --isolate test/*-test.js"
+    "start": "node ./bin/http-saber",
+    "test": "mocha --ui bdd test/**/*-test.js"
   },
   "files": [
     "lib",
     "bin"
   ],
-  "contributors": [
-    {
-      "name": "Charlie Robbins",
-      "email": "charlie.robbins@gmail.com"
-    },
-    {
-      "name": "Marak Squires",
-      "email": "marak.squires@gmail.com"
-    },
-    {
-      "name": "Charlie McConnell",
-      "email": "charlie@charlieistheman.com"
-    },
-    {
-      "name": "Joshua Holbrook",
-      "email": "josh.holbrook@gmail.com"
-    },
-    {
-      "name": "Maciej Małecki",
-      "email": "maciej.malecki@notimplemented.org"
-    },
-    {
-      "name": "Matthew Bergman",
-      "email": "mzbphoto@gmail.com"
-    },
-    {
-      "name": "brad dunbar",
-      "email": "dunbarb2@gmail.com"
-    },
-    {
-      "name": "Dominic Tarr"
-    },
-    {
-      "name": "Travis Person",
-      "email": "travis.person@gmail.com"
-    },
-    {
-      "name": "Jinkwon Lee",
-      "email": "master@bdyne.net"
-    },
-    {
-      "name": "BigBlueHat",
-      "email": "byoung@bigbluehat.com"
-    }
-  ],
+  "contributors": [],
   "dependencies": {
     "colors": "1.0.3",
     "corser": "~2.0.0",
     "ecstatic": "^2.0.0",
-    "http-proxy": "^1.8.1",
+    "http-proxy": "^1.17.0",
+    "http-saber-poet": "file:test/http-saber-test-plugin",
+    "js-plugins": "0.0.3",
     "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
-    "union": "~0.4.3",
-    "js-plugins": "0.0.3"
+    "union": "~0.4.6",
+    "http-saber-cors": "file:./lib/plugins/http-saber-cors",
+    "http-saber-logger": "file:./lib/plugins/http-saber-logger",
+    "http-saber-ronots": "file:./lib/plugins/http-saber-robots"
   },
   "devDependencies": {
-    "common-style": "^3.0.0",
     "request": "2.49.x",
-    "vows": "0.7.x"
+    "mocha": "^5.2.0",
+    "chai": "^4.1.2",
+    "http-saber-test-plugin": "file:./test/http-saber-test-plugin"
   },
   "bugs": {
     "url": "https://github.com/nodeapps/http-server/issues"
@@ -87,7 +51,10 @@
   "license": "MIT",
   "preferGlobal": "true",
   "bin": {
-    "http-server": "./bin/http-server",
-    "hs": "./bin/http-server"
+    "http-saber": "./bin/http-saber",
+    "hs": "./bin/http-saber"
+  },
+  "engines": {
+    "node": ">=6.4.0"
   }
 }
