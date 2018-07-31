@@ -116,11 +116,11 @@ function listen(port) {
 
   if (argv.headers) {
     options.headers = {}
-    argv.headers.split(/\s*,\s*/) //follow same rules as cors headers
+    argv.headers.split(/\s*,\s*/) // follow same rules as cors headers
       .forEach(function (h) {
-        var [hdr, val] = h.split("=");
+        var [hdr, val] = h.split('=');
         options.headers[hdr] = (val ? val : '');
-    })
+      })
   }
 
   if (ssl) {
