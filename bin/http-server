@@ -31,6 +31,7 @@ if (argv.h || argv.help) {
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
+    '  --headers=[header=value]  Add custom headers.  Separate multiple headers by commas',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
@@ -111,6 +112,15 @@ function listen(port) {
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+
+  if (argv.headers) {
+    options.headers = {}
+    argv.headers.split(/\s*,\s*/) //follow same rules as cors headers
+      .forEach(function (h) {
+        var [hdr, val] = h.split("=");
+        options.headers[hdr] = (val ? val : '');
+    })
   }
 
   if (ssl) {
