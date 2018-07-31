@@ -115,12 +115,12 @@ function listen(port) {
   }
 
   if (argv.headers) {
-    options.headers = {}
+    options.headers = {};
     argv.headers.split(/\s*,\s*/) // follow same rules as cors headers
       .forEach(function (h) {
-        var [hdr, val] = h.split('=');
-        options.headers[hdr] = (val ? val : '');
-      })
+        var header = h.split('=');
+        options.headers[header[0]] = (header[1] ? header[1] : '');
+      });
   }
 
   if (ssl) {
