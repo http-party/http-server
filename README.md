@@ -51,6 +51,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-U` or `--utc` Use UTC time format in log messages.
 
+`--headers` Add custom headers.  Format is `--headers=header:value`.  Specify `--headers` multiple times to set multiple headers.
+
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
 `-S` or `--ssl` Enable https.
