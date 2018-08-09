@@ -59,6 +59,25 @@ vows.describe('http-server').addBatch({
         assert.include(body, '/canYouSeeMe');
       }
     },
+    'when headers.json is present': {
+      topic: function () {
+        var self = this;
+        fs.access(path.join(root, 'headers.json'), fs.constants.R_OK, function (err) {
+          self.callback(err);
+        });
+      },
+      'should be readable': function (err) {
+        assert.equal(null, err);
+      },
+      'when requesting /': {
+        topic: function () {
+          request('http://127.0.0.1:8080/', this.callback);
+        },
+        'should respond with custom header': function (err, res) {
+          assert.equal(res.headers['custom-header'], 'http-server');
+        }
+      }
+    },
     'when robots options is activated': {
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);

@@ -63,10 +63,42 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-h` or `--help` Print this list and exit.
 
+## Headers
+
+An optional file called `headers.json` may be placed in the root path (as specified by the [path] argument) being
+served.  If this file is present, the contents are used to add headers to the server response.  Request paths can be
+added to the json file with an array of objects that contain information about the headers to add.
+
+The `headers.json` file follows this format:
+```
+{
+  "Path to Match": [
+    {"header": "Name of the header to add", "value": "value of header", "append": true/false},
+    {"header": "Second header on same path", "value": "value of header", "append": true/false}
+  ],
+  "Second Path to match": [
+    {"header": "Name of the header to add", "value": "value of header", "append": true/false}
+  ]
+}
+```
+
+Notes about the `headers.json` file:
+- "Path to match" uses [minimatch](https://www.npmjs.com/package/minimatch) to match to the request.  For example,
+  an entry for `/**` would match all requests.
+- The headers are added in the order they appear in the file.  Unless `append` is set to true, previous values will
+  be overwritten
+- `append` is optional.  If not present, or set to false, a matched header will be overwritten.  If set to true,
+  the value specified will be appended to the existing header value separated by a semi-colon (;) and a space as
+  specified [here](https://tools.ietf.org/html/rfc7230#section-3.2).
+- Headers added with this file will be added/set AFTER headers set by command line arguments.  This will allow you
+  to selectively override/change headers set at http-server startup.
+
+
 ## Magic Files
 
 - `index.html` will be served as the default file to any directory requests.
 - `404.html` will be served if a file is not found. This can be used for Single-Page App (SPA) hosting to serve the entry page.
+- `headers.json` will be read (if present) and used to add headers to the response.
 
 # Development
 

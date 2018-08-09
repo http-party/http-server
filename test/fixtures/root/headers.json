@@ -1,0 +1,5 @@
+{
+  "/**": [
+    {"header": "Custom-Header", "value": "http-server", "append": false}
+  ]
+}
