@@ -33,6 +33,7 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxyOptions  Pass options to proxy using nested dotted objects. e.g.: --proxyOptions.secure false',
     '',
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
@@ -49,8 +50,22 @@ var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
+    proxyOptions = argv.proxyOptions,
     utc = argv.U || argv.utc,
     logger;
+
+var proxyOptionsBooleanProps = [
+  'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
+  'preserveHeaderKeyCase', 'followRedirects', 'selfHandleResponse'
+];
+
+if (proxyOptions) {
+  Object.keys(proxyOptions).forEach(function (key) {
+    if (proxyOptionsBooleanProps.indexOf(key) > -1) {
+      proxyOptions[key] = proxyOptions[key] === 'true';
+    }
+  });
+}
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -103,6 +118,7 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
+    proxyOptions: proxyOptions,
     showDotfiles: argv.dotfiles
   };
 
@@ -145,7 +161,12 @@ function listen(port) {
     }
 
     if (typeof proxy === 'string') {
-      logger.info('Unhandled requests will be served from: ' + proxy);
+      if (proxyOptions) {
+        logger.info('Unhandled requests will be served from: ' + proxy + '. Options: ' + JSON.stringify(proxyOptions));
+      }
+      else {
+        logger.info('Unhandled requests will be served from: ' + proxy);
+      }
     }
 
     logger.info('Hit CTRL-C to stop the server');

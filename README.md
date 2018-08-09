@@ -53,6 +53,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
 
+`--proxyOptions` Pass proxy [options](https://github.com/nodejitsu/node-http-proxy#options) using nested dotted objects. e.g.: --proxyOptions.secure false
+
 `-S` or `--ssl` Enable https.
 
 `-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
