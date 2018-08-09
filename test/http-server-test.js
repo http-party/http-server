@@ -9,7 +9,7 @@ var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
-    topic: function () {
+    'topic': function () {
       var server = httpServer.createServer({
         root: root,
         robots: true,
@@ -23,14 +23,14 @@ vows.describe('http-server').addBatch({
       this.callback(null, server);
     },
     'it should serve files from root directory': {
-      topic: function () {
+      'topic': function () {
         request('http://127.0.0.1:8080/file', this.callback);
       },
       'status code should be 200': function (res) {
         assert.equal(res.statusCode, 200);
       },
       'and file content': {
-        topic: function (res, body) {
+        'topic': function (res, body) {
           var self = this;
           fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
             self.callback(err, data, body);
@@ -42,7 +42,7 @@ vows.describe('http-server').addBatch({
       }
     },
     'when requesting non-existent file': {
-      topic: function () {
+      'topic': function () {
         request('http://127.0.0.1:8080/404', this.callback);
       },
       'status code should be 404': function (res) {
@@ -50,7 +50,7 @@ vows.describe('http-server').addBatch({
       }
     },
     'when requesting /': {
-      topic: function () {
+      'topic': function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
       'should respond with index': function (err, res, body) {
@@ -60,7 +60,7 @@ vows.describe('http-server').addBatch({
       }
     },
     'when robots options is activated': {
-      topic: function () {
+      'topic': function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
       'should respond with status code 200 to /robots.txt': function (res) {
@@ -68,7 +68,7 @@ vows.describe('http-server').addBatch({
       }
     },
     'and options include custom set http-headers': {
-      topic: function () {
+      'topic': function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
       'should respond with headers set in options': function (err, res) {
@@ -77,7 +77,7 @@ vows.describe('http-server').addBatch({
       }
     },
     'When http-server is proxying from 8081 to 8080': {
-      topic: function () {
+      'topic': function () {
         var proxyServer = httpServer.createServer({
           proxy: 'http://127.0.0.1:8080/',
           root: path.join(__dirname, 'fixtures')
@@ -86,14 +86,14 @@ vows.describe('http-server').addBatch({
         this.callback(null, proxyServer);
       },
       'it should serve files from the proxy server root directory': {
-        topic: function () {
+        'topic': function () {
           request('http://127.0.0.1:8081/root/file', this.callback);
         },
         'status code should be the endpoint code 200': function (res) {
           assert.equal(res.statusCode, 200);
         },
         'and file content': {
-          topic: function (res, body) {
+          'topic': function (res, body) {
             var self = this;
             fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
               self.callback(err, data, body);
@@ -105,14 +105,14 @@ vows.describe('http-server').addBatch({
         }
       },
       'it should fallback to the proxied server': {
-        topic: function () {
+        'topic': function () {
           request('http://127.0.0.1:8081/file', this.callback);
         },
         'status code should be the endpoint code 200': function (res) {
           assert.equal(res.statusCode, 200);
         },
         'and file content': {
-          topic: function (res, body) {
+          'topic': function (res, body) {
             var self = this;
             fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
               self.callback(err, data, body);
@@ -126,7 +126,7 @@ vows.describe('http-server').addBatch({
     }
   },
   'When cors is enabled': {
-    topic: function () {
+    'topic': function () {
       var server = httpServer.createServer({
         root: root,
         cors: true,
@@ -136,13 +136,13 @@ vows.describe('http-server').addBatch({
       this.callback(null, server);
     },
     'and given OPTIONS request': {
-      topic: function () {
+      'topic': function () {
         request({
           method: 'OPTIONS',
           uri: 'http://127.0.0.1:8082/',
           headers: {
             'Access-Control-Request-Method': 'GET',
-            Origin: 'http://example.com',
+            'Origin': 'http://example.com',
             'Access-Control-Request-Headers': 'Foobar'
           }
         }, this.callback);
