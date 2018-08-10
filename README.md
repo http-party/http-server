@@ -88,7 +88,7 @@ Notes about the `headers.json` file:
 - The headers are added in the order they appear in the file.  Unless `append` is set to true, previous values will
   be overwritten
 - `append` is optional.  If not present, or set to false, a matched header will be overwritten.  If set to true,
-  the value specified will be appended to the existing header value separated by a semi-colon (;) and a space as
+  the value specified will be appended to the existing header value separated by a comma (,) and a space as
   specified [here](https://tools.ietf.org/html/rfc7230#section-3.2).
 - Headers added with this file will be added/set AFTER headers set by command line arguments.  This will allow you
   to selectively override/change headers set at http-server startup.
