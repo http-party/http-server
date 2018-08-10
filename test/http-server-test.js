@@ -62,7 +62,7 @@ vows.describe('http-server').addBatch({
     'when headers.json is present': {
       topic: function () {
         var self = this;
-        fs.access(path.join(root, 'headers.json'), fs.constants.R_OK, function (err) {
+        fs.access(path.join(root, 'headers.json'), (fs.R_OK || fs.constants.R_OK), function (err) {
           self.callback(err);
         });
       },
