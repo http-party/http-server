@@ -70,6 +70,8 @@
     "corser": "~2.0.0",
     "ecstatic": "^3.0.0",
     "http-proxy": "^1.8.1",
+    "minimatch": "*",
+    "nvm": "0.0.4",
     "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
