@@ -99,6 +99,7 @@ function listen(port) {
     showDir: argv.d,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
+    brotli: argv.b || argv.brotli,
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
