@@ -29,7 +29,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 ## Available Options:
 
-`-p` Port to use (defaults to 8080)
+`-p` or `--port` Port to use (defaults to 8080)
 
 `-a` Address to use (defaults to 0.0.0.0)
 
