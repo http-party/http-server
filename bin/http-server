@@ -9,6 +9,7 @@ var colors     = require('colors/safe'),
     opener     = require('opener'),
     argv       = require('optimist')
       .boolean('cors')
+      .alias('H', 'header')
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -31,8 +32,7 @@ if (argv.h || argv.help) {
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
-    '  --headers=[header[:value]]  Add custom headers.  Specify --headers for each header',
-    '                              to be set.',
+    '  -H --header=header[:value]  Add custom headers.  Specify -H for each header to be set.',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
@@ -115,17 +115,20 @@ function listen(port) {
     }
   }
 
-  if (argv.headers) {
+  function setHeader(h) {
+    var header = h.split(':');
+    options.headers[header[0]] = (header[1] ? header[1] : '');
+  }
+
+  if (argv.H) {
     options.headers = {};
-    if (typeof argv.headers === 'object') {
-      argv.headers.forEach(function (h) {
-        var header = h.split(':');
-        options.headers[header[0]] = (header[1] ? header[1] : '');
+    if (Array.isArray(argv.H)) {
+      argv.H.forEach(function (h) {
+        setHeader(h);
       });
     }
     else {
-      var header = argv.headers.split(':');
-      options.headers[header[0]] = (header[1] ? header[1] : '');
+      setHeader(argv.H);
     }
   }
 
