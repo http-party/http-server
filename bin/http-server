@@ -40,6 +40,7 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles  Do not show dotfiles',
+    '  --middleware[=middleware.js]  Middleware for http server',
     '  -h --help    Print this list and exit.'
   ].join('\n'));
   process.exit();
@@ -103,7 +104,8 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
-    showDotfiles: argv.dotfiles
+    showDotfiles: argv.dotfiles,
+    middleware: argv.middleware
   };
 
   if (argv.cors) {
