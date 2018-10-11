@@ -54,7 +54,7 @@ if (argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p               Port to use [Default: 8080]',
+    '  -p --port        Port to use [Default: 8080]',
     '  -a               Address to use [Default: 0.0.0.0]',
     '  -d               Show directory listings. Use --no-d to disable [Default: enabled]',
     '  -i               Display autoIndex. Use --no-i to disable [Default: enabled]',
@@ -81,7 +81,7 @@ if (argv.help) {
   process.exit();
 }
 
-var port = argv.p || parseInt(process.env.PORT, 10),
+var port = argv.port || parseInt(process.env.PORT, 10),
     host = argv.a,
     ssl = argv.ssl,
     utc = argv.utc;
