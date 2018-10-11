@@ -21,7 +21,7 @@ var argv = parseArgs(process.argv.slice(2), {
     cert: 'C',
     key: 'K',
     robots: 'r'
-  }
+  },
   unknown: function (arg) {
     return true; // if switch is unknown, add it to argv anyway
   },
@@ -46,8 +46,6 @@ var argv = parseArgs(process.argv.slice(2), {
     dotfiles: true
   }
 });
-
-console.dir(argv);
 
 var ifaces = os.networkInterfaces();
 
