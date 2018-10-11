@@ -61,6 +61,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
+`--middleware` Support custom [union](https://www.npmjs.com/package/union) middleware. if you pass `returnIndex`, the http-server will serve `index.html` for all requests except static. For example, `--middleware=returnIndex`. `--middleware=mw1.js --middleware=mw2.js`
+
 `-h` or `--help` Print this list and exit.
 
 ## Magic Files
