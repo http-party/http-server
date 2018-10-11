@@ -11,38 +11,38 @@ var colors     = require('colors/safe'),
 
 var argv = parseArgs(process.argv.slice(2), {
   alias: {
-    h: 'help',
-    g: 'gzip',
-    e: 'ext',
-    s: 'silent',
-    U: 'utc',
-    P: 'proxy',
-    S: 'ssl',
-    C: 'cert',
-    K: 'key',
-    r: 'robots'
-  },
+    help: 'h',
+    gzip: 'g',
+    ext: 'e',
+    silent: 's',
+    utc: 'U',
+    proxy: 'P',
+    ssl: 'S',
+    cert: 'C',
+    key: 'K',
+    robots: 'r'
+  }
   unknown: function (arg) {
     return true; // if switch is unknown, add it to argv anyway
   },
-  boolean: ['h', 'd', 'i', 'g', 's', 'U', 'S', 'dotfiles'],
-  string: ['P', 'C', 'K'],
+  boolean: ['help', 'd', 'i', 'gzip', 'silent', 'utc', 'ssl', 'dotfiles'],
+  string: ['proxy', 'cert', 'key'],
   default: {
     p: undefined, // no default to preserve portfinder behavior
     a: '0.0.0.0',
     d: true,
     i: true,
-    g: false,
-    e: 'html', // due to ecstatic defaults, this is the same as false
-    s: false,
+    gzip: false,
+    ext: 'html', // due to ecstatic defaults, this is the same as false
+    silent: false,
     cors: false, // can be bool or string
     o: null,
     c: 3600,
-    U: false,
-    S: false,
-    C: 'cert.pem',
-    K: 'key.pem',
-    r: true,
+    utc: false,
+    ssl: false,
+    cert: 'cert.pem',
+    key: 'key.pem',
+    robots: true,
     dotfiles: true
   }
 });
@@ -51,7 +51,7 @@ console.dir(argv);
 
 var ifaces = os.networkInterfaces();
 
-if (argv.h || argv.help) {
+if (argv.help) {
   console.log([
     'usage: http-server [path] [options]',
     '',
@@ -85,11 +85,11 @@ if (argv.h || argv.help) {
 
 var port = argv.p || parseInt(process.env.PORT, 10),
     host = argv.a,
-    ssl = argv.S,
-    utc = argv.U;
+    ssl = argv.ssl,
+    utc = argv.utc;
 var logger;
 
-if (!argv.s) {
+if (!argv.silent) {
   logger = {
     info: console.log,
     request: function (req, res, error) {
@@ -135,11 +135,11 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
-    gzip: argv.g,
-    robots: argv.r,
-    ext: argv.e,
+    gzip: argv.gzip,
+    robots: argv.robots,
+    ext: argv.ext,
     logFn: logger.request,
-    proxy: argv.P,
+    proxy: argv.proxy,
     showDotfiles: argv.dotfiles
   };
 
@@ -150,10 +150,10 @@ function listen(port) {
     }
   }
 
-  if (argv.S) {
+  if (argv.ssl) {
     options.https = {
-      cert: argv.C,
-      key: argv.K
+      cert: argv.cert,
+      key: argv.key
     };
   }
 
@@ -181,8 +181,8 @@ function listen(port) {
       });
     }
 
-    if (typeof argv.P === 'string') {
-      logger.info('Unhandled requests will be served from: ' + argv.P);
+    if (typeof argv.proxy === 'string') {
+      logger.info('Unhandled requests will be served from: ' + argv.proxy);
     }
 
     logger.info('Hit CTRL-C to stop the server');
