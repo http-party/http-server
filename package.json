@@ -5,7 +5,7 @@
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "git://github.com/DKurilo/http-server-spa-e2e.git"
+    "url": "git://github.com/indexzero/http-server.git"
   },
   "keywords": [
     "cli",
@@ -21,10 +21,6 @@
     "bin"
   ],
   "contributors": [
-    {
-      "name": "Dima Kurilo",
-      "email": "dkurilo@gmail.com"
-    },
     {
       "name": "Charlie Robbins",
       "email": "charlie.robbins@gmail.com"
@@ -85,7 +81,7 @@
     "vows": "0.8.x"
   },
   "bugs": {
-    "url": "https://github.com/DKurilo/http-server-spa-e2e/issues"
+    "url": "https://github.com/nodeapps/http-server/issues"
   },
   "license": "MIT",
   "preferGlobal": "true",

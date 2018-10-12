@@ -19,7 +19,7 @@ If I understand correctly it will never be merged, so I registered it on npm and
 
 Installation via `npm`:
 
-     npm install http-server-spa-e2e -g
+     npm install http-server -g
 
 This will install `http-server` globally so that it may be run from the command line.
 
