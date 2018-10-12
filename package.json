@@ -1,7 +1,7 @@
 {
-  "name": "http-server-spa-e2e",
+  "name": "http-server",
   "version": "0.11.1",
-  "description": "A simple zero-configuration command-line http server modified to serve SPA",
+  "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
@@ -70,11 +70,11 @@
     }
   ],
   "dependencies": {
-    "colors": "1.1.2",
-    "corser": "~2.0.1",
+    "colors": "1.0.3",
+    "corser": "~2.0.0",
     "ecstatic": "^3.0.0",
-    "http-proxy": "^1.16.2",
-    "opener": "~1.4.3",
+    "http-proxy": "^1.8.1",
+    "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
     "union": "~0.4.6"

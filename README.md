@@ -31,19 +31,21 @@ This will install `http-server` globally so that it may be run from the command 
 
 *Now you can visit http://localhost:8080 to view your server*
 
+**Note:** Caching is on by default. Add `-c-1` as an option to disable caching.
+
 ## Available Options:
 
-`-p` Port to use (defaults to 8080)
+`-p` or `--port` Port to use (defaults to 8080)
 
 `-a` Address to use (defaults to 0.0.0.0)
 
-`-d` Show directory listings (defaults to 'True')
+`-d` Show directory listings (defaults to `true`)
 
-`-i` Display autoIndex (defaults to 'True')
+`-i` Display autoIndex (defaults to `true`)
 
-`-g` or `--gzip` When enabled (defaults to 'False') it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding.
+`-g` or `--gzip` When enabled (defaults to `false`) it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding.
 
-`-e` or `--ext` Default file extension if none supplied (defaults to 'html')
+`-e` or `--ext` Default file extension if none supplied (defaults to `html`)
 
 `-s` or `--silent` Suppress log messages from output
 
@@ -51,7 +53,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-o` Open browser window after starting the server
 
-`-c` Set cache time (in seconds) for cache-control max-age header, e.g. -c10 for 10 seconds (defaults to '3600'). To disable caching, use -c-1.
+`-c` Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds (defaults to `3600`). To disable caching, use `-c-1`.
 
 `-U` or `--utc` Use UTC time format in log messages.
 
@@ -59,15 +61,20 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-S` or `--ssl` Enable https.
 
-`-C` or `--cert` Path to ssl cert file (default: cert.pem).
+`-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
 
-`-K` or `--key` Path to ssl key file (default: key.pem).
+`-K` or `--key` Path to ssl key file (default: `key.pem`).
 
-`-r` or `--robots` Provide a /robots.txt (whose content defaults to 'User-agent: *\nDisallow: /').
+`-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
 `-h` or `--help` Print this list and exit.
 
 `-F` or `--fallback` 404 serves from the given file (relative to [path]). Doesn\'t work simultaneously with proxy
+
+## Magic Files
+
+- `index.html` will be served as the default file to any directory requests.
+- `404.html` will be served if a file is not found. This can be used for Single-Page App (SPA) hosting to serve the entry page.
 
 # Development
 
