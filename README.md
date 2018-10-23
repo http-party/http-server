@@ -41,6 +41,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-e` or `--ext` Default file extension if none supplied (defaults to `html`)
 
+`-m` or `--mime` JSON for mimetype mapping. e.g: `-m '{"application/wasm": ["wasm"]}'`
+
 `-s` or `--silent` Suppress log messages from output
 
 `--cors` Enable CORS via the `Access-Control-Allow-Origin` header

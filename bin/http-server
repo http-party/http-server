@@ -24,6 +24,7 @@ if (argv.h || argv.help) {
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -e --ext     Default file extension if none supplied [none]',
+    '  -m --mime    JSON for mimetype mapping. e.g: -m \'{"application/wasm": ["wasm"]}\'',
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
@@ -101,6 +102,7 @@ function listen(port) {
     gzip: argv.g || argv.gzip,
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
+    mimeTypes: argv.m || argv.mime,
     logFn: logger.request,
     proxy: proxy,
     showDotfiles: argv.dotfiles
