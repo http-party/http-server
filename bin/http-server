@@ -27,7 +27,8 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
-    '  -o [path]    Open browser window after starting the server',
+    '  -o [cmd]     Open browser window after starting the server',
+    '  -b --baseDir If -o then open that base dir. e.g.: docs => http://127.0.0.1:8080/docs',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
@@ -151,7 +152,7 @@ function listen(port) {
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       opener(
-        protocol + canonicalHost + ':' + port,
+        protocol + canonicalHost + ':' + port + (argv.b ? '/' + argv.b : ''),
         { command: argv.o !== true ? argv.o : null }
       );
     }
