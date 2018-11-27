@@ -47,6 +47,8 @@ This will install `http-server` globally so that it may be run from the command 
 
 `-o` Open browser window after starting the server
 
+`-b` or `--baseDir` If -o is used then open given base dir. e.g.: `hs -o -b docs` => http://127.0.0.1:8080/docs
+
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds (defaults to `3600`). To disable caching, use `-c-1`.
 
 `-U` or `--utc` Use UTC time format in log messages.
