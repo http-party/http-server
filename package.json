@@ -73,6 +73,7 @@
     "opener": "~1.4.0",
     "optimist": "0.6.x",
     "portfinder": "^1.0.13",
+    "sleep": "^5.2.3",
     "union": "~0.4.3"
   },
   "devDependencies": {
