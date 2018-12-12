@@ -154,5 +154,58 @@ vows.describe('http-server').addBatch({
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }
+  },
+  'When gzip and brotli compression is enabled and a compressed file is available': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        brotli: true,
+        gzip: true
+      });
+      server.listen(8084);
+      this.callback(null, server);
+    },
+    'when making a request accepting only gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'gzip'
+          }
+        }, this.callback);
+      },
+      'response should be gzip compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'gzip');
+      }
+    },
+    'and a request accepting only brotli is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    },
+    'and a request accepting both brotli and gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    }
   }
 }).export(module);
