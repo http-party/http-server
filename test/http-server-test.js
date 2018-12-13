@@ -165,7 +165,7 @@ vows.describe('http-server').addBatch({
       server.listen(8084);
       this.callback(null, server);
     },
-    'when making a request accepting only gzip is made': {
+    'and a request accepting only gzip is made': {
       topic: function () {
         request({
           uri: 'http://127.0.0.1:8084/compression/',
@@ -198,7 +198,7 @@ vows.describe('http-server').addBatch({
         request({
           uri: 'http://127.0.0.1:8084/compression/',
           headers: {
-            'accept-encoding': 'br'
+            'accept-encoding': 'gzip, br'
           }
         }, this.callback);
       },
