@@ -116,15 +116,15 @@ function listen(port) {
     }
   }
 
-  if (noTlsV1) {
-    options.secureOptions = crypto.constants.SSL_OP_NO_TLSv1;
-  }
-
   if (ssl) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
     };
+
+    if (noTlsV1) {
+        options.https.secureOptions = crypto.constants.SSL_OP_NO_TLSv1;
+    }
   }
 
   var server = httpServer.createServer(options);
