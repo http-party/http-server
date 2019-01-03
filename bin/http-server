@@ -7,6 +7,7 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+    crypto     = require('crypto'),
     argv       = require('optimist')
       .boolean('cors')
       .argv;
@@ -27,6 +28,7 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
+    '  --no-tls-v1  Don\'t allow TLS V1 protocol',
     '  -o [path]    Open browser window after starting the server',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
@@ -48,6 +50,7 @@ if (argv.h || argv.help) {
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
+    noTlsV1 = typeof argv['tls-v1'] !== 'undefined',
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
     logger;
@@ -111,6 +114,10 @@ function listen(port) {
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+
+  if (noTlsV1) {
+    options.secureOptions = crypto.constants.SSL_OP_NO_TLSv1;
   }
 
   if (ssl) {
