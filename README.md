@@ -17,6 +17,12 @@ Installation via `npm`:
 
 This will install `http-server` globally so that it may be run from the command line.
 
+## Running on-demand:
+
+Using `npx` you can run the script without installing it first:
+
+     npx http-server [path] [options]
+
 ## Usage:
 
      http-server [path] [options]
