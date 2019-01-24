@@ -27,6 +27,13 @@ This will install `http-server` globally so that it may be run from the command 
 
 **Note:** Caching is on by default. Add `-c-1` as an option to disable caching.
 
+### docker:
+
+```shell
+docker run -it -p 8080:8080  -v `pwd`:/app/public --rm  indexzero/http-server:latest
+```
+
+
 ## Available Options:
 
 `-p` or `--port` Port to use (defaults to 8080)
@@ -60,6 +67,8 @@ This will install `http-server` globally so that it may be run from the command 
 `-K` or `--key` Path to ssl key file (default: `key.pem`).
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
+
+`-v` or `--verbose`  verbose mode ,can inspect a  unknown request header and body. such as an web hook request, but no detail api document.
 
 `-h` or `--help` Print this list and exit.
 
