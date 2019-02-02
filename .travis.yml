@@ -1,10 +1,9 @@
 sudo: false
 language: node_js
 node_js:
-  - "4"
-  - "5"
-  - "6"
-  - "7"
+  - "8"
+  - "10"
+  - "11"
 
 before_install:
   - travis_retry npm install
