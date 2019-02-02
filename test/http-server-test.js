@@ -7,6 +7,8 @@ var assert = require('assert'),
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
+// disabling quote-props due to the readability in the DSL-like syntax of vows
+/* eslint quote-props: 0 */
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
     topic: function () {
@@ -37,6 +39,7 @@ vows.describe('http-server').addBatch({
           });
         },
         'should match content of served file': function (err, file, body) {
+          assert.isNull(err);
           assert.equal(body.trim(), file.trim());
         }
       }
@@ -54,6 +57,7 @@ vows.describe('http-server').addBatch({
         request('http://127.0.0.1:8080/', this.callback);
       },
       'should respond with index': function (err, res, body) {
+        assert.isNull(err);
         assert.equal(res.statusCode, 200);
         assert.include(body, '/file');
         assert.include(body, '/canYouSeeMe');
@@ -72,6 +76,7 @@ vows.describe('http-server').addBatch({
         request('http://127.0.0.1:8080/', this.callback);
       },
       'should respond with headers set in options': function (err, res) {
+        assert.isNull(err);
         assert.equal(res.headers['access-control-allow-origin'], '*');
         assert.equal(res.headers['access-control-allow-credentials'], 'true');
       }
@@ -96,10 +101,12 @@ vows.describe('http-server').addBatch({
           topic: function (res, body) {
             var self = this;
             fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+              assert.isNull(err);
               self.callback(err, data, body);
             });
           },
           'should match content of the served file': function (err, file, body) {
+            assert.isNull(err);
             assert.equal(body.trim(), file.trim());
           }
         }
@@ -115,10 +122,12 @@ vows.describe('http-server').addBatch({
           topic: function (res, body) {
             var self = this;
             fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+              assert.isNull(err);
               self.callback(err, data, body);
             });
           },
           'should match content of the proxied served file': function (err, file, body) {
+            assert.isNull(err);
             assert.equal(body.trim(), file.trim());
           }
         }
@@ -148,9 +157,11 @@ vows.describe('http-server').addBatch({
         }, this.callback);
       },
       'status code should be 204': function (err, res) {
+        assert.isNull(err);
         assert.equal(res.statusCode, 204);
       },
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
+        assert.isNull(err);
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
     }

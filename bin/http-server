@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-'use strict';
-
 var colors     = require('colors/safe'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
-    argv       = require('optimist')
-      .boolean('cors')
-      .argv;
+    optimist   = require('optimist');
+
+var argv = optimist.boolean('cors').argv;
 
 var ifaces = os.networkInterfaces();
 
@@ -63,8 +61,7 @@ if (!argv.s && !argv.silent) {
           date, colors.red(req.method), colors.red(req.url),
           colors.red(error.status.toString()), colors.red(error.message)
         );
-      }
-      else {
+      } else {
         logger.info(
           '[%s] "%s %s" "%s"',
           date, colors.cyan(req.method), colors.cyan(req.url),
@@ -87,8 +84,7 @@ if (!port) {
     if (err) { throw err; }
     listen(port);
   });
-}
-else {
+} else {
   listen(port);
 }
 
@@ -126,15 +122,14 @@ function listen(port) {
         protocol      = ssl ? 'https://' : 'http://';
 
     logger.info([colors.yellow('Starting up http-server, serving '),
-      colors.cyan(server.root),
-      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
-      colors.yellow('\nAvailable on:')
-    ].join(''));
+                 colors.cyan(server.root),
+                 ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
+                 colors.yellow('\nAvailable on:')
+                ].join(''));
 
     if (argv.a && host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
-    }
-    else {
+    } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
