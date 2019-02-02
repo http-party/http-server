@@ -13,13 +13,20 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "pretest": "common bin/http-server lib/ test",
+    "pretest": "eslint bin/http-server lib/ test",
     "test": "vows --spec --isolate"
   },
   "files": [
     "lib",
     "bin"
   ],
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "extends": "populist"
+  },
   "contributors": [
     {
       "name": "Charlie Robbins",
@@ -63,6 +70,9 @@
     {
       "name": "BigBlueHat",
       "email": "byoung@bigbluehat.com"
+    },
+    {
+      "name": "Jade Michael Thornton"
     }
   ],
   "dependencies": {
@@ -76,7 +86,7 @@
     "union": "~0.4.3"
   },
   "devDependencies": {
-    "common-style": "^3.0.0",
+    "eslint-config-populist": "^4.2.0",
     "request": "2.49.x",
     "vows": "0.7.x"
   },
