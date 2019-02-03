@@ -1,9 +1,12 @@
+// FIXME disabling because eslint should be allowing this
+/* eslint-disable indent */
 var assert = require('assert'),
     path = require('path'),
     fs = require('fs'),
     vows = require('vows'),
     request = require('request'),
     httpServer = require('../lib/http-server');
+/* eslint-enable indent */
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
