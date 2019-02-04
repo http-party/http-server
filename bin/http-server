@@ -59,7 +59,7 @@ if (!argv.s && !argv.silent) {
     info: console.log,
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
-      var ip = argv.log-ip
+      var ip = argv['log-ip']
           ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
           : '';
       if (error) {
