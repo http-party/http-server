@@ -105,7 +105,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     showDotfiles: argv.dotfiles,
-    overlay: argv.overlay,
+    overlay: argv.overlay
   };
 
   if (argv.cors) {
