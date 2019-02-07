@@ -67,6 +67,8 @@ Using `npx` you can run the script without installing it first:
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
+`--overlay` Add an overlay folder. Any requested file is previously searched in this folder and if does not exists then is searched in the default root folder.
+
 `-h` or `--help` Print this list and exit.
 
 ## Magic Files
