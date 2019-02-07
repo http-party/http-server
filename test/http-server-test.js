@@ -6,6 +6,7 @@ var assert = require('assert'),
     httpServer = require('../lib/http-server');
 
 var root = path.join(__dirname, 'fixtures', 'root');
+var overlay = path.join(__dirname, 'fixtures', 'overlay');
 
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080': {
@@ -152,6 +153,54 @@ vows.describe('http-server').addBatch({
       },
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      }
+    }
+  },
+  'When overlay is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        overlay: overlay
+      });
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'it should serve files from root directory': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'it should serve files from overlay directory': {
+      topic: function () {
+        request('http://127.0.0.1:8083/canYouSeeMe', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(overlay, 'canYouSeeMe'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file (overlay)': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
       }
     }
   }
