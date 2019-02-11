@@ -1,0 +1,20 @@
+**Do you want to request a *feature* or report a *bug*?**
+
+**If the issue is a bug report, please provide the steps to reproduce it. Please include the actual command causing the issue if applicable.**
+
+<!-- Paste the command here: -->
+
+**What did you expect to happen?**
+
+**What actually happened? Please include the actual error trace and / or stack trace if applicable.**
+
+<!-- Paste the error and / or stack trace here: -->
+
+**If the issue is a feature request, what is the motivation / use case for it?**
+
+**Tell us about your environment**
+- **http-server version:**
+- **Platform:**
+
+**Other information (related issues, suggestions for a fix, etc):**
+

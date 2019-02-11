@@ -2,7 +2,7 @@
 
 'use strict';
 
-var colors     = require('colors'),
+var colors     = require('colors/safe'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
@@ -18,10 +18,11 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p           Port to use [8080]',
+    '  -p --port    Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
     '  -i           Display autoIndex [true]',
+    '  -g --gzip    Serve gzip files when possible [false]',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
@@ -38,12 +39,13 @@ if (argv.h || argv.help) {
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
     '  -r --robots  Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  --no-dotfiles  Do not show dotfiles',
     '  -h --help    Print this list and exit.'
   ].join('\n'));
   process.exit();
 }
 
-var port = argv.p || parseInt(process.env.PORT, 10),
+var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
@@ -58,14 +60,14 @@ if (!argv.s && !argv.silent) {
       if (error) {
         logger.info(
           '[%s] "%s %s" Error (%s): "%s"',
-          date, req.method.red, req.url.red,
-          error.status.toString().red, error.message.red
+          date, colors.red(req.method), colors.red(req.url),
+          colors.red(error.status.toString()), colors.red(error.message)
         );
       }
       else {
         logger.info(
           '[%s] "%s %s" "%s"',
-          date, req.method.cyan, req.url.cyan,
+          date, colors.cyan(req.method), colors.cyan(req.url),
           req.headers['user-agent']
         );
       }
@@ -96,10 +98,12 @@ function listen(port) {
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
+    gzip: argv.g || argv.gzip,
     robots: argv.r || argv.robots,
     ext: argv.e || argv.ext,
     logFn: logger.request,
-    proxy: proxy
+    proxy: proxy,
+    showDotfiles: argv.dotfiles
   };
 
   if (argv.cors) {
@@ -121,20 +125,20 @@ function listen(port) {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
         protocol      = ssl ? 'https://' : 'http://';
 
-    logger.info(['Starting up http-server, serving '.yellow,
-      server.root.cyan,
-      ssl ? (' through'.yellow + ' https'.cyan) : '',
-      '\nAvailable on:'.yellow
+    logger.info([colors.yellow('Starting up http-server, serving '),
+      colors.cyan(server.root),
+      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
+      colors.yellow('\nAvailable on:')
     ].join(''));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + port.toString()).green);
+      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
     }
     else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + port.toString()).green);
+            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
           }
         });
       });
@@ -166,11 +170,11 @@ if (process.platform === 'win32') {
 }
 
 process.on('SIGINT', function () {
-  logger.info('http-server stopped.'.red);
+  logger.info(colors.red('http-server stopped.'));
   process.exit();
 });
 
 process.on('SIGTERM', function () {
-  logger.info('http-server stopped.'.red);
+  logger.info(colors.red('http-server stopped.'));
   process.exit();
 });
