@@ -63,7 +63,11 @@
     {
       "name": "BigBlueHat",
       "email": "byoung@bigbluehat.com"
-    }
+    },
+	{
+	  "name": "Jade Michael Thornton",
+	  "email": "jade@jmthornton.net"
+	}
   ],
   "dependencies": {
     "colors": "1.0.3",
