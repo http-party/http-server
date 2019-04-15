@@ -165,10 +165,12 @@ function listen(port) {
 
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
-      opener(
-        protocol + canonicalHost + ':' + port,
-        { command: argv.o !== true ? argv.o : null }
-      );
+      var openUrl = protocol + canonicalHost + ':' + port;
+      if (typeof argv.o === 'string') {
+        openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
+      }
+      logger.info('open: ' + openUrl);
+      opener(openUrl);
     }
   });
 }
