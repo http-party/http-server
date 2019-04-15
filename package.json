@@ -64,10 +64,10 @@
       "name": "BigBlueHat",
       "email": "byoung@bigbluehat.com"
     },
-	{
-	  "name": "Jade Michael Thornton",
-	  "email": "jade@jmthornton.net"
-	}
+    {
+      "name": "Jade Michael Thornton",
+      "email": "jade@jmthornton.net"
+    }
   ],
   "dependencies": {
     "basic-auth": "^1.0.3",
