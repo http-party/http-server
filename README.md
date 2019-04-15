@@ -53,7 +53,7 @@ Using `npx` you can run the script without installing it first:
 
 `--cors` Enable CORS via the `Access-Control-Allow-Origin` header
 
-`-o` Open browser window after starting the server
+`-o [path]` Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/
 
 `-c` Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds (defaults to `3600`). To disable caching, use `-c-1`.
 
