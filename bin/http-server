@@ -9,6 +9,7 @@ var colors     = require('colors/safe'),
     opener     = require('opener'),
     argv       = require('optimist')
       .boolean('cors')
+      .boolean('log-ip')
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -18,7 +19,7 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p           Port to use [8080]',
+    '  -p --port    Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
     '  -i           Display autoIndex [true]',
@@ -33,6 +34,7 @@ if (argv.h || argv.help) {
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
+    '  --log-ip     Enable logging of the client\'s IP address',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '',
@@ -47,7 +49,7 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || parseInt(process.env.PORT, 10),
+var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
@@ -59,17 +61,20 @@ if (!argv.s && !argv.silent) {
     info: console.log,
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
+      var ip = argv['log-ip']
+          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
+          : '';
       if (error) {
         logger.info(
-          '[%s] "%s %s" Error (%s): "%s"',
-          date, colors.red(req.method), colors.red(req.url),
+          '[%s] %s "%s %s" Error (%s): "%s"',
+          date, ip, colors.red(req.method), colors.red(req.url),
           colors.red(error.status.toString()), colors.red(error.message)
         );
       }
       else {
         logger.info(
-          '[%s] "%s %s" "%s"',
-          date, colors.cyan(req.method), colors.cyan(req.url),
+          '[%s] %s "%s %s" "%s"',
+          date, ip, colors.cyan(req.method), colors.cyan(req.url),
           req.headers['user-agent']
         );
       }

@@ -5,6 +5,9 @@ var assert = require('assert'),
     request = require('request'),
     httpServer = require('../lib/http-server');
 
+// Prevent vows from swallowing errors
+process.on('uncaughtException', console.error);
+
 var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
