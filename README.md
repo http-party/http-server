@@ -90,7 +90,7 @@ To implement a catch-all redirect, use the index page itself as the proxy with:
 http-server --proxy http://localhost:8080?
 ```
 
-Note the `?` at the end of the proxy URL. Thanks to (@houston3)[https://github.com/houston3] for this clever hack!
+Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
 
 # Development
 
