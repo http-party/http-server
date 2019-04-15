@@ -158,6 +158,59 @@ vows.describe('http-server').addBatch({
       }
     }
   },
+  'When gzip and brotli compression is enabled and a compressed file is available': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        brotli: true,
+        gzip: true
+      });
+      server.listen(8084);
+      this.callback(null, server);
+    },
+    'and a request accepting only gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'gzip'
+          }
+        }, this.callback);
+      },
+      'response should be gzip compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'gzip');
+      }
+    },
+    'and a request accepting only brotli is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    },
+    'and a request accepting both brotli and gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'gzip, br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    }
+  },
   'When http-server is listening on 8083 with username "good_username" and password "good_password"': {
     topic: function () {
       var server = httpServer.createServer({
