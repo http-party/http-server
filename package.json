@@ -9,7 +9,9 @@
   },
   "keywords": [
     "cli",
-    "command"
+    "command",
+    "http",
+    "server"
   ],
   "scripts": {
     "start": "node ./bin/http-server",
@@ -20,6 +22,9 @@
     "lib",
     "bin"
   ],
+  "engines": {
+    "node": ">=6"
+  },
   "contributors": [
     {
       "name": "Charlie Robbins",
