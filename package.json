@@ -20,6 +20,7 @@
     "lib",
     "bin"
   ],
+  "man": "./doc/http-server.1",
   "contributors": [
     {
       "name": "Charlie Robbins",
