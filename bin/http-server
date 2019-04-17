@@ -123,14 +123,14 @@ function listen(port) {
       fs.lstatSync(options.https.cert);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not stat certificate ' + options.https.cert));
+      logger.info(colors.red('Error: Could not find certificate ' + options.https.cert));
       process.exit(1);
     }
     try {
       fs.lstatSync(options.https.key);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not stat private key ' + options.https.key));
+      logger.info(colors.red('Error: Could not find private key ' + options.https.key));
       process.exit(1);
     }
   }
