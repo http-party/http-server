@@ -1,10 +1,3 @@
----
-tags: [Import-2dec]
-title: README
-created: '2019-04-19T04:04:47.383Z'
-modified: '2019-04-19T04:19:42.487Z'
----
-
 [![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
 [![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server)
@@ -42,30 +35,47 @@ Using `npx` you can run the script without installing it first:
 
 ## Available Options:
 
-| Argument          | What it does            | Default Value | Notes |
-| ----------------- | ----------------------- | ------------- | ----- |
-| `-p` or `--port`  | Port to use             | 8080          | |
-| `-a`              | Address to use          | 0.0.0.0       | |
-| `-d`              | Show directory listings | `true`        | |
-| `-i`              | Display autoIndex       | `true`        | |
-| `-g` or `--gzip`  | Serve gzipped version   | `false`       | Serve `./public/some-file.js.jz` in place of `./public/some-file.js` if it exists. If `brotli` is enabled, it will try to serve brotli first. |
-| `-b` or `--brotli`| Serve brotli version    | `false`       | Serve `./public/some-file.js.br` in place of `./public/some-file.js` if it exists. If `gzip` is enabled, it will try to serve brotli first. |
-| `-e`              | Default file extension  | `html`        | |
-| `-s` or `--silent`| Suppress log messages   | | |
-| `--cors`          | Enable CORS via the `Access-Control-Allow-Origin` Header | | |
-| `-o [path]`       | Open a browser window to specified path after server starts. | | Optionally, provide a path for the browser to open, e.g.: `-o /other/dir` |
-| `-c`              | Set cache time (in seconds) | `3600` | e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`. This uses the `Cache-Control Max-Age` header. |
-| `-U` or `--utc`   | Use UTC time format in logs. | | |
-| `--log-ip`        | Enable logging of client IP address. | `false` | |
-| `-P` or `--proxy` | Proxies all requests that can't be resolved locally to the given URL. | | e.g.: `-P http://someurl.com` |
-| `--username`      | Username, for basic authentication. | | |
-| `--password`      | Password, for basic authentication. | | |
-| `-S` or `--ssl`   | Enable HTTPS. | | |
-| `-C` or `--cert`  | Path to SSL certificate file. | `cert.pem` | |
-| `-K` or `--key`   | Path to SSL private key file. | `key.pem`  | |
-| `-r` or `--robots`| Provide a `/robots.txt`. | Content defaults to `User-agent: *\nDisallow: /`. | |
-| `-h` or `--help`  | Print this argument list. | | |
+`-p` or `--port` Port to use (defaults to 8080)
 
+`-a` Address to use (defaults to 0.0.0.0)
+
+`-d` Show directory listings (defaults to `true`)
+
+`-i` Display autoIndex (defaults to `true`)
+
+`-g` or `--gzip` When enabled (defaults to `false`) it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.
+
+`-b` or `--brotli` When enabled (defaults to `false`) it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first.
+
+`-e` or `--ext` Default file extension if none supplied (defaults to `html`)
+
+`-s` or `--silent` Suppress log messages from output
+
+`--cors` Enable CORS via the `Access-Control-Allow-Origin` header
+
+`-o [path]` Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/
+
+`-c` Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds (defaults to `3600`). To disable caching, use `-c-1`.
+
+`-U` or `--utc` Use UTC time format in log messages.
+
+`--log-ip` Enable logging of the client's IP address (default: `false`).
+
+`-P` or `--proxy` Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com
+
+`--username` Username for basic authentication [none]
+
+`--password` Password for basic authentication [none]
+
+`-S` or `--ssl` Enable https.
+
+`-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
+
+`-K` or `--key` Path to ssl key file (default: `key.pem`).
+
+`-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
+
+`-h` or `--help` Print this list and exit.
 
 ## Magic Files
 
@@ -85,4 +95,3 @@ $ node bin/http-server
 
 You should see the turtle image in the screenshot above hosted at that URL. See
 the `./public` folder for demo content.
-
