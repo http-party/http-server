@@ -1,9 +1,3 @@
----
-tags: [Import-2dec]
-title: README
-created: '2019-04-19T04:04:47.383Z'
-modified: '2019-04-19T04:19:42.487Z'
----
 
 [![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
 [![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
