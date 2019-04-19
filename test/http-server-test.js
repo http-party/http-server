@@ -168,14 +168,14 @@ vows.describe('http-server').addBatch({
         credentials: true,
         corsHeaders: 'X-Test'
       });
-      server.listen(8083);
+      server.listen(8085);
       this.callback(null, server);
     },
     'and given OPTIONS request': {
       topic: function () {
         request({
           method: 'OPTIONS',
-          uri: 'http://127.0.0.1:8083/',
+          uri: 'http://127.0.0.1:8085/',
           headers: {
             'Access-Control-Request-Method': 'GET',
             Origin: 'http://example.com',
