@@ -1,0 +1,19 @@
+**Please ensure that your pull request fulfills these requirements:**
+- [ ] The pull request is being made against the `master` branch
+- [ ] Tests for the changes have been added (for bug fixes / features)
+
+**What is the purpose of this pull request? (bug fix, enhancement, new feature,...)**
+
+<!--
+    Link to the issue this pull request fixes here, if applicable: "Fixes #xxx" or "Resolves #xxx"
+-->
+
+**What changes did you make?**
+
+**Provide some example code that this change will affect, if applicable:**
+
+<!-- Paste the example code here: -->
+
+**Is there anything you'd like reviewers to focus on?**
+
+**Please provide testing instructions, if applicable:**
