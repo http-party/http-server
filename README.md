@@ -46,7 +46,7 @@ This will install `http-server` globally so that it may be run from the command 
 | -------------  |-------------|-------------|
 |`-p` or `--port` |Port to use. Use `-p 0` to look for an open port, starting at 8080. It will also read from `process.env.PORT`. |8080 |
 |`-a`   |Address to use |0.0.0.0|
-|`--baseDir` | Base path to serve files from | `/` |
+|`--base-dir` | Base path to serve files from | `/` |
 |`-d`     |Show directory listings |`true` |
 |`-i`   | Display autoIndex | `true` |
 |`-g` or `--gzip` |When enabled it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.|`false`|

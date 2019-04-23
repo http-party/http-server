@@ -27,7 +27,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
-    '  --baseDir    Base directory to serve files from [/]',
+    '  --base-dir   Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
@@ -74,7 +74,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
-    baseDir = argv.baseDir || argv.basedir,
+    baseDir = argv['base-dir'],
     logger;
 
 var proxyOptionsBooleanProps = [
