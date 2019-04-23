@@ -39,7 +39,7 @@ Using `npx` you can run the script without installing it first:
 
 `-a` Address to use (defaults to 0.0.0.0)
 
-`-b` Base path to serve files from (defaults /)
+`-b` or `--base-dir` Base path to serve files from (defaults to /)
 
 `-d` Show directory listings (defaults to `true`)
 

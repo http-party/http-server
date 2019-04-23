@@ -22,7 +22,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
-    '  -b           Base directory to serve files from [/]',
+    '  -b --base-dir   Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
@@ -61,7 +61,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
   ssl = !!argv.S || !!argv.ssl,
   proxy = argv.P || argv.proxy,
   utc = argv.U || argv.utc,
-  baseDir = argv.b,
+  baseDir = argv.b || argv['base-dir'],
   logger;
 
 if (!argv.s && !argv.silent) {
