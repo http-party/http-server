@@ -138,7 +138,27 @@ vows.describe('http-server').addBatch({
       server.listen(8082);
       this.callback(null, server);
     },
-    'and given OPTIONS request': {
+    'and given OPTIONS request with an allowed (and custom) header': {
+      topic: function () {
+        request({
+          method: 'OPTIONS',
+          uri: 'http://127.0.0.1:8082/',
+          headers: {
+            'Access-Control-Request-Method': 'GET',
+            Origin: 'http://example.com',
+            'Access-Control-Request-Headers': 'X-Test'
+          }
+        }, this.callback);
+      },
+      'status code should be 204': function (err, res) {
+        assert.equal(res.statusCode, 204);
+      },
+      'response Access-Control-Allow-Headers should contain X-Test and allow the origin': function (err, res) {
+        assert.ok(/\bX-Test\b/i.test(res.headers['access-control-allow-headers']));
+        assert.ok(res.headers['access-control-allow-origin'] === '*');
+      }
+    },
+    'and given OPTIONS request with a disallowed header': {
       topic: function () {
         request({
           method: 'OPTIONS',
@@ -153,8 +173,9 @@ vows.describe('http-server').addBatch({
       'status code should be 204': function (err, res) {
         assert.equal(res.statusCode, 204);
       },
-      'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
-        assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      'Should not allow the origin': function (err, res) {
+        assert.ok(res.headers['access-control-allow-headers'] === undefined);
+        assert.ok(res.headers['access-control-allow-origin'] === undefined);
       }
     }
   },
