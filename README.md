@@ -82,6 +82,16 @@ Using `npx` you can run the script without installing it first:
 - `index.html` will be served as the default file to any directory requests.
 - `404.html` will be served if a file is not found. This can be used for Single-Page App (SPA) hosting to serve the entry page.
 
+## Auto-restart on file change
+
+To restart `http-server` on file change (e.g. during development), use it together with a tool like [nodemon](https://github.com/remy/nodemon):
+
+```
+nodemon --exec "http-server -c-1"
+```
+
+`-c-1` is added in this example to disable caching, which is what you likely want during development.
+
 ## Catch-all redirect
 
 To implement a catch-all redirect, use the index page itself as the proxy with:
