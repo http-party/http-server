@@ -90,7 +90,7 @@
     "url": "https://github.com/nodeapps/http-server/issues"
   },
   "license": "MIT",
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "bin": {
     "http-server": "./bin/http-server",
     "hs": "./bin/http-server"
