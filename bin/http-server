@@ -73,7 +73,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
-    request: function(req, res, error) {
+    request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       var ip = argv['log-ip']
         ? req.headers['x-forwarded-for'] || '' + req.connection.remoteAddress
@@ -97,14 +97,14 @@ if (!argv.s && !argv.silent) {
 }
 else if (colors) {
   logger = {
-    info: function() { },
-    request: function() { }
+    info: function () { },
+    request: function () { }
   };
 }
 
 if (!port) {
   portfinder.basePort = 8080;
-  portfinder.getPort(function(err, port) {
+  portfinder.getPort(function (err, port) {
     if (err) { throw err; }
     listen(port);
   });
@@ -134,7 +134,8 @@ function listen(port) {
   if (websocket) {
     if (!proxy) {
       logger.warning(colors.yellow('WebSocket proxy will not be enabled because proxy is not enabled'));
-    } else {
+    }
+    else {
       options.websocket = true;
     }
   }
@@ -154,7 +155,7 @@ function listen(port) {
   }
 
   var server = httpServer.createServer(options);
-  server.listen(port, host, function() {
+  server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
       protocol = ssl ? 'https://' : 'http://';
 
@@ -168,8 +169,8 @@ function listen(port) {
       logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
     }
     else {
-      Object.keys(ifaces).forEach(function(dev) {
-        ifaces[dev].forEach(function(details) {
+      Object.keys(ifaces).forEach(function (dev) {
+        ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
             logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
           }
@@ -197,17 +198,17 @@ if (process.platform === 'win32') {
   require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
-  }).on('SIGINT', function() {
+  }).on('SIGINT', function () {
     process.emit('SIGINT');
   });
 }
 
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   logger.info(colors.red('http-server stopped.'));
   process.exit();
 });
 
-process.on('SIGTERM', function() {
+process.on('SIGTERM', function () {
   logger.info(colors.red('http-server stopped.'));
   process.exit();
 });
