@@ -12,7 +12,8 @@ var colors     = require('colors/safe'),
       .boolean('log-ip')
       .argv,
     Address6   = require('ip-address')
-      .Address6;
+      .Address6,
+    isIp       = require('is-ip');
 
 var ifaces = os.networkInterfaces();
 
@@ -149,10 +150,8 @@ function listen(port) {
       colors.yellow('\nAvailable on:')
     ].join(''));
 
-    var address = new Address6(argv.a);
-    var is4 = address.is4();
-    if (is4) {
-      if (argv.a && host !== '0.0.0.0') {
+    if (isIp.v4(host)) {
+      if (host !== '0.0.0.0') {
         logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
       }
       else {
@@ -166,7 +165,8 @@ function listen(port) {
       }
     }
     else {
-      if (address.correctForm() !== '::') {
+      var address6 = new Address6(host);
+      if (address6.correctForm() !== '::') {
         logger.info(('  ' + protocol + '[' + canonicalHost + ']' + ':' + colors.green(port.toString())));
       }
       else {
@@ -192,7 +192,7 @@ function listen(port) {
         });
         logger.info(colors.yellow('  IPv6:'));
         address6s.forEach(function (a) {
-          logger.info(('    ' + protocol + '[' +  ':' + ']' + colors.green(port.toString())));
+          logger.info(('    ' + protocol + '[' +  a + ']:' + colors.green(port.toString())));
         });
       }
     }
