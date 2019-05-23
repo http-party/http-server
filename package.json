@@ -75,6 +75,7 @@
     "corser": "^2.0.1",
     "ecstatic": "^3.3.0",
     "http-proxy": "^1.17.0",
+    "ip-address": "^5.9.0",
     "opener": "^1.5.1",
     "optimist": "~0.6.1",
     "portfinder": "^1.0.20",

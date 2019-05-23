@@ -342,5 +342,111 @@ vows.describe('http-server').addBatch({
         }
       }
     }
+  },
+  'When http-server is listening on IPv6 any address (::), port 8085': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        robots: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        }
+      });
+
+      server.listen(8085, '::');
+      this.callback(null, server);
+    },
+    'it should serve files from root directory, and could be visited through [::1]': {
+      topic: function () {
+        request('http://[::1]:8085/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'it should serve files from root directory, and could be visited through IPv4 loopback': {
+      topic: function () {
+        request('http://127.0.0.1:8085/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
+  },
+  'When http-server is listening on IPv6 any address (::1), port 8086': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        robots: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        }
+      });
+
+      server.listen(8086, '::');
+      this.callback(null, server);
+    },
+    'it should serve files from root directory, and could be visited through [::1]': {
+      topic: function () {
+        request('http://[::1]:8086/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    },
+    'it should serve files from root directory, and could be visited through IPv4 loopback': {
+      topic: function () {
+        request('http://127.0.0.1:8086/file', this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
   }
 }).export(module);

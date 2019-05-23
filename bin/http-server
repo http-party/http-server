@@ -10,7 +10,9 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
-      .argv;
+      .argv,
+    Address6   = require('ip-address')
+      .Address6;
 
 var ifaces = os.networkInterfaces();
 
@@ -147,17 +149,52 @@ function listen(port) {
       colors.yellow('\nAvailable on:')
     ].join(''));
 
-    if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+    var address = new Address6(argv.a);
+    var is4 = address.is4();
+    if (is4) {
+      if (argv.a && host !== '0.0.0.0') {
+        logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+      }
+      else {
+        Object.keys(ifaces).forEach(function (dev) {
+          ifaces[dev].forEach(function (details) {
+            if (details.family === 'IPv4') {
+              logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            }
+          });
+        });
+      }
     }
     else {
-      Object.keys(ifaces).forEach(function (dev) {
-        ifaces[dev].forEach(function (details) {
-          if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
-          }
+      if (address.correctForm() !== '::') {
+        logger.info(('  ' + protocol + '[' + canonicalHost + ']' + ':' + colors.green(port.toString())));
+      }
+      else {
+        var address4s = [];
+        var address6s = [];
+        Object.keys(ifaces).forEach(function (dev) {
+          ifaces[dev].forEach(function (details) {
+            switch (details.family) {
+              case 'IPv4':
+                address4s.push(details.address);
+                break;
+              case 'IPv6':
+                address6s.push(details.address);
+                break;
+              default:
+                break;
+            }
+          });
         });
-      });
+        logger.info(colors.yellow('  IPv4:'));
+        address4s.forEach(function (a) {
+          logger.info(('    ' + protocol + a + ':' + colors.green(port.toString())));
+        });
+        logger.info(colors.yellow('  IPv6:'));
+        address6s.forEach(function (a) {
+          logger.info(('    ' + protocol + '[' +  ':' + ']' + colors.green(port.toString())));
+        });
+      }
     }
 
     if (typeof proxy === 'string') {
