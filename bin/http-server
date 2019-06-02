@@ -135,6 +135,10 @@ function listen(port) {
       key: argv.K || argv.key || 'key.pem'
     };
   }
+    
+  options.headers = {
+    'Accept-Ranges': 'bytes'
+  };
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
