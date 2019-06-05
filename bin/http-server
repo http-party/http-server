@@ -10,7 +10,7 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
-      .default("verbose", true)
+      .default('verbose', true)
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -70,7 +70,8 @@ if (!argv.s && !argv.silent) {
       info: console.log,
       request: function () {}
     };
-  } else {
+  }
+  else {
     logger = {
       info: console.log,
       request: function (req, res, error) {
