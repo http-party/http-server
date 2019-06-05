@@ -10,6 +10,7 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
+      .default("verbose", true)
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -28,6 +29,7 @@ if (argv.h || argv.help) {
     '               If both brotli and gzip are enabled, brotli takes precedence',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --nv --no-verbose  Only show the basic info',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
     '  -o [path]    Open browser window after starting the server.',
@@ -63,29 +65,36 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     logger;
 
 if (!argv.s && !argv.silent) {
-  logger = {
-    info: console.log,
-    request: function (req, res, error) {
-      var date = utc ? new Date().toUTCString() : new Date();
-      var ip = argv['log-ip']
-          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
-          : '';
-      if (error) {
-        logger.info(
-          '[%s] %s "%s %s" Error (%s): "%s"',
-          date, ip, colors.red(req.method), colors.red(req.url),
-          colors.red(error.status.toString()), colors.red(error.message)
-        );
+  if (argv.nv || !argv.verbose) {
+    logger = {
+      info: console.log,
+      request: function () {}
+    };
+  } else {
+    logger = {
+      info: console.log,
+      request: function (req, res, error) {
+        var date = utc ? new Date().toUTCString() : new Date();
+        var ip = argv['log-ip']
+            ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
+            : '';
+        if (error) {
+          logger.info(
+            '[%s] %s "%s %s" Error (%s): "%s"',
+            date, ip, colors.red(req.method), colors.red(req.url),
+            colors.red(error.status.toString()), colors.red(error.message)
+          );
+        }
+        else {
+          logger.info(
+            '[%s] %s "%s %s" "%s"',
+            date, ip, colors.cyan(req.method), colors.cyan(req.url),
+            req.headers['user-agent']
+          );
+        }
       }
-      else {
-        logger.info(
-          '[%s] %s "%s %s" "%s"',
-          date, ip, colors.cyan(req.method), colors.cyan(req.url),
-          req.headers['user-agent']
-        );
-      }
-    }
-  };
+    };
+  }
 }
 else if (colors) {
   logger = {
