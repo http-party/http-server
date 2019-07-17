@@ -35,6 +35,7 @@ if (argv.h || argv.help) {
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
     '  -U --utc     Use UTC time format in log messages.',
+    '  -F --find-port Find a free port when then port given by -p is not available.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
     '  -P --proxy   Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
@@ -60,6 +61,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     ssl = !!argv.S || !!argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
+    findPort = argv.F || argv['find-port'],
     logger;
 
 if (!argv.s && !argv.silent) {
@@ -94,8 +96,8 @@ else if (colors) {
   };
 }
 
-if (!port) {
-  portfinder.basePort = 8080;
+if (!port || findPort) {
+  portfinder.basePort = port || 8080;
   portfinder.getPort(function (err, port) {
     if (err) { throw err; }
     listen(port);
