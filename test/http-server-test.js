@@ -5,6 +5,9 @@ var assert = require('assert'),
     request = require('request'),
     httpServer = require('../lib/http-server');
 
+// Prevent vows from swallowing errors
+process.on('uncaughtException', console.error);
+
 var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
@@ -155,6 +158,191 @@ vows.describe('http-server').addBatch({
       }
     }
   },
+  'When gzip and brotli compression is enabled and a compressed file is available': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        brotli: true,
+        gzip: true
+      });
+      server.listen(8084);
+      this.callback(null, server);
+    },
+    'and a request accepting only gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'gzip'
+          }
+        }, this.callback);
+      },
+      'response should be gzip compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'gzip');
+      }
+    },
+    'and a request accepting only brotli is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    },
+    'and a request accepting both brotli and gzip is made': {
+      topic: function () {
+        request({
+          uri: 'http://127.0.0.1:8084/compression/',
+          headers: {
+            'accept-encoding': 'gzip, br'
+          }
+        }, this.callback);
+      },
+      'response should be brotli compressed': function (err, res, body) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'br');
+      }
+    }
+  },
+  'When http-server is listening on 8083 with username "good_username" and password "good_password"': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        robots: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true'
+        },
+        username: 'good_username',
+        password: 'good_password'
+      });
+
+      server.listen(8083);
+      this.callback(null, server);
+    },
+    'and the user requests an existent file with no auth details': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with incorrect username': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'wrong_username',
+            pass: 'good_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with incorrect password': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'good_username',
+            pass: 'wrong_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests a non-existent file with incorrect password': {
+      topic: function () {
+        request('http://127.0.0.1:8083/404', {
+          auth: {
+            user: 'good_username',
+            pass: 'wrong_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 401': function (res) {
+        assert.equal(res.statusCode, 401);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should be a forbidden message': function (err, file, body) {
+          assert.equal(body, 'Access denied');
+        }
+      }
+    },
+    'and the user requests an existent file with correct auth details': {
+      topic: function () {
+        request('http://127.0.0.1:8083/file', {
+          auth: {
+            user: 'good_username',
+            pass: 'good_password'
+          }
+        }, this.callback);
+      },
+      'status code should be 200': function (res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and file content': {
+        topic: function (res, body) {
+          var self = this;
+          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+            self.callback(err, data, body);
+          });
+        },
+        'should match content of served file': function (err, file, body) {
+          assert.equal(body.trim(), file.trim());
+        }
+      }
+    }
+  },
   'When adding extra middleware file': {
     topic: function () {
       var server = httpServer.createServer({
@@ -162,12 +350,12 @@ vows.describe('http-server').addBatch({
         extraMiddleware: path.join(root, 'extra_middleware_222.js')
       });
 
-      server.listen(8083);
+      server.listen(8085);
       this.callback(null, server);
     },
     'it should response with a 222 response as the "middleware" file behaves': {
       topic: function () {
-        request('http://127.0.0.1:8083/file', this.callback);
+        request('http://127.0.0.1:8085/file', this.callback);
       },
       'status code should 222': function (err, res) {
         assert.equal(res.statusCode, 222);
