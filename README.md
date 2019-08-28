@@ -92,6 +92,14 @@ http-server --proxy http://localhost:8080?
 
 Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
 
+## Need a self signed SSL Certificate?
+
+Create the `cert.pem` and `key.pem` via the command:
+
+```
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+```
+
 # Development
 
 Checkout this repository locally, then:
