@@ -7,6 +7,8 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+    fs         = require('fs'),
+    selfsigned = require('selfsigned'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
@@ -134,6 +136,21 @@ function listen(port) {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
     };
+
+    if (!fs.existsSync(options.https.cert) || !fs.existsSync(options.https.key)) {
+      var pemPath = __dirname + '/pem';
+      if (!fs.existsSync(pemPath) || (Date.now() - fs.statSync(pemPath).ctime) / (1000 * 60 * 60 * 24) > 1) {
+        logger.info('Generating SSL Certificate');
+        var pem = selfsigned.generate(null, {
+          keySize: 2048,
+          days: 1,
+          algorithm: 'sha256'
+        });
+        fs.writeFileSync(pemPath, pem.cert + pem.private);
+      }
+
+      options.https.cert = options.https.key = pemPath;
+    }
   }
 
   var server = httpServer.createServer(options);
