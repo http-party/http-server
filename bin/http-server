@@ -108,8 +108,6 @@ else {
 
 function listen(port) {
 
-  console.log(argv)
-
   var options = {
     root: argv._[0],
     cache: argv.c,
