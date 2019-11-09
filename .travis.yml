@@ -7,6 +7,10 @@ node_js:
   - "12"
   - "13"
 
+os:
+  - linux
+  - windows
+
 before_install:
   - travis_retry npm install
 
