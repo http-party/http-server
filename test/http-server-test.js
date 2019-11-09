@@ -125,7 +125,13 @@ vows.describe('http-server').addBatch({
             assert.equal(body.trim(), file.trim());
           }
         }
+      },
+      teardown: function (proxyServer) {
+        proxyServer.close();
       }
+    },
+    teardown: function (server) {
+      server.close();
     }
   },
   'When cors is enabled': {
@@ -156,6 +162,9 @@ vows.describe('http-server').addBatch({
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
       }
+    },
+    teardown: function (server) {
+      server.close();
     }
   },
   'When gzip and brotli compression is enabled and a compressed file is available': {
@@ -209,6 +218,9 @@ vows.describe('http-server').addBatch({
         assert.equal(res.statusCode, 200);
         assert.equal(res.headers['content-encoding'], 'br');
       }
+    },
+    teardown: function (server) {
+      server.close();
     }
   },
   'When http-server is listening on 8083 with username "good_username" and password "good_password"': {
@@ -341,6 +353,9 @@ vows.describe('http-server').addBatch({
           assert.equal(body.trim(), file.trim());
         }
       }
+    },
+    teardown: function (server) {
+      server.close();
     }
   }
 }).export(module);

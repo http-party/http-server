@@ -82,6 +82,16 @@ Using `npx` you can run the script without installing it first:
 - `index.html` will be served as the default file to any directory requests.
 - `404.html` will be served if a file is not found. This can be used for Single-Page App (SPA) hosting to serve the entry page.
 
+## Catch-all redirect
+
+To implement a catch-all redirect, use the index page itself as the proxy with:
+
+```
+http-server --proxy http://localhost:8080?
+```
+
+Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
+
 # Development
 
 Checkout this repository locally, then:
