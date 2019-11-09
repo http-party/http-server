@@ -7,6 +7,9 @@ node_js:
   - "12"
   - "13"
 
+git:
+  autocrlf: input
+
 os:
   - linux
   - windows
