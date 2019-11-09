@@ -75,6 +75,8 @@ Using `npx` you can run the script without installing it first:
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
+`--no-dotfiles` Do not show dotfiles
+
 `-h` or `--help` Print this list and exit.
 
 ## Magic Files
