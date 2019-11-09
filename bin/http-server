@@ -14,6 +14,8 @@ var colors     = require('colors/safe'),
 
 var ifaces = os.networkInterfaces();
 
+process.title = 'http-server';
+
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
