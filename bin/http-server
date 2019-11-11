@@ -14,6 +14,8 @@ var colors     = require('colors/safe'),
 
 var ifaces = os.networkInterfaces();
 
+process.title = 'http-server';
+
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
@@ -34,6 +36,8 @@ if (argv.h || argv.help) {
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
+    '  -t           Connections timeout in seconds [120], e.g. -t60 for 1 minute.',
+    '               To disable timeout, use -t0',
     '  -U --utc     Use UTC time format in log messages.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
@@ -109,6 +113,7 @@ function listen(port) {
   var options = {
     root: argv._[0],
     cache: argv.c,
+    timeout: argv.t,
     showDir: argv.d,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
