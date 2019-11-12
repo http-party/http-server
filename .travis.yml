@@ -13,6 +13,7 @@ git:
 os:
   - linux
   - windows
+  - osx
 
 before_install:
   - travis_retry npm install
