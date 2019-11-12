@@ -70,6 +70,10 @@
       "email": "byoung@bigbluehat.com"
     },
     {
+      "name": "Daniel Dalton",
+      "email": "daltond2@hawkmail.newpaltz.edu"
+    },
+    {
       "name": "Jade Michael Thornton",
       "email": "jade@jmthornton.net"
     }
@@ -95,7 +99,7 @@
     "url": "https://github.com/nodeapps/http-server/issues"
   },
   "license": "MIT",
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "bin": {
     "http-server": "./bin/http-server",
     "hs": "./bin/http-server"

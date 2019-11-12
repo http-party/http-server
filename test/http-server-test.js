@@ -11,7 +11,7 @@ process.on('uncaughtException', console.error);
 var root = path.join(__dirname, 'fixtures', 'root');
 
 vows.describe('http-server').addBatch({
-  'When http-server is listening on 8080': {
+  'When http-server is listening on 8080,\n': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
@@ -44,7 +44,7 @@ vows.describe('http-server').addBatch({
         }
       }
     },
-    'when requesting non-existent file': {
+    'and a non-existent file is requested...': {
       topic: function () {
         request('http://127.0.0.1:8080/404', this.callback);
       },
@@ -52,7 +52,7 @@ vows.describe('http-server').addBatch({
         assert.equal(res.statusCode, 404);
       }
     },
-    'when requesting /': {
+    'requesting /': {
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
@@ -62,15 +62,15 @@ vows.describe('http-server').addBatch({
         assert.include(body, '/canYouSeeMe');
       }
     },
-    'when robots options is activated': {
+    'when robots option is toggled on...': {
       topic: function () {
-        request('http://127.0.0.1:8080/', this.callback);
+        request('http://127.0.0.1:8080/robots.txt', this.callback);
       },
       'should respond with status code 200 to /robots.txt': function (res) {
         assert.equal(res.statusCode, 200);
       }
     },
-    'and options include custom set http-headers': {
+    'and options include custom set http-headers...': {
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);
       },
@@ -79,7 +79,7 @@ vows.describe('http-server').addBatch({
         assert.equal(res.headers['access-control-allow-credentials'], 'true');
       }
     },
-    'When http-server is proxying from 8081 to 8080': {
+    'and the server is set to proxy port 8081 to 8080, ': {
       topic: function () {
         var proxyServer = httpServer.createServer({
           proxy: 'http://127.0.0.1:8080/',
@@ -88,7 +88,7 @@ vows.describe('http-server').addBatch({
         proxyServer.listen(8081);
         this.callback(null, proxyServer);
       },
-      'it should serve files from the proxy server root directory': {
+      '\nit should serve files from the proxy\'s root': {
         topic: function () {
           request('http://127.0.0.1:8081/root/file', this.callback);
         },
@@ -107,7 +107,7 @@ vows.describe('http-server').addBatch({
           }
         }
       },
-      'it should fallback to the proxied server': {
+      '\nit should fallback to the proxied server': {
         topic: function () {
           request('http://127.0.0.1:8081/file', this.callback);
         },
@@ -134,7 +134,7 @@ vows.describe('http-server').addBatch({
       server.close();
     }
   },
-  'When cors is enabled': {
+  'When CORS is enabled': {
     topic: function () {
       var server = httpServer.createServer({
         root: root,
@@ -144,7 +144,7 @@ vows.describe('http-server').addBatch({
       server.listen(8082);
       this.callback(null, server);
     },
-    'and given OPTIONS request': {
+    'and the server is given an OPTIONS request': {
       topic: function () {
         request({
           method: 'OPTIONS',
