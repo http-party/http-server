@@ -55,7 +55,8 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
-    '  -h --help          Print this list and exit.'
+    '  -h --help          Print this list and exit.',
+    '  --version          Print http-server version'
   ].join('\n'));
   process.exit();
 }
@@ -65,6 +66,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
+    version = argv.version,
     logger;
 
 if (!argv.s && !argv.silent) {
@@ -97,6 +99,11 @@ else if (colors) {
     info: function () {},
     request: function () {}
   };
+}
+
+if (version) {
+  console.log('v' + require('../package.json').version);
+  process.exit();
 }
 
 if (!port) {
