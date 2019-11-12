@@ -9,7 +9,7 @@ var colors     = require('colors/safe'),
     opener     = require('opener'),
     argv       = require('optimist')
       .boolean('cors')
-      .alias('H', 'header')
+      .alias('header', 'H')
       .argv;
 
 var ifaces = os.networkInterfaces();
@@ -120,15 +120,15 @@ function listen(port) {
     options.headers[header[0]] = (header[1] ? header[1] : '');
   }
 
-  if (argv.H) {
+  if (argv.header) {
     options.headers = {};
-    if (Array.isArray(argv.H)) {
-      argv.H.forEach(function (h) {
+    if (Array.isArray(argv.header)) {
+      argv.header.forEach(function (h) {
         setHeader(h);
       });
     }
     else {
-      setHeader(argv.H);
+      setHeader(argv.header);
     }
   }
 

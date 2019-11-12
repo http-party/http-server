@@ -15,7 +15,8 @@ vows.describe('http-server').addBatch({
         robots: true,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': 'true'
+          'Access-Control-Allow-Credentials': 'true',
+          'my-header': 'headerValue'
         }
       });
 
@@ -74,6 +75,14 @@ vows.describe('http-server').addBatch({
       'should respond with headers set in options': function (err, res) {
         assert.equal(res.headers['access-control-allow-origin'], '*');
         assert.equal(res.headers['access-control-allow-credentials'], 'true');
+      }
+    },
+    'and options include static http-headers': {
+      topic: function () {
+        request('http://127.0.0.1:8080/', this.callback);
+      },
+      'should respond with headers set in options': function (err, res) {
+        assert.equal(res.headers['my-header'], 'headerValue');
       }
     },
     'When http-server is proxying from 8081 to 8080': {
