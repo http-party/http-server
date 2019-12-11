@@ -11,7 +11,8 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
-      .argv;
+      .argv,
+    pjson      = require('../package.json');
 
 var ifaces = os.networkInterfaces();
 
@@ -55,7 +56,8 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
-    '  -h --help          Print this list and exit.'
+    '  -h --help          Print this list and exit.',
+    '  -v --version       Print the version and exit.'
   ].join('\n'));
   process.exit();
 }
@@ -65,7 +67,8 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
-    logger;
+    logger,
+    version = pjson.version;
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -108,6 +111,11 @@ if (!port) {
 }
 else {
   listen(port);
+}
+
+if (argv.v || argv.version) {
+  console.log(version);
+  process.exit();
 }
 
 function listen(port) {

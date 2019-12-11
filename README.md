@@ -79,6 +79,8 @@ Using `npx` you can run the script without installing it first:
 
 `-h` or `--help` Print this list and exit.
 
+`-v` or `--version` Print the version and exit.
+
 ## Magic Files
 
 - `index.html` will be served as the default file to any directory requests.
