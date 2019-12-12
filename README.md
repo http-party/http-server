@@ -98,7 +98,7 @@ Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.c
 
 ## TLS/SSL
 
-First, make sure that you have `key.pem` and `cert.pem` files. You can generate them using this command:
+First, you need to make sure that [openssl](https://github.com/openssl/openssl) is installed correctly, and you have `key.pem` and `cert.pem` files. You can generate them using this command:
 
 ``` sh
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
@@ -108,7 +108,7 @@ You will be prompted with a few questions after entering the command. Use `127.0
 
 This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
 
-Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file:
+Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file. This is what should be output if successful:
 
 ``` sh
 http-server -S -C cert.pem
