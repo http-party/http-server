@@ -1,7 +1,7 @@
-[![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
-[![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
+[![build status](https://img.shields.io/travis/http-party/http-server.svg?style=flat-square)](https://travis-ci.org/http-party/http-server)
+[![dependencies status](https://img.shields.io/david/http-party/http-server.svg?style=flat-square)](https://david-dm.org/http-party/http-server)
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server)
-[![license](https://img.shields.io/github/license/indexzero/http-server.svg?style=flat-square)](https://github.com/indexzero/http-server)
+[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server)
 
 # http-server: a command-line http server
 
@@ -75,7 +75,11 @@ Using `npx` you can run the script without installing it first:
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
+`--no-dotfiles` Do not show dotfiles
+
 `-h` or `--help` Print this list and exit.
+
+`-v` or `--version` Print the version and exit.
 
 ## Magic Files
 
@@ -92,7 +96,7 @@ http-server --proxy http://localhost:8080?
 
 Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
 
-## Using SSL
+## TLS/SSL
 
 First, make sure that you have `key.pem` and `cert.pem` files. You can generate them using this command:
 
@@ -102,12 +106,12 @@ openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out c
 
 You will be prompted with a few questions after entering the command. Use `127.0.0.1` as value for `Common name` if you want to be able to install the certificate in your OS's root certificate store or browser so that it is trusted.
 
-This generates a cert-key pair and it will be valid for roughly 10 years (3650 days to be exact).
+This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
 
 Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file:
 
 ``` sh
-http-server -S -C cert.pem -o
+http-server -S -C cert.pem
 Starting up http-server, serving ./ through https
 Available on:
   https:127.0.0.1:8080
