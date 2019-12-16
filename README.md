@@ -108,10 +108,15 @@ You will be prompted with a few questions after entering the command. Use `127.0
 
 This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
 
-Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file. This is what should be output if successful:
+Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file.
 
 ``` sh
 http-server -S -C cert.pem
+```
+
+This is what should be output if successful:
+
+``` sh
 Starting up http-server, serving ./ through https
 Available on:
   https:127.0.0.1:8080
