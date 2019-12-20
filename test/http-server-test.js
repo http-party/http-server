@@ -16,6 +16,7 @@ vows.describe('http-server').addBatch({
       var server = httpServer.createServer({
         root: root,
         robots: true,
+        serverHeader: false,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Credentials': 'true'
@@ -77,6 +78,14 @@ vows.describe('http-server').addBatch({
       'should respond with headers set in options': function (err, res) {
         assert.equal(res.headers['access-control-allow-origin'], '*');
         assert.equal(res.headers['access-control-allow-credentials'], 'true');
+      }
+    },
+    'and serverHeaderis disabled': {
+      topic: function () {
+        request('http://127.0.0.1:8080/', this.callback);
+      },
+      'should not respond with headers from ecstatic': function (res) {
+        assert.isFalse('server' in res.headers);
       }
     },
     'and the server is set to proxy port 8081 to 8080, ': {
