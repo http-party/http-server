@@ -77,6 +77,8 @@ Using `npx` you can run the script without installing it first:
 
 `--no-dotfiles` Do not show dotfiles
 
+`--no-server-header` Hide the `server` header which identifies ecstatic
+
 `-h` or `--help` Print this list and exit.
 
 `-v` or `--version` Print the version and exit.

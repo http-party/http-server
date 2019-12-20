@@ -11,6 +11,7 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
+      .boolean('server-header')
       .argv,
     pjson      = require('../package.json');
 
@@ -56,6 +57,7 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
+    '  --no-server-header  Hide the "server" header which identifies ecstatic',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.'
   ].join('\n'));
@@ -132,6 +134,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     showDotfiles: argv.dotfiles,
+    serverHeader: argv['server-header'],
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
