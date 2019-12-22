@@ -79,6 +79,8 @@ Using `npx` you can run the script without installing it first:
 
 `-h` or `--help` Print this list and exit.
 
+`-v` or `--version` Print the version and exit.
+
 ## Magic Files
 
 - `index.html` will be served as the default file to any directory requests.
@@ -94,12 +96,33 @@ http-server --proxy http://localhost:8080?
 
 Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
 
-## Need a self signed SSL Certificate?
+## TLS/SSL
 
-Create the `cert.pem` and `key.pem` via the command:
+First, you need to make sure that [openssl](https://github.com/openssl/openssl) is installed correctly, and you have `key.pem` and `cert.pem` files. You can generate them using this command:
 
-```
+``` sh
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+```
+
+You will be prompted with a few questions after entering the command. Use `127.0.0.1` as value for `Common name` if you want to be able to install the certificate in your OS's root certificate store or browser so that it is trusted.
+
+This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
+
+Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file.
+
+``` sh
+http-server -S -C cert.pem
+```
+
+This is what should be output if successful:
+
+``` sh
+Starting up http-server, serving ./ through https
+Available on:
+  https:127.0.0.1:8080
+  https:192.168.1.101:8080
+  https:192.168.1.104:8080
+Hit CTRL-C to stop the server
 ```
 
 # Development

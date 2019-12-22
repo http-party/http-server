@@ -1,11 +1,11 @@
 {
   "name": "http-server",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
-    "url": "git://github.com/indexzero/http-server.git"
+    "url": "git://github.com/http-party/http-server.git"
   },
   "keywords": [
     "cli",
@@ -96,7 +96,7 @@
     "vows": "~0.8.3"
   },
   "bugs": {
-    "url": "https://github.com/nodeapps/http-server/issues"
+    "url": "https://github.com/http-party/http-server/issues"
   },
   "license": "MIT",
   "preferGlobal": true,
