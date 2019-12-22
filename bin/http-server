@@ -116,11 +116,6 @@ else {
   listen(port);
 }
 
-if (argv.v || argv.version) {
-  console.log(version);
-  process.exit();
-}
-
 function listen(port) {
   var options = {
     root: argv._[0],
