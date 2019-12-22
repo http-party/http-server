@@ -11,9 +11,7 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
-      .argv,
-    pjson      = require('../package.json');
-
+      .argv;
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
