@@ -101,7 +101,7 @@ else if (colors) {
 }
 
 if (version) {
-  console.log('v' + require('../package.json').version);
+  logger.info('v' + require('../package.json').version);
   process.exit();
 }
 
