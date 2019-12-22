@@ -11,9 +11,7 @@ var colors     = require('colors/safe'),
     argv       = require('optimist')
       .boolean('cors')
       .boolean('log-ip')
-      .argv,
-    pjson      = require('../package.json');
-
+      .argv;
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -67,8 +65,8 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
-    logger,
-    version = pjson.version;
+    version = argv.v || argv.version,
+    logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -102,6 +100,11 @@ else if (colors) {
   };
 }
 
+if (version) {
+  console.log('v' + require('../package.json').version);
+  process.exit();
+}
+
 if (!port) {
   portfinder.basePort = 8080;
   portfinder.getPort(function (err, port) {
@@ -111,11 +114,6 @@ if (!port) {
 }
 else {
   listen(port);
-}
-
-if (argv.v || argv.version) {
-  console.log(version);
-  process.exit();
 }
 
 function listen(port) {
