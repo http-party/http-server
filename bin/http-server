@@ -93,7 +93,7 @@ if (superverbose) {
           date, colors.red(req.method), colors.red(req.url),
           colors.red(error.status.toString()), colors.red(error.message)
         );
-        logger.info('---------------header--------------');
+        logger.info('---------------headers-------------');
         var  request = req.request;
         var rawHeaders = request.rawHeaders;
         if (rawHeaders && rawHeaders.length > 0) {
