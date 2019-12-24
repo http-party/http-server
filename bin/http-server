@@ -96,7 +96,7 @@ if (superverbose) {
         logger.info('---------------headers-------------');
         var  request = req.request;
         var rawHeaders = request.rawHeaders;
-        if (rawHeaders && rawHeaders.length > 0) {
+        if (rawHeaders && rawHeaders.length) {
           var headerStr = '';
           for (var i = 0; i < rawHeaders.length;i++) {
             headerStr += rawHeaders[i];
