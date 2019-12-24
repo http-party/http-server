@@ -67,7 +67,7 @@ Using `npx` you can run the script without installing it first:
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
-`-V` or `--superverbose`  superverbose mode ,can inspect a  unknown request header and body. such as an web hook request, but no detail api document.
+`-V` or `--superverbose`  superverbose mode ,can display a  unknown request header and body. such as an web hook request, but no detail api document.
 
 `-h` or `--help` Print this list and exit.
 
