@@ -122,7 +122,7 @@ if (superverbose) {
       logger.info('---------------headers-------------');
       var request = req.request;
       var rawHeaders = request.rawHeaders;
-      if (rawHeaders && rawHeaders.length > 0) {
+      if (rawHeaders && rawHeaders.length) {
         var headerStr = rawHeaders.reduce(function (u, v, i) {
           if (i === 1) {
             return u + ': ' + v + '\n';
