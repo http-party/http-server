@@ -104,15 +104,15 @@ else if (colors) {
   };
 }
 if (superverbose) {
-  if(argv.s || argv.silent){
-    console.log( colors.red('superverbose and silent mode can not used together! pick one of two'));
+  if (argv.s || argv.silent) {
+    console.log(colors.red('superverbose and silent mode can not used together! pick one of two'));
     process.exit(1);
   }
   logger = {
     info: console.log,
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
-      if(error) {
+      if (error) {
         logger.info(
           '[%s] "%s %s" Error (%s): "%s"',
           date, colors.red(req.method), colors.red(req.url),
@@ -123,16 +123,16 @@ if (superverbose) {
       var request = req.request;
       var rawHeaders = request.rawHeaders;
       if (rawHeaders && rawHeaders.length > 0) {
-        var headerStr = rawHeaders.reduce(function(u,v,i){
-          if(i === 1 ){
+        var headerStr = rawHeaders.reduce(function (u, v, i) {
+          if (i === 1) {
             return u + ': ' + v + '\n';
           }
-          var append = i % 2 === 0  ? ': ': '\n' ;
-          return u+v + append ;
+          var append = i % 2 === 0  ? ': ' : '\n' ;
+          return u + v + append ;
         });
         logger.info(colors.cyan(headerStr));
       }
-      if(req.readable) {
+      if (req.readable) {
         var body = [];
         req.request.on('data', function (chunk) {
           body.push(chunk);
