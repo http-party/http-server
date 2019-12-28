@@ -99,6 +99,7 @@
     "url-join": "^4.0.1"
   },
   "devDependencies": {
+    "auto-changelog": "^1.16.2",
     "eol": "^0.9.1",
     "eslint": "^4.19.1",
     "eslint-config-populist": "^4.2.0",
