@@ -91,6 +91,7 @@
     "union": "~0.5.0"
   },
   "devDependencies": {
+    "auto-changelog": "^1.16.2",
     "common-style": "^3.0.0",
     "request": "^2.88.0",
     "vows": "~0.8.3"
