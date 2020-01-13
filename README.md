@@ -9,19 +9,27 @@
 
 ![](https://github.com/nodeapps/http-server/raw/master/screenshots/public.png)
 
-# Installing globally:
+## Installation:
 
-Installation via `npm`:
+#### Globally via `npm`
 
-     npm install http-server -g
+    npm install --global http-server
 
-This will install `http-server` globally so that it may be run from the command line.
+This will install `http-server` globally so that it may be run from the command line anywhere.
 
-## Running on-demand:
+#### Globally via Homebrew
+
+    brew install http-server
+
+#### Running on-demand:
 
 Using `npx` you can run the script without installing it first:
 
-     npx http-server [path] [options]
+    npx http-server [path] [options]
+     
+#### As a dependency in your `npm` package:
+
+    npm install http-server
 
 ## Usage:
 
