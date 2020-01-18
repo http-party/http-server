@@ -136,41 +136,47 @@ if (port === true) {
 if (ssl && redirect) {
   var ports = [];
   if (!port) {
-    ports = [8080,443]
-  } else if (typeof port == "string") {
-    ports = (port.toString() || "").split(',').map( s => parseInt(s, 10) );
-  }else {
+    ports = [8080,443];
+  }
+  else if (typeof port === 'string') {
+    ports = (port.toString() || '').split(',').map(function (s) { parseInt(s, 10) });
+  }
+  else {
     logger.info(colors.red('Error: Cannot parse "--port ' + port + '" of type ' + typeof port + '. Port has to be in the format [httpPort,httpsPort]\nExample: --port 8080,443'));
     process.exit(1);
   }
 
-  if (ports.length == 2) {
-     if (isNaN(ports[0]) || isNaN(ports[1])) {
+  if (ports.length === 2) {
+    if (isNaN(ports[0]) || isNaN(ports[1])) {
       logger.info(colors.red('Error parsing "--port ' + port + '". [' + ports + '] is not of type [number,number]'));
       process.exit(1);
-     }
-  }else {
+    }
+  }
+  else {
     logger.info(colors.red('Error: Cannot parse "--port ' + port + '"\nExample: --port 8080,443'));
     process.exit(1);
   }
 
   listen(ports[1]);
   listen(ports[0], ports[1]);
-}else if (!ssl && redirect) {
+}
+else if (!ssl && redirect) {
   logger.info(colors.red('Error: Can\'t redirect to https when the main server runs on http!'));
-}else {
+}
+else {
   if (!port) {
     portfinder.basePort = 8080;
     portfinder.getPort(function (err, port) {
       if (err) { throw err; }
       listen(port);
     });
-  }else{
-    listen(port); 
+  }
+  else {
+    listen(port);
   }
 }
 
-function listen(port, redirectPort = null) {
+function listen(port, redirectPort) {
   var options = {
     root: argv._[0],
     cache: argv.c,
@@ -191,7 +197,7 @@ function listen(port, redirectPort = null) {
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
-  var isSSLServer = (ssl && !redirectPort)
+  var isSSLServer = (ssl && !redirectPort);
 
   if (argv.cors) {
     options.cors = true;
@@ -281,8 +287,8 @@ function listen(port, redirectPort = null) {
       }
     }
 
-    if (redirectPort){
-      logger.info("[Redirect listener]")
+    if (redirectPort) {
+      logger.info('[Redirect listener]');
     }
 
     logger.info('Hit CTRL-C to stop the server');
