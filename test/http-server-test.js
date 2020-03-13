@@ -139,7 +139,8 @@ vows.describe('http-server').addBatch({
       var server = httpServer.createServer({
         root: root,
         cors: true,
-        corsHeaders: 'X-Test'
+        corsHeaders: 'X-Test',
+        corsOrigin: 'http://example.com'
       });
       server.listen(8082);
       this.callback(null, server);
@@ -161,6 +162,9 @@ vows.describe('http-server').addBatch({
       },
       'response Access-Control-Allow-Headers should contain X-Test': function (err, res) {
         assert.ok(res.headers['access-control-allow-headers'].split(/\s*,\s*/g).indexOf('X-Test') >= 0, 204);
+      },
+      'response Access-Control-Allow-Origin should equal http://example.com': function (err, res) {
+        assert.equal(res.headers['access-control-allow-origin'], 'http://example.com');
       }
     },
     teardown: function (server) {

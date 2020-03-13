@@ -139,6 +139,10 @@ function listen(port) {
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+
+    if (typeof argv.corsOrigin === 'string') {
+      options.corsOrigin = argv.corsOrigin;
+    }
   }
 
   if (ssl) {
