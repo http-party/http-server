@@ -80,19 +80,19 @@
   ],
   "dependencies": {
     "basic-auth": "^1.0.3",
-    "colors": "^1.3.3",
+    "colors": "^1.4.0",
     "corser": "^2.0.1",
     "ecstatic": "^3.3.2",
-    "http-proxy": "^1.17.0",
+    "http-proxy": "^1.18.0",
     "minimist": "^1.2.5",
     "opener": "^1.5.1",
-    "portfinder": "^1.0.20",
+    "portfinder": "^1.0.25",
     "secure-compare": "3.0.1",
     "union": "~0.5.0"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "vows": "~0.8.3"
   },
   "bugs": {
