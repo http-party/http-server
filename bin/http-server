@@ -8,10 +8,7 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
-    argv       = require('optimist')
-      .boolean('cors')
-      .boolean('log-ip')
-      .argv;
+    argv       = require('minimist')(process.argv.slice(2));
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
