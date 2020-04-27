@@ -20,7 +20,8 @@
   },
   "files": [
     "lib",
-    "bin"
+    "bin",
+    "doc"
   ],
   "man": "./doc/http-server.1",
   "engines": {
