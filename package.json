@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
