@@ -74,7 +74,7 @@ Using `npx` you can run the script without installing it first:
 
 `--password` Password for basic authentication [none]
 
-`-S` or `--ssl` Enable https.
+`-S` or `--tls` Secure. Enables TLS/SSL.
 
 `-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
 
@@ -115,7 +115,7 @@ You will be prompted with a few questions after entering the command. Use `127.0
 
 This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
 
-Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file.
+Then you need to run the server with `-S` for enabling Secure and `-C` for your certificate file.
 
 ``` sh
 http-server -S -C cert.pem
