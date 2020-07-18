@@ -45,7 +45,7 @@ if (argv.h || argv.help) {
     '  --password   Password for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
-    '  -S --tls     Enable TLS/SSL.',
+    '  -S --tls --ssl     Enable TLS/SSL.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
@@ -59,7 +59,7 @@ if (argv.h || argv.help) {
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
-    tls = argv.S || argv.tls,
+    tls = argv.S || argv.tls || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,

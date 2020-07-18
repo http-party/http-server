@@ -76,6 +76,8 @@ Using `npx` you can run the script without installing it first:
 
 `-S` or `--tls` Secure. Enables TLS/SSL.
 
+`--ssl` An alias for `--tls`.
+
 `-C` or `--cert` Path to ssl cert file (default: `cert.pem`).
 
 `-K` or `--key` Path to ssl key file (default: `key.pem`).
