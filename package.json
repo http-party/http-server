@@ -84,7 +84,7 @@
     "basic-auth": "^1.0.3",
     "colors": "^1.4.0",
     "corser": "^2.0.1",
-    "ecstatic": "^3.3.2",
+    "ecstatic": "^4.1.4",
     "http-proxy": "^1.18.0",
     "minimist": "^1.2.5",
     "opener": "^1.5.1",
