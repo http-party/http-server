@@ -18,15 +18,16 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p --port    Port to use [8080]',
-    '  -a           Address to use [0.0.0.0]',
-    '  -d           Show directory listings [true]',
-    '  -i           Display autoIndex [true]',
-    '  -g --gzip    Serve gzip files when possible [false]',
-    '  -b --brotli  Serve brotli files when possible [false]',
-    '               If both brotli and gzip are enabled, brotli takes precedence',
-    '  -e --ext     Default file extension if none supplied [none]',
-    '  -s --silent  Suppress log messages from output',
+    '  -p --port          Port to use [8080]',
+    '  -a                 Address to use [0.0.0.0]',
+    '  -d                 Show directory listings [true]',
+    '  -i                 Display autoIndex [true]',
+    '  -g --gzip          Serve gzip files when possible [false]',
+    '  -b --brotli        Serve brotli files when possible [false]',
+    '                     If both brotli and gzip are enabled, brotli takes precedence',
+    '  -e --ext           Default file extension if none supplied [none]',
+    '  -e --errors-only   Suppress non-error messages from output',
+    '  -s --silent        Suppress all messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
     '  -o [path]    Open browser window after starting the server.',
@@ -57,48 +58,43 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+var noop = function () {},
+    port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
-    logger;
+    silent = argv.s || argv.silent,
+    errorsonly = argv.e || argv['errors-only'];
 
-if (!argv.s && !argv.silent) {
-  logger = {
-    info: console.log,
-    request: function (req, res, error) {
-      var date = utc ? new Date().toUTCString() : new Date();
-      var ip = argv['log-ip']
-          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
-          : '';
-      if (error) {
-        logger.info(
-          '[%s] %s "%s %s" Error (%s): "%s"',
-          date, ip, colors.red(req.method), colors.red(req.url),
-          colors.red(error.status.toString()), colors.red(error.message)
-        );
-      }
-      else {
-        logger.info(
-          '[%s] %s "%s %s" "%s"',
-          date, ip, colors.cyan(req.method), colors.cyan(req.url),
-          req.headers['user-agent']
-        );
-      }
+var logger = {
+  log: (silent || errorsonly) ? noop : console.info,
+  error: silent ? noop : console.info,
+  request: silent ? noop : function (req, res, error) {
+    var date = utc ? new Date().toUTCString() : new Date();
+    var ip = argv['log-ip']
+        ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
+        : '';
+    if (error) {
+      logger.error(
+        '[%s] %s "%s %s" Error (%s): "%s"',
+        date, ip, colors.red(req.method), colors.red(req.url),
+        colors.red(error.status.toString()), colors.red(error.message)
+      );
     }
-  };
-}
-else if (colors) {
-  logger = {
-    info: function () {},
-    request: function () {}
-  };
-}
+    else {
+      logger.log(
+        '[%s] %s "%s %s" "%s"',
+        date, ip, colors.cyan(req.method), colors.cyan(req.url),
+        req.headers['user-agent']
+      );
+    }
+  }
+};
 
 if (version) {
-  logger.info('v' + require('../package.json').version);
+  logger.log('v' + require('../package.json').version);
   process.exit();
 }
 
@@ -147,14 +143,14 @@ function listen(port) {
       fs.lstatSync(options.https.cert);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find certificate ' + options.https.cert));
+      logger.error(colors.red('Error: Could not find certificate ' + options.https.cert));
       process.exit(1);
     }
     try {
       fs.lstatSync(options.https.key);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find private key ' + options.https.key));
+      logger.error(colors.red('Error: Could not find private key ' + options.https.key));
       process.exit(1);
     }
   }
@@ -162,38 +158,49 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
-        protocol      = ssl ? 'https://' : 'http://';
+        protocol      = ssl ? 'https://' : 'http://',
+        startup = [
+          colors.yellow('Starting up http-server, serving '),
+          colors.cyan(server.root),
+          ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
+        ];
 
-    logger.info([colors.yellow('Starting up http-server, serving '),
-      colors.cyan(server.root),
-      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
-      colors.yellow('\nAvailable on:')
-    ].join(''));
+
+    if (errorsonly) {
+      logger.error(startup.concat([
+        colors.yellow(' on '),
+        protocol + canonicalHost + ':' + port
+      ]).join(''));
+    } else {
+      logger.log(startup.concat([
+        colors.yellow('\nAvailable on:')
+      ]).join(''));
+    }
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+      logger.log(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
     }
     else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            logger.log(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
           }
         });
       });
     }
 
     if (typeof proxy === 'string') {
-      logger.info('Unhandled requests will be served from: ' + proxy);
+      logger.log('Unhandled requests will be served from: ' + proxy);
     }
 
-    logger.info('Hit CTRL-C to stop the server');
+    logger.log('Hit CTRL-C to stop the server');
     if (argv.o) {
       var openUrl = protocol + canonicalHost + ':' + port;
       if (typeof argv.o === 'string') {
         openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
       }
-      logger.info('open: ' + openUrl);
+      logger.log('open: ' + openUrl);
       opener(openUrl);
     }
   });
@@ -209,11 +216,11 @@ if (process.platform === 'win32') {
 }
 
 process.on('SIGINT', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.error(colors.red('http-server stopped.'));
   process.exit();
 });
 
 process.on('SIGTERM', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.error(colors.red('http-server stopped.'));
   process.exit();
 });
