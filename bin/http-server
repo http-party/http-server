@@ -58,8 +58,7 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var noop = function () {},
-    port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
@@ -67,6 +66,8 @@ var noop = function () {},
     version = argv.v || argv.version,
     silent = argv.s || argv.silent,
     errorsonly = argv.e || argv['errors-only'];
+
+function noop() {}
 
 var logger = {
   log: (silent || errorsonly) ? noop : console.info,
@@ -165,13 +166,13 @@ function listen(port) {
           ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
         ];
 
-
     if (errorsonly) {
       logger.error(startup.concat([
         colors.yellow(' on '),
         protocol + canonicalHost + ':' + port
       ]).join(''));
-    } else {
+    }
+    else {
       logger.log(startup.concat([
         colors.yellow('\nAvailable on:')
       ]).join(''));
