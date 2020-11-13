@@ -11,6 +11,7 @@
     "cli",
     "command",
     "http",
+    "http-server",
     "server"
   ],
   "scripts": {
