@@ -46,6 +46,7 @@ if (argv.h || argv.help) {
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
     '  -S --ssl     Enable https.',
+    ' -T --tls Enable https too',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
@@ -59,7 +60,7 @@ if (argv.h || argv.help) {
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
-    ssl = argv.S || argv.ssl,
+    ssl = argv.S || argv.ssl || argv.T || argv.tls,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
