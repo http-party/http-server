@@ -14,7 +14,7 @@ var root = path.join(__dirname, 'fixtures', 'root');
 // the returned response is code with the expected body.
 function respondsWith(code, url, opts) {
   var context = {
-    topic: function () {
+    topic: function (server) {
       opts = opts || {};
       request(url, opts, this.callback);
     }
@@ -26,23 +26,24 @@ function respondsWith(code, url, opts) {
   return context;
 }
 
+// respondsWithMessage makes a request to the URL with the optional opts, and asserts
+// the returned response is `code` and the response body is `message`.
 function respondsWithMessage(code, message, url, opts) {
   var context = respondsWith(code, url, opts);
   context['and file content should be "' + message + '"'] = function (err, res, body) {
+    assert.isNull(err);
     assert.equal(body, message);
   };
   return context;
 }
 
 // respondsWithFile makes a request to the URL with the optional opts, and asserts
-// the returned response is 200 and matches the expectFilename.
+// the returned status is `code` and the response body matches the expected filename
+// contents.
 function respondsWithFile(code, filename, url, opts) {
   var context = respondsWith(code, url, opts);
   context['and file content'] = {
     topic: function (res, body) {
-      assert.isNotNull(res);
-      assert.isNotNull(body);
-
       var self = this;
       fs.readFile(path.join(root, filename), 'utf8', function (err, data) {
         self.callback(err, data, body);
@@ -69,17 +70,14 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8080);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'it should serve files from root directory': respondsWithFile(200, 'file', 'http://127.0.0.1:8080/file'),
-    'and a non-existent file is requested...': {
-      topic: function () {
-        request('http://127.0.0.1:8080/404', this.callback);
-      },
-      'status code should be 404': function (err, res) {
-        assert.equal(res.statusCode, 404);
-      }
-    },
+    'and a non-existent file is requested...': respondsWith(404, 'http://127.0.0.1:8080/404'),
     'requesting /': {
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);
@@ -114,7 +112,11 @@ vows.describe('http-server').addBatch({
           root: path.join(__dirname, 'fixtures')
         });
         proxyServer.listen(8081);
-        this.callback(null, proxyServer);
+        return proxyServer;
+      },
+      'it should start without errors': function (err, server) {
+        assert.isNull(err);
+        assert.isTrue(server.server.listening);
       },
       '\nit should serve files from the proxy\'s root': respondsWithFile(200, 'file', 'http://127.0.0.1:8081/root/file'),
       '\nit should fallback to the proxied server': respondsWithFile(200, 'file', 'http://127.0.0.1:8081/file'),
@@ -135,7 +137,11 @@ vows.describe('http-server').addBatch({
         corsHeaders: 'X-Test'
       });
       server.listen(8082);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and the server is given an OPTIONS request': {
       topic: function () {
@@ -168,7 +174,11 @@ vows.describe('http-server').addBatch({
         gzip: true
       });
       server.listen(8084);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and a request accepting only gzip is made': {
       topic: function () {
@@ -230,7 +240,11 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8083);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and the user requests an existent file with no auth details': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file'),
     'and the user requests an existent file with incorrect username': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
@@ -268,7 +282,11 @@ vows.describe('http-server').addBatch({
         ext: true
       });
       server.listen(8085);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and a file with no extension is requested with default options,': {
       topic: function () {
@@ -297,7 +315,11 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8086);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and the user requests an existent file with no auth details': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8086/file'),
     'and the user requests an existent file with incorrect username': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
