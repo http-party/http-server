@@ -349,5 +349,41 @@ vows.describe('http-server').addBatch({
     teardown: function (server) {
       server.close();
     }
+  },
+  'When SSL is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        https: {
+          cert: path.join(__dirname, 'fixtures', 'cert.pem'),
+          key:  path.join(__dirname, 'fixtures', 'key.pem')
+        }
+      });
+      server.listen(8087);
+      return server;
+    },
+    'the server should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
+    },
+    'and it should serve files': {
+      topic: function (server) {
+        var caFile = path.join(__dirname, 'fixtures', 'ca.pem');
+        request('https://127.0.0.1:8087/', {
+          ca: fs.readFileSync(caFile)
+        }, this.callback);
+      },
+      'over SSL': function (err, res) {
+        assert.isNull(err);
+
+        var peerCert = res.socket.getPeerCertificate();
+        assert.isNotNull(peerCert);
+        assert.equal(peerCert.subject.CN, 'localhost');
+      }
+    },
+    teardown: function (server) {
+      if (server) {
+        server.close();
+      }
+    }
   }
 }).export(module);
