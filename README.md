@@ -1,27 +1,34 @@
-[![build status](https://img.shields.io/travis/indexzero/http-server.svg?style=flat-square)](https://travis-ci.org/indexzero/http-server)
-[![dependencies status](https://img.shields.io/david/indexzero/http-server.svg?style=flat-square)](https://david-dm.org/indexzero/http-server)
-[![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server)
-[![license](https://img.shields.io/github/license/indexzero/http-server.svg?style=flat-square)](https://github.com/indexzero/http-server)
+[![build status](https://img.shields.io/travis/http-party/http-server.svg?style=flat-square)](https://travis-ci.org/http-party/http-server)
+[![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server) [![homebrew](https://img.shields.io/homebrew/v/http-server?style=flat-square)](https://formulae.brew.sh/formula/http-server) [![npm downloads](https://img.shields.io/npm/dm/http-server?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/http-server)
+[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server)
 
 # http-server: a command-line http server
 
 `http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
 
-![](https://github.com/nodeapps/http-server/raw/master/screenshots/public.png)
+![Example of running http-server](https://github.com/http-party/http-server/raw/master/screenshots/public.png)
 
-# Installing globally:
+## Installation:
 
-Installation via `npm`:
+#### Globally via `npm`
 
-     npm install http-server -g
+    npm install --global http-server
 
-This will install `http-server` globally so that it may be run from the command line.
+This will install `http-server` globally so that it may be run from the command line anywhere.
 
-## Running on-demand:
+#### Globally via Homebrew
+
+    brew install http-server
+
+#### Running on-demand:
 
 Using `npx` you can run the script without installing it first:
 
-     npx http-server [path] [options]
+    npx http-server [path] [options]
+     
+#### As a dependency in your `npm` package:
+
+    npm install http-server
 
 ## Usage:
 
@@ -35,7 +42,7 @@ Using `npx` you can run the script without installing it first:
 
 ## Available Options:
 
-`-p` or `--port` Port to use (defaults to 8080)
+`-p` or `--port` Port to use (defaults to 8080). It will also read from `process.env.PORT`.
 
 `-a` Address to use (defaults to 0.0.0.0)
 
@@ -75,7 +82,11 @@ Using `npx` you can run the script without installing it first:
 
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
+`--no-dotfiles` Do not show dotfiles
+
 `-h` or `--help` Print this list and exit.
+
+`-v` or `--version` Print the version and exit.
 
 ## Magic Files
 
@@ -91,6 +102,35 @@ http-server --proxy http://localhost:8080?
 ```
 
 Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
+
+## TLS/SSL
+
+First, you need to make sure that [openssl](https://github.com/openssl/openssl) is installed correctly, and you have `key.pem` and `cert.pem` files. You can generate them using this command:
+
+``` sh
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+```
+
+You will be prompted with a few questions after entering the command. Use `127.0.0.1` as value for `Common name` if you want to be able to install the certificate in your OS's root certificate store or browser so that it is trusted.
+
+This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
+
+Then you need to run the server with `-S` for enabling SSL and `-C` for your certificate file.
+
+``` sh
+http-server -S -C cert.pem
+```
+
+This is what should be output if successful:
+
+``` sh
+Starting up http-server, serving ./ through https
+Available on:
+  https:127.0.0.1:8080
+  https:192.168.1.101:8080
+  https:192.168.1.104:8080
+Hit CTRL-C to stop the server
+```
 
 # Development
 
