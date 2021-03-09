@@ -16,9 +16,8 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "pretest": "common bin/http-server lib/http-server.js test",
-    "test": "vows --spec --isolate test/*.test.js",
-    "test-watch": "vows --spec --isolate --watch test/*.test.js"
+    "test": "tap --reporter=spec test/*.test.js",
+    "test-watch": "tap --reporter=spec --watch test/*.test.js"
   },
   "files": [
     "lib",
@@ -86,10 +85,10 @@
     "basic-auth": "^1.0.3",
     "colors": "^1.4.0",
     "corser": "^2.0.1",
-    "http-proxy": "^1.18.0",
-    "minimist": "^1.2.5",
     "he": "^1.1.0",
+    "http-proxy": "^1.18.0",
     "mime": "^1.6.0",
+    "minimist": "^1.2.5",
     "opener": "^1.5.1",
     "portfinder": "^1.0.25",
     "secure-compare": "3.0.1",
@@ -99,7 +98,7 @@
   "devDependencies": {
     "common-style": "^3.0.0",
     "request": "^2.88.2",
-    "vows": "~0.8.3"
+    "tap": "^14.11.0"
   },
   "bugs": {
     "url": "https://github.com/http-party/http-server/issues"
