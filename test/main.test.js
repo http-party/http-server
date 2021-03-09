@@ -33,37 +33,86 @@ test('http-server main', (t) => {
       });
       server.listen(8080, async () => {
         try {
-          // request file from root
-          await requestAsync("http://localhost:8080/file").then(async (res) => {
-            // files should be served from the root
-            t.equal(res.statusCode, 200);
 
-            const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
-            t.equal(res.body.trim(), fileData.trim());
-          }).catch(err => t.fail(err));
+          // Since none of these depend on anything not already declared, they
+          // can run on the event loop at their own leisure
+          await Promise.all([
+            // request file from root
+            requestAsync("http://localhost:8080/file").then(async (res) => {
+              // files should be served from the root
+              t.equal(res.statusCode, 200);
 
-          // Request non-existent file
-          await requestAsync("http://localhost:8080/404").then(res => {
-            t.ok(res);
-            t.equal(res.statusCode, 404);
-          }).catch(err => t.fail(err));
+              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              t.equal(res.body.trim(), fileData.trim(), 'root file content matches');
+            }).catch(err => t.fail(err.toString())),
 
-          // Request root
-          await requestAsync("http://localhost:8080/").then(res => {
-            t.ok(res);
-            t.equal(res.statusCode, 200);
-            t.includes(res.body, '/file');
-            t.includes(res.body, '/canYouSeeMe');
+            // Request non-existent file
+            requestAsync("http://localhost:8080/404").then(res => {
+              t.ok(res);
+              t.equal(res.statusCode, 404);
+            }).catch(err => t.fail(err.toString())),
 
-            // Custom headers
-            t.equal(res.headers['access-control-allow-origin'], '*');
-            t.equal(res.headers['access-control-allow-credentials'], 'true');
-          }).catch(err => t.fail(err));
+            // Request root
+            requestAsync("http://localhost:8080/").then(res => {
+              t.ok(res);
+              t.equal(res.statusCode, 200);
+              t.includes(res.body, '/file');
+              t.includes(res.body, '/canYouSeeMe');
 
-          // Get robots
-          await requestAsync("http://localhost:8080/robots.txt").then(res => {
-            t.equal(res.statusCode, 200);
-          }).catch(err => t.fail(err));
+              // Custom headers
+              t.equal(res.headers['access-control-allow-origin'], '*');
+              t.equal(res.headers['access-control-allow-credentials'], 'true');
+            }).catch(err => t.fail(err.toString())),
+
+            // Get robots
+            requestAsync("http://localhost:8080/robots.txt").then(res => {
+              t.equal(res.statusCode, 200);
+            }).catch(err => t.fail(err.toString())),
+
+            // CORS time
+            requestAsync({
+              uri: 'http://localhost:8080',
+              method: 'OPTIONS',
+              headers: {
+                'Access-Control-Request-Method': 'GET',
+                Origin: 'http://example.com',
+                'Access-Control-Request-Headers': 'Foobar'
+              }
+            }).then(res => {
+              t.equal(res.statusCode, 204);
+              t.ok(
+                res.headers['access-control-allow-headers']
+                  .split(/\s*,\s*/g)
+                  .indexOf('X-Test') >= 0, 204);
+            }).catch(err => t.fail(err.toString())),
+
+            // Light compression testing. Heavier compression tests exist in
+            // compression.test.js
+            requestAsync({
+              uri: 'http://localhost:8080/compression/',
+              headers: {
+                'accept-encoding': 'gzip'
+              }
+            }).then(res => {
+              t.equal(res.statusCode, 200);
+              t.equal(res.headers['content-encoding'], 'gzip');
+            }).catch(err => t.fail(err.toString())),
+
+            requestAsync({
+              uri: 'http://localhost:8080/compression/',
+              headers: {
+                'accept-encoding': 'gzip, br'
+              }
+            }).then(res => {
+              t.equal(res.statusCode, 200);
+              t.equal(res.headers['content-encoding'], 'br');
+            }).catch(err => t.fail(err.toString())),
+
+            requestAsync("http://localhost:8080/htmlButNot").then(res => {
+              t.equal(res.statusCode, 200);
+              t.match(res.headers['content-type'], /^text\/html/);
+            }).catch(err => t.fail(err.toString()))
+          ]);
 
           // Another server proxies 8081 to 8080
           const proxyServer = httpServer.createServer({
@@ -81,20 +130,20 @@ test('http-server main', (t) => {
 
                   // File content matches
                   const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
-                  t.equal(res.body.trim(), fileData.trim());
-                }).catch(err => t.fail(err));
+                  t.equal(res.body.trim(), fileData.trim(), 'proxied root file content matches');
+                }).catch(err => t.fail(err.toString()));
 
                 // Proxy fallback
-                await requestAsync("http://localhost:8081/file").then(res => {
+                await requestAsync("http://localhost:8081/file").then(async (res) => {
                   t.ok(res);
                   t.equal(res.statusCode, 200);
 
                   // File content matches
-                  const fileData = fs.readFileSync(path.join(root, 'file'), 'utf8');
-                  t.equal(res.body.trim(), fileData.trim());
-                }).catch(err => t.fail(err));
+                  const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+                  t.equal(res.body.trim(), fileData.trim(), 'proxy fallback root file content matches');
+                }).catch(err => t.fail(err.toString()));
               } catch (err) {
-                t.fail(err);
+                t.fail(err.toString());
               } finally {
                 proxyServer.close();
                 resolve();
@@ -102,52 +151,8 @@ test('http-server main', (t) => {
             });
           });
 
-          // CORS time
-          await requestAsync({
-            uri: 'http://localhost:8080',
-            method: 'OPTIONS',
-            headers: {
-              'Access-Control-Request-Method': 'GET',
-              Origin: 'http://example.com',
-              'Access-Control-Request-Headers': 'Foobar'
-            }
-          }).then(res => {
-            t.equal(res.statusCode, 204);
-            t.ok(
-              res.headers['access-control-allow-headers']
-                .split(/\s*,\s*/g)
-                .indexOf('X-Test') >= 0, 204);
-          }).catch(err => t.fail(err));
-
-          // Light compression testing. Heavier compression tests exist in
-          // compression.test.js
-          await requestAsync({
-            uri: 'http://localhost:8080/compression/',
-            headers: {
-              'accept-encoding': 'gzip'
-            }
-          }).then(res => {
-            t.equal(res.statusCode, 200);
-            t.equal(res.headers['content-encoding'], 'gzip');
-          }).catch(err => t.fail(err));
-
-          await requestAsync({
-            uri: 'http://localhost:8080/compression/',
-            headers: {
-              'accept-encoding': 'gzip, br'
-            }
-          }).then(res => {
-            t.equal(res.statusCode, 200);
-            t.equal(res.headers['content-encoding'], 'br');
-          }).catch(err => t.fail(err));
-
-          await requestAsync("http://localhost:8080/htmlButNot").then(res => {
-            t.equal(res.statusCode, 200);
-            t.match(res.headers['content-type'], /^text\/html/);
-          }).catch(err => t.fail(err));
-
         } catch (err) {
-          t.fail(err);
+          t.fail(err.toString());
         } finally {
           server.close();
           resolve();
@@ -163,60 +168,60 @@ test('http-server main', (t) => {
 
       server.listen(8082, async () => {
         try {
+          await Promise.all([
+            // Bad request with no auth
+            requestAsync("http://localhost:8082/file").then((res) => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // Bad request with no auth
-          await requestAsync("http://localhost:8082/file").then((res) => {
-            t.equal(res.statusCode, 401);
-            t.equal(body, 'Access denied');
-          }).catch(err => t.fail(err));
+            // bad user
+            requestAsync("http://localhost:8082/file", {
+              auth: {
+                user: 'wrong_username',
+                pass: 'correct_password'
+              }
+            }).then((res) => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // bad user
-          await requestAsync("http://localhost:8082/file", {
-            auth: {
-              user: 'wrong_username',
-              pass: 'correct_password'
-            }
-          }).then((res) => {
-            t.equal(res.statusCode, 401);
-            t.equal(body, 'Access denied');
-          }).catch(err => t.fail(err));
+            // bad password
+            requestAsync("http://localhost:8082/file", {
+              auth: {
+                user: 'correct_username',
+                pass: 'wrong_password'
+              }
+            }).then((res) => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // bad password
-          await requestAsync("http://localhost:8082/file", {
-            auth: {
-              user: 'correct_username',
-              pass: 'wrong_password'
-            }
-          }).then((res) => {
-            t.equal(res.statusCode, 401);
-            t.equal(body, 'Access denied');
-          }).catch(err => t.fail(err));
+            // nonexistant file, and bad auth
+            requestAsync("http://localhost:8082/404", {
+              auth: {
+                user: 'correct_username',
+                pass: 'wrong_password'
+              }
+            }).then((res) => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // nonexistant file, and bad auth
-          await requestAsync("http://localhost:8082/404", {
-            auth: {
-              user: 'correct_username',
-              pass: 'wrong_password'
-            }
-          }).then((res) => {
-            t.equal(res.statusCode, 401);
-            t.equal(body, 'Access denied');
-          }).catch(err => t.fail(err));
-
-          // good path, good auth
-          await requestAsync("http://localhost:8082/file", {
-            auth: {
-              user: 'correct_username',
-              pass: 'correct_password'
-            }
-          }).then(async (res) => {
-            t.equal(res.statusCode, 200);
-            const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
-            t.equal(res.body.trim(), fileData.trim());
-          }).catch(err => t.fail(err));
-
+            // good path, good auth
+            requestAsync("http://localhost:8082/file", {
+              auth: {
+                user: 'correct_username',
+                pass: 'correct_password'
+              }
+            }).then(async (res) => {
+              t.equal(res.statusCode, 200);
+              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              t.equal(res.body.trim(), fileData.trim(), 'auth-protected file with good auth has expected file content');
+            }).catch(err => t.fail(err.toString())),
+          ]);
         } catch (err) {
-          t.fail(err);
+          t.fail(err.toString());
         } finally {
           server.close();
           resolve();
@@ -233,44 +238,45 @@ test('http-server main', (t) => {
 
       server.listen(8083, async () => {
         try {
-          // regression test
-          await requestAsync("http://localhost:8083/file").then(res => {
-            t.equal(res.statusCode, 401);
-            t.equal(res.body, 'Access denied');
-          }).catch(err => t.fail(err));
+          await Promise.all([
+            // regression test
+            requestAsync("http://localhost:8083/file").then(res => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // regression test, bad username
-          await requestAsync("http://localhost:8083/file", {
-            auth: {
-              user: 'wrong_username',
-              pass: '123456'
-            }
-          }).then(res => {
-            t.equal(res.statusCode, 401);
-            t.equal(res.body, 'Access denied');
-          }).catch(err => t.fail(err));
+            // regression test, bad username
+            requestAsync("http://localhost:8083/file", {
+              auth: {
+                user: 'wrong_username',
+                pass: '123456'
+              }
+            }).then(res => {
+              t.equal(res.statusCode, 401);
+              t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
+            }).catch(err => t.fail(err.toString())),
 
-          // regression test, correct auth, even though the password is a
-          // different type.
-          await requestAsync("http://localhost:8083/file", {
-            auth: {
-              user: 'correct_username',
-              pass: '123456'
-            }
-          }).then(async (res) => {
-            t.equal(res.statusCode, 200);
-            const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
-            t.equal(res.body.trim(), fileData.trim());
-          }).catch(err => t.fail(err));
-
+            // regression test, correct auth, even though the password is a
+            // different type.
+            requestAsync("http://localhost:8083/file", {
+              auth: {
+                user: 'correct_username',
+                pass: '123456'
+              }
+            }).then(async (res) => {
+              t.equal(res.statusCode, 200);
+              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              t.equal(res.body.trim(), fileData.trim(), 'numeric auth with good auth has expected file content');
+            }).catch(err => t.fail(err.toString()))
+          ]);
         } catch (err) {
-          t.fail(err);
+          t.fail(err.toString());
         } finally {
           server.close();
           resolve();
         }
       });
     }),
-  ]).catch(err => t.fail(err))
+  ]).catch(err => t.fail(err.toString()))
     .finally(() => t.end());
 });
