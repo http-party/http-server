@@ -62,7 +62,7 @@ test('http-server main', (t) => {
 
           // Get robots
           await requestAsync("http://localhost:8080/robots.txt").then(res => {
-            t.equal(res.statuscode, 200);
+            t.equal(res.statusCode, 200);
           }).catch(err => t.fail(err));
 
           // Another server proxies 8081 to 8080
