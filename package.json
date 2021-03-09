@@ -11,6 +11,9 @@
     "cli",
     "command",
     "http",
+    "https",
+    "http-server",
+    "https-server",
     "server"
   ],
   "scripts": {
