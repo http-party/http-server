@@ -49,6 +49,8 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
+    '  --cgi        Enable CGI scripts in /cgi-bin/',
+    '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
     '  -h --help          Print this list and exit.',
@@ -128,7 +130,8 @@ function listen(port) {
     proxy: proxy,
     showDotfiles: argv.dotfiles,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    cgi: argv.cgi
   };
 
   if (argv.cors) {
