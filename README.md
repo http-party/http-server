@@ -25,7 +25,7 @@ This will install `http-server` globally so that it may be run from the command 
 Using `npx` you can run the script without installing it first:
 
     npx http-server [path] [options]
-     
+
 #### As a dependency in your `npm` package:
 
     npm install http-server
@@ -80,6 +80,8 @@ Using `npx` you can run the script without installing it first:
 
 `-K` or `--key` Path to ssl key file (default: `key.pem`).
 
+`--cgi` Enable CGI scripts in /cgi-bin/.
+
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
 `--no-dotfiles` Do not show dotfiles
@@ -132,11 +134,32 @@ Available on:
 Hit CTRL-C to stop the server
 ```
 
+## CGI scripts
+
+If you need some server-side scripting, you can enable CGI scripts with `--cgi`. Place your scripts in `/cgi-bin/` and call them using something like `http://127.0.0.1:8080/cgi-bin/script.js?query=string`.
+
+On POSIX systems (e.g. Linux and Mac), you can set any script in `/cgi-bin/` to be executable using something like `chmod +x script.sh`. Files ending in `.js` will be executing using Node.js, even if they are not set to be executable. On Windows, scripts must be JavaScript (`.js`), batch (`.bat`), command (`.cmd`) or executable (`.exe`) files.
+
+An example CGI script written in JavaScript is:
+
+``` js
+#!/usr/bin/env node
+
+console.log('Content-Type: text/plain')
+console.log('');
+console.log(`Hello, ${process.env.REMOTE_ADDR}!`);
+console.log('');
+
+for (var v in process.env) {
+  console.log(v, process.env[v]);
+}
+```
+
 # Development
 
 Checkout this repository locally, then:
 
-```sh
+``` sh
 $ npm i
 $ node bin/http-server
 ```
