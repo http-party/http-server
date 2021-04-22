@@ -514,5 +514,62 @@ vows.describe('http-server').addBatch({
     teardown: function (server) {
       server.close();
     }
+  },
+  'When http-server is listening on 8087 with CGI enabled,\n': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        cgi: true
+      });
+
+      server.listen(8087);
+      this.callback(null, server);
+    },
+    'a file served from the cgi-bin directory': {
+      topic: function () {
+        request('http://127.0.0.1:8087/cgi-bin/file.js', this.callback);
+      },
+      'should be executed as a script': function (error, response, body) {
+        assert.equal(body.trim(), 'cgi like the 90s');
+      },
+      'and a file with that throws an error': {
+        topic: function () {
+          request('http://127.0.0.1:8087/cgi-bin/broken.js', this.callback);
+        },
+        'status code should be 500': function (res) {
+          assert.equal(res.statusCode, 500);
+        },
+        'and a non-existant file': {
+          topic: function () {
+            request('http://127.0.0.1:8087/cgi-bin/nothing.js', this.callback);
+          },
+          'status code should be 404': function (res) {
+            assert.equal(res.statusCode, 404);
+          },
+          'it should serve files from root directory': {
+            topic: function () {
+              request('http://127.0.0.1:8087/file', this.callback);
+            },
+            'status code should be 200': function (res) {
+              assert.equal(res.statusCode, 200);
+            },
+            'and file content': {
+              topic: function (res, body) {
+                var self = this;
+                fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
+                  self.callback(err, data, body);
+                });
+              },
+              'should match content of served file': function (err, file, body) {
+                assert.equal(body.trim(), file.trim());
+              }
+            }
+          }
+        }
+      }
+    },
+    teardown: function (server) {
+      server.close();
+    }
   }
 }).export(module);
