@@ -133,8 +133,6 @@ function listen(port) {
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
-  options.headers = {};
-
   if (argv.cors && argv.coi) {
     logger.info(colors.red('Error: conflicting arguments: --cors and --coi'));
     process.exit(1);
@@ -147,8 +145,7 @@ function listen(port) {
     }
   }
   else if (argv.coi) {
-    options.headers['Cross-Origin-Embedder-Policy'] = 'require-corp';
-    options.headers['Cross-Origin-Opener-Policy'] = 'same-origin';
+    options.coi = true;
   }
 
   if (ssl) {

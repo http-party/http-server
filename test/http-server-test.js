@@ -167,6 +167,26 @@ vows.describe('http-server').addBatch({
       server.close();
     }
   },
+  'When cross origin isolation is enabled,\n': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        coi: true
+      });
+
+      server.listen(8080);
+      this.callback(null, server);
+    },
+    'and a page is requested': {
+      topic: function () {
+        request('http://127.0.0.1:8080/', this.callback);
+      },
+      'response should have cross origin isolation headers set': function (err, res) {
+        assert.equal(res.headers['Cross-Origin-Embedder-Policy'], 'require-corp');
+        assert.equal(res.headers['Cross-Origin-Opener-Policy'], 'same-origin');
+      }
+    }
+  },
   'When gzip and brotli compression is enabled and a compressed file is available': {
     topic: function () {
       var server = httpServer.createServer({
