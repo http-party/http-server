@@ -58,7 +58,9 @@ Using `npx` you can run the script without installing it first:
 
 `-s` or `--silent` Suppress log messages from output
 
-`--cors` Enable CORS via the `Access-Control-Allow-Origin` header
+`--cors` Enable CORS via the `Access-Control-Allow-Origin` header. Cannot be specified alongside `--coi`.
+
+`--coi` Enable cross origin isolation via the `Cross-Origin-Embedder-Policy:required-corp` and `Cross-Origin-Opener-Policy:same-origin` headers. Cannot be specified alongside `--cors`.
 
 `-o [path]` Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/
 
