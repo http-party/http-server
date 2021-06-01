@@ -51,6 +51,8 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
+    '  -H --header        Send the specified header with responses,',
+    '                     e.g. -H \'X-MY-HEADER: foo\'',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.'
   ].join('\n'));
@@ -113,6 +115,20 @@ else {
   listen(port);
 }
 
+function addHeader(headers, headersList) {
+  if (!Array.isArray(headersList)) {
+    headersList = [headersList];
+  }
+
+  for (var i in headersList) {
+    var idx = headersList[i].indexOf(':'),
+        key = headersList[i].substring(0, idx),
+        val = headersList[i].substring(idx + 1).trim();
+
+    headers[key] = val;
+  }
+}
+
 function listen(port) {
   var options = {
     root: argv._[0],
@@ -127,6 +143,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     showDotfiles: argv.dotfiles,
+    headers: {},
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
@@ -158,6 +175,8 @@ function listen(port) {
       process.exit(1);
     }
   }
+
+  addHeader(options.headers, argv.H || argv.header);
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {

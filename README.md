@@ -83,6 +83,8 @@ Using `npx` you can run the script without installing it first:
 `-r` or `--robots` Provide a /robots.txt (whose content defaults to `User-agent: *\nDisallow: /`)
 
 `--no-dotfiles` Do not show dotfiles
+ 
+`-H` or `--header` Send the specified header with responses, e.g. `-H "Strict-Transport-Security: max-age=315360000; includeSubdomains"`.
 
 `-h` or `--help` Print this list and exit.
 

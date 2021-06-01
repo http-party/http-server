@@ -514,5 +514,31 @@ vows.describe('http-server').addBatch({
     teardown: function (server) {
       server.close();
     }
+  },
+  'When custom headers are set': {
+    topic: function () {
+      var server = httpServer.createServer({
+        root: root,
+        headers: {
+          'X-Custom': 'Test'
+        }
+      });
+      server.listen(8087);
+      this.callback(null, server);
+    },
+    requesting: {
+      topic: function () {
+        request('http://127.0.0.1:8087/', this.callback);
+      },
+      'should respond with status code 200': function (err, res) {
+        assert.equal(res.statusCode, 200);
+      },
+      'and response X-Custom header should contain 1': function (err, res) {
+        assert.ok(res.headers['x-custom']);
+      }
+    },
+    teardown: function (server) {
+      server.close();
+    }
   }
 }).export(module);
