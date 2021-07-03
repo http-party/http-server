@@ -1,11 +1,12 @@
 const test = require('tap').test;
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
 const request = require('request');
 const httpServer = require('../lib/http-server');
 const promisify = require('util').promisify;
 
 const requestAsync = promisify(request);
+const fsReadFile = promisify(fs.readFile);
 
 // Prevent errors from being swallowed
 process.on('uncaughtException', console.error);
@@ -42,7 +43,7 @@ test('http-server main', (t) => {
               // files should be served from the root
               t.equal(res.statusCode, 200);
 
-              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
               t.equal(res.body.trim(), fileData.trim(), 'root file content matches');
             }).catch(err => t.fail(err.toString())),
 
@@ -129,7 +130,7 @@ test('http-server main', (t) => {
                   t.equal(res.statusCode, 200);
 
                   // File content matches
-                  const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+                  const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
                   t.equal(res.body.trim(), fileData.trim(), 'proxied root file content matches');
                 }).catch(err => t.fail(err.toString()));
 
@@ -139,7 +140,7 @@ test('http-server main', (t) => {
                   t.equal(res.statusCode, 200);
 
                   // File content matches
-                  const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+                  const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
                   t.equal(res.body.trim(), fileData.trim(), 'proxy fallback root file content matches');
                 }).catch(err => t.fail(err.toString()));
               } catch (err) {
@@ -216,7 +217,7 @@ test('http-server main', (t) => {
               }
             }).then(async (res) => {
               t.equal(res.statusCode, 200);
-              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
               t.equal(res.body.trim(), fileData.trim(), 'auth-protected file with good auth has expected file content');
             }).catch(err => t.fail(err.toString())),
           ]);
@@ -265,7 +266,7 @@ test('http-server main', (t) => {
               }
             }).then(async (res) => {
               t.equal(res.statusCode, 200);
-              const fileData = await fs.readFile(path.join(root, 'file'), 'utf8');
+              const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
               t.equal(res.body.trim(), fileData.trim(), 'numeric auth with good auth has expected file content');
             }).catch(err => t.fail(err.toString()))
           ]);
@@ -277,6 +278,9 @@ test('http-server main', (t) => {
         }
       });
     }),
-  ]).catch(err => t.fail(err.toString()))
-    .finally(() => t.end());
+  ]).then(() => t.end())
+    .catch(err => {
+      t.fail(err.toString());
+      t.end();
+  });
 });

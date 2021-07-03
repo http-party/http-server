@@ -50,6 +50,6 @@ test('directory listing with pathname including HTML characters', (t) => {
 });
 
 test('remove test directory', (t) => {
-  fs.rmdirSync(`${root}/<dir>`, '0755');
+  fs.rmdirSync(`${root}/<dir>`);
   t.end();
 });

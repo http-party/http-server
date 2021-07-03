@@ -9,17 +9,21 @@ const path = require('path');
 
 const node = process.execPath;
 const defaultUrl = 'http://localhost';
-const defaultPort = 8000;
+const defaultPort = 8080;
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * ((max - min) + 1)) + min;
 }
 
 function startEcstatic(args) {
-  return spawn(node, [require.resolve('../lib/core.js')].concat(args));
+  return spawn(node, [require.resolve('../bin/http-server')].concat(args));
 }
 
-function checkServerIsRunning(url, t, _cb) {
+function checkServerIsRunning(url, msg, t, _cb) {
+  if (!msg.toString().match(/Starting up/)) {
+    return;
+  }
+  t.pass('http-server started');
   const cb = _cb || (() => {});
 
   request(url, (err, res) => {
@@ -61,9 +65,8 @@ test('setting port via cli - default port', (t) => {
 
   tearDown(ecstatic, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
-    checkServerIsRunning(`${defaultUrl}:${port}`, t);
+  ecstatic.stdout.on('data', (msg) => {
+    checkServerIsRunning(`${defaultUrl}:${port}`, msg, t);
   });
 });
 
@@ -76,12 +79,12 @@ test('setting port via cli - custom port', (t) => {
 
   tearDown(ecstatic, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
-    checkServerIsRunning(`${defaultUrl}:${port}`, t);
+  ecstatic.stdout.on('data', (msg) => {
+    checkServerIsRunning(`${defaultUrl}:${port}`, msg, t);
   });
 });
 
+/** TODO mime types not supported in CLI
 test('setting mimeTypes via cli - .types file', (t) => {
   t.plan(2);
 
@@ -93,9 +96,8 @@ test('setting mimeTypes via cli - .types file', (t) => {
 
   tearDown(ecstatic, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
-    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, t);
+  ecstatic.stdout.on('data', (msg) => {
+    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t);
   });
 });
 
@@ -111,11 +113,11 @@ test('setting mimeTypes via cli - directly', (t) => {
   // TODO: remove error handler
   tearDown(ecstatic, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
-    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, t, (err, res) => {
+  ecstatic.stdout.on('data', (msg) => {
+    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
       t.error(err);
       t.equal(res.headers['content-type'], 'application/x-my-type; charset=utf-8');
     });
   });
 });
+**/

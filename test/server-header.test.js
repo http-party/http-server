@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('tap').test;
-const ecstatic = require('../');
+const ecstatic = require('../lib/core');
 const http = require('http');
 const request = require('request');
 
@@ -16,7 +16,7 @@ test('serverHeader should exist', (t) => {
     const port = server.address().port;
     request.get(`http://localhost:${port}`, (err, res) => {
       t.ifError(err);
-      t.equal(res.headers.server, `ecstatic-${ecstatic.version}`);
+      t.equal(res.headers.server, `http-server-${ecstatic.version}`);
     });
   });
 });

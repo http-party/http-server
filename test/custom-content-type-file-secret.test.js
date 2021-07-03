@@ -3,7 +3,7 @@
 const test = require('tap').test;
 const http = require('http');
 const request = require('request');
-const ecstatic = require('../');
+const ecstatic = require('../lib/core');
 
 test('custom contentType via .types file', (t) => {
   let server = null;
