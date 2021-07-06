@@ -62,7 +62,7 @@ test('express', (t) => {
         }
 
         if (r.body !== undefined) {
-          t.equal(eol.lf(body).trim(), r.body.trim(), `body for \`${file}\``);
+          t.equal(eol.lf(body), r.body, `body for \`${file}\``);
         }
 
         pending -= 1;

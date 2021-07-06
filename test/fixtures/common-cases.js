@@ -143,7 +143,7 @@ module.exports = {
     file: 'gzip/fake_ecstatic',
     type: 'application/octet-stream',
     headers: { 'accept-encoding': 'compress, gzip' },
-    body: 'ecstatic',
+    body: 'ecstatic\n',
   },
   'gzip/fake_ecstatic.gz': {
     code: 200,
