@@ -84,9 +84,8 @@ test('setting port via cli - custom port', (t) => {
   });
 });
 
-/** TODO mime types not supported in CLI
 test('setting mimeTypes via cli - .types file', (t) => {
-  t.plan(2);
+  t.plan(4);
 
   const port = getRandomPort();
   const root = path.resolve(__dirname, 'public/');
@@ -97,7 +96,10 @@ test('setting mimeTypes via cli - .types file', (t) => {
   tearDown(ecstatic, t);
 
   ecstatic.stdout.on('data', (msg) => {
-    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t);
+    checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
+      t.error(err);
+      t.equal(res.headers['content-type'], 'application/secret; charset=utf-8');
+    });
   });
 });
 
@@ -106,8 +108,8 @@ test('setting mimeTypes via cli - directly', (t) => {
 
   const port = getRandomPort();
   const root = path.resolve(__dirname, 'public/');
-  const mimeType = ['--mimeTypes', '{ "application/x-my-type": ["opml"] }'];
-  const options = [root, '--port', port, '--mimetypes'].concat(mimeType);
+  const mimeType = ['--mimetypes', '{ "application/x-my-type": ["opml"] }'];
+  const options = [root, '--port', port].concat(mimeType);
   const ecstatic = startEcstatic(options);
 
   // TODO: remove error handler
@@ -120,4 +122,3 @@ test('setting mimeTypes via cli - directly', (t) => {
     });
   });
 });
-**/
