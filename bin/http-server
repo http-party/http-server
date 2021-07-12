@@ -18,7 +18,7 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p --port    Port to use [8080]',
+    '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
     '  -i           Display autoIndex [true]',
