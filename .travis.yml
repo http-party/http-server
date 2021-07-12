@@ -16,6 +16,7 @@ os:
   - osx
 
 before_install:
+  - npm i -g npm@7
   - travis_retry npm install
 
 script:
