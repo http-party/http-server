@@ -42,7 +42,7 @@ Using `npx` you can run the script without installing it first:
 
 ## Available Options:
 
-`-p` or `--port` Port to use (defaults to 8080). It will also read from `process.env.PORT`.
+`-p` or `--port` Port to use (defaults to 8080). Use `-p 0` to look for an open port, starting at 8080. It will also read from `process.env.PORT`.
 
 `-a` Address to use (defaults to 0.0.0.0)
 
