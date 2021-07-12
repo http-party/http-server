@@ -23,3 +23,8 @@ install:
 
 script:
   - npx npm@7 test
+  
+matrix:
+  exclude:
+    - os: windows
+      node_js: "8"
