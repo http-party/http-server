@@ -17,6 +17,9 @@ os:
 
 before_install:  
   - travis_retry npx npm@7 install
+  
+install:
+  - npm --version
 
 script:
   - npx npm@7 test
