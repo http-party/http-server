@@ -93,7 +93,8 @@
     "opener": "^1.5.1",
     "portfinder": "^1.0.25",
     "secure-compare": "3.0.1",
-    "union": "~0.5.0"
+    "union": "~0.5.0",
+    "x509.js": "^1.0.0"
   },
   "devDependencies": {
     "common-style": "^3.0.0",

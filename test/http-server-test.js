@@ -10,6 +10,53 @@ process.on('uncaughtException', console.error);
 
 var root = path.join(__dirname, 'fixtures', 'root');
 
+// respondsWith makes a request to the URL with the optional opts, and asserts
+// the returned response is code with the expected body.
+function respondsWith(code, url, opts) {
+  var context = {
+    topic: function (server) {
+      opts = opts || {};
+      request(url, opts, this.callback);
+    }
+  };
+  context['status code should be ' + code] = function (err, res) {
+    assert.isNull(err);
+    assert.equal(res.statusCode, code);
+  };
+  return context;
+}
+
+// respondsWithMessage makes a request to the URL with the optional opts, and asserts
+// the returned response is `code` and the response body is `message`.
+function respondsWithMessage(code, message, url, opts) {
+  var context = respondsWith(code, url, opts);
+  context['and file content should be "' + message + '"'] = function (err, res, body) {
+    assert.isNull(err);
+    assert.equal(body, message);
+  };
+  return context;
+}
+
+// respondsWithFile makes a request to the URL with the optional opts, and asserts
+// the returned status is `code` and the response body matches the expected filename
+// contents.
+function respondsWithFile(code, filename, url, opts) {
+  var context = respondsWith(code, url, opts);
+  context['and file content'] = {
+    topic: function (res, body) {
+      var self = this;
+      fs.readFile(path.join(root, filename), 'utf8', function (err, data) {
+        self.callback(err, data, body);
+      });
+    },
+    'should match content of served file': function (err, data, body) {
+      assert.isNull(err);
+      assert.equal(data.trim(), body.trim());
+    }
+  };
+  return context;
+}
+
 vows.describe('http-server').addBatch({
   'When http-server is listening on 8080,\n': {
     topic: function () {
@@ -23,35 +70,14 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8080);
-      this.callback(null, server);
+      return server;
     },
-    'it should serve files from root directory': {
-      topic: function () {
-        request('http://127.0.0.1:8080/file', this.callback);
-      },
-      'status code should be 200': function (res) {
-        assert.equal(res.statusCode, 200);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should match content of served file': function (err, file, body) {
-          assert.equal(body.trim(), file.trim());
-        }
-      }
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
-    'and a non-existent file is requested...': {
-      topic: function () {
-        request('http://127.0.0.1:8080/404', this.callback);
-      },
-      'status code should be 404': function (res) {
-        assert.equal(res.statusCode, 404);
-      }
-    },
+    'it should serve files from root directory': respondsWithFile(200, 'file', 'http://127.0.0.1:8080/file'),
+    'and a non-existent file is requested...': respondsWith(404, 'http://127.0.0.1:8080/404'),
     'requesting /': {
       topic: function () {
         request('http://127.0.0.1:8080/', this.callback);
@@ -66,7 +92,7 @@ vows.describe('http-server').addBatch({
       topic: function () {
         request('http://127.0.0.1:8080/robots.txt', this.callback);
       },
-      'should respond with status code 200 to /robots.txt': function (res) {
+      'should respond with status code 200 to /robots.txt': function (err, res) {
         assert.equal(res.statusCode, 200);
       }
     },
@@ -86,46 +112,15 @@ vows.describe('http-server').addBatch({
           root: path.join(__dirname, 'fixtures')
         });
         proxyServer.listen(8081);
-        this.callback(null, proxyServer);
+        return proxyServer;
       },
-      '\nit should serve files from the proxy\'s root': {
-        topic: function () {
-          request('http://127.0.0.1:8081/root/file', this.callback);
-        },
-        'status code should be the endpoint code 200': function (res) {
-          assert.equal(res.statusCode, 200);
-        },
-        'and file content': {
-          topic: function (res, body) {
-            var self = this;
-            fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-              self.callback(err, data, body);
-            });
-          },
-          'should match content of the served file': function (err, file, body) {
-            assert.equal(body.trim(), file.trim());
-          }
-        }
+      'it should start without errors': function (err, server) {
+        assert.isNull(err);
+        assert.isTrue(server.server.listening);
       },
-      '\nit should fallback to the proxied server': {
-        topic: function () {
-          request('http://127.0.0.1:8081/file', this.callback);
-        },
-        'status code should be the endpoint code 200': function (res) {
-          assert.equal(res.statusCode, 200);
-        },
-        'and file content': {
-          topic: function (res, body) {
-            var self = this;
-            fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-              self.callback(err, data, body);
-            });
-          },
-          'should match content of the proxied served file': function (err, file, body) {
-            assert.equal(body.trim(), file.trim());
-          }
-        }
-      },
+      '\nit should serve files from the proxy\'s root': respondsWithFile(200, 'file', 'http://127.0.0.1:8081/root/file'),
+      '\nit should fallback to the proxied server': respondsWithFile(200, 'file', 'http://127.0.0.1:8081/file'),
+
       teardown: function (proxyServer) {
         proxyServer.close();
       }
@@ -142,7 +137,11 @@ vows.describe('http-server').addBatch({
         corsHeaders: 'X-Test'
       });
       server.listen(8082);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and the server is given an OPTIONS request': {
       topic: function () {
@@ -175,7 +174,11 @@ vows.describe('http-server').addBatch({
         gzip: true
       });
       server.listen(8084);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and a request accepting only gzip is made': {
       topic: function () {
@@ -237,123 +240,37 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8083);
-      this.callback(null, server);
+      return server;
     },
-    'and the user requests an existent file with no auth details': {
-      topic: function () {
-        request('http://127.0.0.1:8083/file', this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
+    },
+    'and the user requests an existent file with no auth details': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file'),
+    'and the user requests an existent file with incorrect username': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
+      auth: {
+        user: 'wrong_username',
+        pass: 'good_password'
       }
-    },
-    'and the user requests an existent file with incorrect username': {
-      topic: function () {
-        request('http://127.0.0.1:8083/file', {
-          auth: {
-            user: 'wrong_username',
-            pass: 'good_password'
-          }
-        }, this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
+    }),
+    'and the user requests an existent file with incorrect password': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
+      auth: {
+        user: 'good_username',
+        pass: 'wrong_password'
       }
-    },
-    'and the user requests an existent file with incorrect password': {
-      topic: function () {
-        request('http://127.0.0.1:8083/file', {
-          auth: {
-            user: 'good_username',
-            pass: 'wrong_password'
-          }
-        }, this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
+    }),
+    'and the user requests a non-existent file with incorrect password': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/404', {
+      auth: {
+        user: 'good_username',
+        pass: 'wrong_password'
       }
-    },
-    'and the user requests a non-existent file with incorrect password': {
-      topic: function () {
-        request('http://127.0.0.1:8083/404', {
-          auth: {
-            user: 'good_username',
-            pass: 'wrong_password'
-          }
-        }, this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
+    }),
+    'and the user requests an existent file with correct auth details': respondsWithFile(200, 'file', 'http://127.0.0.1:8083/file', {
+      auth: {
+        user: 'good_username',
+        pass: 'good_password'
       }
-    },
-    'and the user requests an existent file with correct auth details': {
-      topic: function () {
-        request('http://127.0.0.1:8083/file', {
-          auth: {
-            user: 'good_username',
-            pass: 'good_password'
-          }
-        }, this.callback);
-      },
-      'status code should be 200': function (res) {
-        assert.equal(res.statusCode, 200);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should match content of served file': function (err, file, body) {
-          assert.equal(body.trim(), file.trim());
-        }
-      }
-    },
+    }),
     teardown: function (server) {
       server.close();
     }
@@ -365,7 +282,11 @@ vows.describe('http-server').addBatch({
         ext: true
       });
       server.listen(8085);
-      this.callback(null, server);
+      return server;
+    },
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
     },
     'and a file with no extension is requested with default options,': {
       topic: function () {
@@ -394,125 +315,75 @@ vows.describe('http-server').addBatch({
       });
 
       server.listen(8086);
-      this.callback(null, server);
+      return server;
     },
-    'and the user requests an existent file with no auth details': {
-      topic: function () {
-        request('http://127.0.0.1:8086/file', this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
+    'it should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
+    },
+    'and the user requests an existent file with no auth details': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8086/file'),
+    'and the user requests an existent file with incorrect username': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
+      auth: {
+        user: 'wrong_username',
+        pass: '123456'
       }
+    }),
+    'and the user requests an existent file with incorrect password': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/file', {
+      auth: {
+        user: 'good_username',
+        pass: '654321'
+      }
+    }),
+    'and the user requests a non-existent file with incorrect password': respondsWithMessage(401, 'Access denied', 'http://127.0.0.1:8083/404', {
+      auth: {
+        user: 'good_username',
+        pass: '654321'
+      }
+    }),
+    'and the user requests an existent file with correct auth details': respondsWithFile(200, 'file', 'http://127.0.0.1:8086/file', {
+      auth: {
+        user: 'good_username',
+        pass: '123456'
+      }
+    }),
+    teardown: function (server) {
+      server.close();
+    }
+  },
+  'When SSL is enabled': {
+    topic: function () {
+      var server = httpServer.createServer({
+        https: {
+          cert: path.join(__dirname, 'fixtures', 'cert.pem'),
+          key:  path.join(__dirname, 'fixtures', 'key.pem')
+        }
+      });
+      server.listen(8087);
+      return server;
     },
-    'and the user requests an existent file with incorrect username': {
-      topic: function () {
-        request('http://127.0.0.1:8086/file', {
-          auth: {
-            user: 'wrong_username',
-            pass: '123456'
-          }
+    'the server should start without errors': function (err, server) {
+      assert.isNull(err);
+      assert.isTrue(server.server.listening);
+    },
+    'and it should serve files': {
+      topic: function (server) {
+        var caFile = path.join(__dirname, 'fixtures', 'ca.pem');
+        request('https://127.0.0.1:8087/', {
+          ca: fs.readFileSync(caFile)
         }, this.callback);
       },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
-      }
-    },
-    'and the user requests an existent file with incorrect password': {
-      topic: function () {
-        request('http://127.0.0.1:8086/file', {
-          auth: {
-            user: 'good_username',
-            pass: '654321'
-          }
-        }, this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
-      }
-    },
-    'and the user requests a non-existent file with incorrect password': {
-      topic: function () {
-        request('http://127.0.0.1:8086/404', {
-          auth: {
-            user: 'good_username',
-            pass: '654321'
-          }
-        }, this.callback);
-      },
-      'status code should be 401': function (res) {
-        assert.equal(res.statusCode, 401);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should be a forbidden message': function (err, file, body) {
-          assert.equal(body, 'Access denied');
-        }
-      }
-    },
-    'and the user requests an existent file with correct auth details': {
-      topic: function () {
-        request('http://127.0.0.1:8086/file', {
-          auth: {
-            user: 'good_username',
-            pass: '123456'
-          }
-        }, this.callback);
-      },
-      'status code should be 200': function (res) {
-        assert.equal(res.statusCode, 200);
-      },
-      'and file content': {
-        topic: function (res, body) {
-          var self = this;
-          fs.readFile(path.join(root, 'file'), 'utf8', function (err, data) {
-            self.callback(err, data, body);
-          });
-        },
-        'should match content of served file': function (err, file, body) {
-          assert.equal(body.trim(), file.trim());
-        }
+      'over SSL': function (err, res) {
+        assert.isNull(err);
+
+        var peerCert = res.socket.getPeerCertificate();
+        assert.isNotNull(peerCert);
+        assert.equal(peerCert.subject.CN, 'localhost');
       }
     },
     teardown: function (server) {
-      server.close();
+      if (server) {
+        server.close();
+      }
     }
   }
 }).export(module);

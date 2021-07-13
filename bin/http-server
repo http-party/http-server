@@ -8,6 +8,7 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
+    x509       = require('x509.js'),
     argv       = require('minimist')(process.argv.slice(2));
 var ifaces = os.networkInterfaces();
 
@@ -138,23 +139,25 @@ function listen(port) {
     }
   }
 
+  var commonName;
   if (ssl) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
     };
     try {
-      fs.lstatSync(options.https.cert);
+      var c = x509.parseCert(fs.readFileSync(options.https.cert));
+      commonName = c.subject.commonName;
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find certificate ' + options.https.cert));
+      logger.info(colors.red('Error: Could not read certificate ' + err));
       process.exit(1);
     }
     try {
-      fs.lstatSync(options.https.key);
+      fs.readFileSync(options.https.key);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find private key ' + options.https.key));
+      logger.info(colors.red('Error: Could not read private key ' + err));
       process.exit(1);
     }
   }
@@ -170,18 +173,26 @@ function listen(port) {
       colors.yellow('\nAvailable on:')
     ].join(''));
 
+    var hosts = [];
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
+      hosts.push(canonicalHost);
     }
     else {
+      if (ssl && commonName) {
+        hosts.push(commonName);
+      }
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            hosts.push(details.address);
           }
         });
       });
     }
+
+    hosts.forEach(function (host) {
+      logger.info(('  ' + protocol + host + ':' + colors.green(port.toString())));
+    });
 
     if (typeof proxy === 'string') {
       logger.info('Unhandled requests will be served from: ' + proxy);

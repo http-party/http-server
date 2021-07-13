@@ -111,7 +111,7 @@ First, you need to make sure that [openssl](https://github.com/openssl/openssl) 
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
 ```
 
-You will be prompted with a few questions after entering the command. Use `127.0.0.1` as value for `Common name` if you want to be able to install the certificate in your OS's root certificate store or browser so that it is trusted.
+You will be prompted with a few questions after entering the command. Use `localhost` as value for `Common Name` if you want to be able to install the certificate in your OS's root certificate store or browser so that it is trusted.
 
 This generates a cert-key pair and it will be valid for 3650 days (about 10 years).
 
@@ -126,9 +126,8 @@ This is what should be output if successful:
 ``` sh
 Starting up http-server, serving ./ through https
 Available on:
-  https:127.0.0.1:8080
-  https:192.168.1.101:8080
-  https:192.168.1.104:8080
+  https://localhost:8080
+  https://192.168.1.101:8080
 Hit CTRL-C to stop the server
 ```
 
