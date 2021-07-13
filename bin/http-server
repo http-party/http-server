@@ -29,6 +29,8 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
+    '  --coi        Enable cross origin isolation via the "Cross-Origin-Embedder-Policy:required-corp"',
+    '               and "Cross-Origin-Opener-Policy:same-origin" headers.',
     '  -o [path]    Open browser window after starting the server.',
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
@@ -131,11 +133,19 @@ function listen(port) {
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
+  if (argv.cors && argv.coi) {
+    logger.info(colors.red('Error: conflicting arguments: --cors and --coi'));
+    process.exit(1);
+  }
+
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+  else if (argv.coi) {
+    options.coi = true;
   }
 
   if (ssl) {
