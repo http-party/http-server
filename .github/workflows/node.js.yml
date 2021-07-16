@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [8.x, 10.x, 12.x, 14.x, 16.x]
-        os: [ubuntu-latest, macOS-latest, macOS-11, windows-latest]
+        node-version: [10.x, 12.x, 14.x, 16.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -27,5 +27,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npx npm@7 ci --no-optional
+    - run: npx npm@7 ci
     - run: npm test
