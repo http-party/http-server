@@ -101,7 +101,11 @@ test('partial range', (t) => {
       t.equal(res.statusCode, 206, 'partial content status code');
       t.equal(eol.lf(body), 'e!!</b>\n');
       t.equal(parseInt(res.headers['content-length'], 10), body.length);
-      t.equal(res.headers['content-range'], 'bytes 3-10/11');
+      if (eol.lf(body) != body) { // on Windows, depending on Git settings
+        t.equal(res.headers['content-range'], 'bytes 3-11/12');
+      } else {
+        t.equal(res.headers['content-range'], 'bytes 3-10/11');
+      }
     });
   });
 });
