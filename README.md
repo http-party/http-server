@@ -84,6 +84,8 @@ Using `npx` you can run the script without installing it first:
 
 `--no-dotfiles` Do not show dotfiles
 
+`--mimetypes` Path to a .types file for custom mimetype definition
+
 `-h` or `--help` Print this list and exit.
 
 `-v` or `--version` Print the version and exit.

@@ -1,0 +1,3 @@
+# This file is an example of the Apache .types file format for describing mime-types.
+# Other example: http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+application/secret                 opml

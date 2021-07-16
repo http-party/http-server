@@ -10,6 +10,7 @@
   "keywords": [
     "cli",
     "command",
+    "static",
     "http",
     "https",
     "http-server",
@@ -18,8 +19,8 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "pretest": "common bin/http-server lib/ test",
-    "test": "vows --spec --isolate"
+    "test": "tap --reporter=spec test/*.test.js",
+    "test-watch": "tap --reporter=spec --watch test/*.test.js"
   },
   "files": [
     "lib",
@@ -80,25 +81,30 @@
     },
     {
       "name": "Jade Michael Thornton",
-      "email": "jade@jmthornton.net"
+      "email": "jademichael@jmthornton.net"
     }
   ],
   "dependencies": {
     "basic-auth": "^1.0.3",
     "colors": "^1.4.0",
     "corser": "^2.0.1",
-    "ecstatic": "^3.3.2",
+    "he": "^1.1.0",
     "http-proxy": "^1.18.0",
+    "mime": "^1.6.0",
     "minimist": "^1.2.5",
     "opener": "^1.5.1",
     "portfinder": "^1.0.25",
     "secure-compare": "3.0.1",
-    "union": "~0.5.0"
+    "union": "~0.5.0",
+    "url-join": "^2.0.5"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
+    "eol": "^0.9.1",
+    "express": "^4.16.3",
+    "mkdirp": "^0.5.0",
     "request": "^2.88.2",
-    "vows": "~0.8.3"
+    "tap": "^14.11.0"
   },
   "bugs": {
     "url": "https://github.com/http-party/http-server/issues"

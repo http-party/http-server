@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/hyperscope/src/client/lib/hs/xslt/hyperscope.xsl"?>
+<opml xmlns:hs="http://www.hyperscope.org/hyperscope/opml/public/2006/05/09" hs:version="1.0" version="2.0">
+  <head hs:left-label-delim="" hs:right-label-delim="" hs:sidCount="749">
+    <dateCreated>Tue 9 May 2006 06:44:27 GMT+00:00</dateCreated>
+    <ownerName>BKN</ownerName>
+    <dateModified>Sat 20 May 2006 00:17:25 GMT+00:00</dateModified>
+  </head>
+  <body>
+    <outline text="This node is from transclude.opml; the node below is transcluded from another document to illustrate recursive transclusions; it is actually from a remote, third-party webserver:"/>
+    <outline type="include" url="http://radio.weblogs.com/0001000/gems/publications.opml#1D" hs:include-type="branch" text="INCLUDE BRANCH http://radio.weblogs.com/0001000/gems/publications.opml#1D"/>
+  </body>
+</opml>

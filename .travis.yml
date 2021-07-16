@@ -1,7 +1,6 @@
 sudo: false
 language: node_js
 node_js:
-  - "6"
   - "8"
   - "10"
   - "12"
@@ -16,8 +15,16 @@ os:
   - windows
   - osx
 
-before_install:
-  - travis_retry npm install
+before_install:  
+  - travis_retry npx npm@7 install
+  
+install:
+  - npm --version
 
 script:
-  - npm test
+  - npx npm@7 test
+  
+matrix:
+  exclude:
+    - os: windows
+      node_js: "8"

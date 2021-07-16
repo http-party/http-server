@@ -1,0 +1,4 @@
+It should generate an href of <a href="/show-dir-href-encoding/aname+aplus.txt">..
+
+http://stackoverflow.com/a/1006074/147079
+http://tools.ietf.org/html/rfc1738
