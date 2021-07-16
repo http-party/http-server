@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-
+    name: Test
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -26,9 +26,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm --version
     - run: npm ci
     - run: npm test
-    
-    - name: Codecov
-      uses: codecov/codecov-action@v1.5.2
