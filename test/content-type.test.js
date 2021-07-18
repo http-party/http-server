@@ -2,14 +2,16 @@
 
 const test = require('tap').test;
 const http = require('http');
-const request = require('request');
 const ecstatic = require('../lib/core');
+const checkHeaders = require('./check-headers.js');
 
-test('default default contentType', (t) => {
+const root = `${__dirname}/public/`;
+
+test('global default contentType', (t) => {
   let server = null;
   try {
     server = http.createServer(ecstatic({
-      root: `${__dirname}/public/`,
+      root,
       contentType: 'text/plain',
     }));
   } catch (e) {
@@ -19,13 +21,32 @@ test('default default contentType', (t) => {
 
   t.plan(3);
 
-  server.listen(0, () => {
-    const port = server.address().port;
-    request.get(`http://localhost:${port}/f_f`, (err, res) => {
-      t.ifError(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers['content-type'], 'text/plain; charset=UTF-8');
-      server.close(() => { t.end(); });
-    });
+  
+  checkHeaders(t, server, 'f_f', (t, headers) => {
+    t.equal(headers['content-type'], 'text/plain; charset=UTF-8');
+  });
+});
+
+test('content type text', (t) => {
+  t.plan(3);
+
+  const server = http.createServer(
+    ecstatic({root})
+  );
+
+  checkHeaders(t, server, 'subdir/e.html', (t, headers) => {
+    t.equal(headers['content-type'], 'text/html; charset=UTF-8');
+  });
+});
+
+test('content type binary', (t) => {
+  t.plan(3);
+
+  const server = http.createServer(
+    ecstatic({root})
+  );
+
+  checkHeaders(t, server, 'subdir/app.wasm', (t, headers) => {
+    t.equal(headers['content-type'], 'application/wasm');
   });
 });
