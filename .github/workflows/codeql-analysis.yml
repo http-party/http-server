@@ -12,13 +12,20 @@
 name: "CodeQL"
 
 on:
+  # we're ignoring test/public/中文/檔案.html because codeql refuses to recognize it as a valid path
   push:
     branches: [ master ]
+    paths-ignore:
+      - test/public/中文/檔案.html
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master ]
+    paths-ignore:
+      - test/public/中文/檔案.html
   schedule:
     - cron: '23 14 * * 0'
+    paths-ignore:
+      - test/public/中文/檔案.html
 
 jobs:
   analyze:
