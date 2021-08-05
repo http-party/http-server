@@ -24,8 +24,6 @@ on:
       - test/public/中文/檔案.html
   schedule:
     - cron: '23 14 * * 0'
-    paths-ignore:
-      - test/public/中文/檔案.html
 
 jobs:
   analyze:
