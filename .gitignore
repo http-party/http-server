@@ -1,3 +1,5 @@
-node_modules/*
-npm-debug.log
+node_modules/
+npm-debug.log*
+.nyc_*/
 .dir-locals.el
+.DS_Store

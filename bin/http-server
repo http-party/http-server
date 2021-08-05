@@ -8,12 +8,7 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
-    argv       = require('optimist')
-      .boolean('cors')
-      .boolean('log-ip')
-      .argv,
-    pjson      = require('../package.json');
-
+    argv       = require('minimist')(process.argv.slice(2));
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -23,7 +18,7 @@ if (argv.h || argv.help) {
     'usage: http-server [path] [options]',
     '',
     'options:',
-    '  -p --port    Port to use [8080]',
+    '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
     '  -i           Display autoIndex [true]',
@@ -56,6 +51,7 @@ if (argv.h || argv.help) {
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
+    '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.'
   ].join('\n'));
@@ -67,8 +63,8 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     ssl = argv.S || argv.ssl,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
-    logger,
-    version = pjson.version;
+    version = argv.v || argv.version,
+    logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -102,6 +98,11 @@ else if (colors) {
   };
 }
 
+if (version) {
+  logger.info('v' + require('../package.json').version);
+  process.exit();
+}
+
 if (!port) {
   portfinder.basePort = 8080;
   portfinder.getPort(function (err, port) {
@@ -111,11 +112,6 @@ if (!port) {
 }
 else {
   listen(port);
-}
-
-if (argv.v || argv.version) {
-  console.log(version);
-  process.exit();
 }
 
 function listen(port) {
@@ -132,6 +128,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     showDotfiles: argv.dotfiles,
+    mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
@@ -166,7 +163,7 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var canonicalHost = host === '0.0.0.0' ? '127.0.0.1' : host,
+    var canonicalHost = host,
         protocol      = ssl ? 'https://' : 'http://';
 
     logger.info([colors.yellow('Starting up http-server, serving '),
