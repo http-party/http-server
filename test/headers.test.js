@@ -3,7 +3,7 @@
 const test = require('tap').test;
 const ecstatic = require('../lib/core');
 const http = require('http');
-const request = require('request');
+const checkHeaders = require('./check-headers.js');
 
 const root = `${__dirname}/public`;
 
@@ -22,19 +22,9 @@ test('headers object', (t) => {
     })
   );
 
-  server.listen(() => {
-    const port = server.address().port;
-    const uri = `http://localhost:${port}/subdir`;
-
-    request.get({ uri }, (err, res) => {
-      t.ifError(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers.wow, 'sweet');
-      t.equal(res.headers.cool, 'beans');
-    });
-  });
-  t.once('end', () => {
-    server.close();
+  checkHeaders(t, server, 'subdir', (t, headers) => {
+    t.equal(headers.wow, 'sweet');
+    t.equal(headers.cool, 'beans');
   });
 });
 
@@ -50,18 +40,8 @@ test('header string', (t) => {
     })
   );
 
-  server.listen(() => {
-    const port = server.address().port;
-    const uri = `http://localhost:${port}/subdir`;
-
-    request.get({ uri }, (err, res) => {
-      t.ifError(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers.beep, 'boop');
-    });
-  });
-  t.once('end', () => {
-    server.close();
+  checkHeaders(t, server, 'subdir', (t, headers) => {
+    t.equal(headers.beep, 'boop');
   });
 });
 
@@ -80,17 +60,8 @@ test('header array', (t) => {
     })
   );
 
-  server.listen(() => {
-    const port = server.address().port;
-    const uri = `http://localhost:${port}/subdir`;
-    request.get({ uri }, (err, res) => {
-      t.ifError(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers.beep, 'boop');
-    });
-  });
-  t.once('end', () => {
-    server.close();
+  checkHeaders(t, server, 'subdir', (t, headers) => {
+    t.equal(headers.beep, 'boop');
   });
 });
 
@@ -109,16 +80,7 @@ test('H array', (t) => {
     })
   );
 
-  server.listen(() => {
-    const port = server.address().port;
-    const uri = `http://localhost:${port}/subdir`;
-    request.get({ uri }, (err, res) => {
-      t.ifError(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers.beep, 'boop');
-    });
-  });
-  t.once('end', () => {
-    server.close();
+  checkHeaders(t, server, 'subdir', (t, headers) => {
+    t.equal(headers.beep, 'boop');
   });
 });
