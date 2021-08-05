@@ -8,7 +8,6 @@
   "handleError": [ "handleError", "handleerror" ],
   "cors": [ "cors", "CORS" ],
   "headers": [ "H", "header", "headers" ],
-  "serverHeader": [ "serverHeader", "serverheader", "server-header" ],
   "contentType": [ "contentType", "contenttype", "content-type" ],
   "mimeType": [
     "mimetype",
