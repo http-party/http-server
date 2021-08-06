@@ -24,7 +24,7 @@ test('custom contentType via .types file', (t) => {
     request.get(`http://localhost:${port}/custom_mime_type.opml`, (err, res) => {
       t.ifError(err);
       t.equal(res.statusCode, 200, 'custom_mime_type.opml should be found');
-      t.equal(res.headers['content-type'], 'application/secret; charset=utf-8');
+      t.equal(res.headers['content-type'], 'application/secret');
       server.close(() => { t.end(); });
     });
   });

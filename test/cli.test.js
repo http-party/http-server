@@ -98,7 +98,7 @@ test('setting mimeTypes via cli - .types file', (t) => {
   ecstatic.stdout.on('data', (msg) => {
     checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
       t.error(err);
-      t.equal(res.headers['content-type'], 'application/secret; charset=utf-8');
+      t.equal(res.headers['content-type'], 'application/secret');
     });
   });
 });
@@ -118,7 +118,7 @@ test('setting mimeTypes via cli - directly', (t) => {
   ecstatic.stdout.on('data', (msg) => {
     checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
       t.error(err);
-      t.equal(res.headers['content-type'], 'application/x-my-type; charset=utf-8');
+      t.equal(res.headers['content-type'], 'application/x-my-type');
     });
   });
 });
