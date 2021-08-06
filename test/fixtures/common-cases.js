@@ -65,9 +65,13 @@ module.exports = {
     code: 302,
     location: '%E4%B8%AD%E6%96%87/',
   },
-  '%E4%B8%AD%E6%96%87?%E5%A4%AB=%E5%B7%B4': {  // '中文?夫=巴'
+  '%E3%81%93%E3%82%8C': { // これ
     code: 302,
-    location: '%E4%B8%AD%E6%96%87/?%E5%A4%AB=%E5%B7%B4',
+    location: '%E3%81%93%E3%82%8C/'
+  },
+  '%E3%81%93%E3%82%8C?%E3%81%AF%E4%BD%95': {  // 'これ?は何'
+    code: 302,
+    location: '%E3%81%93%E3%82%8C/?%E3%81%AF%E4%BD%95',
   },
   'subdir/': {
     code: 200,
