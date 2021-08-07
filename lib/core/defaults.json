@@ -11,7 +11,6 @@
   "brotli": false,
   "defaultExt": ".html",
   "handleError": true,
-  "serverHeader": true,
   "contentType": "application/octet-stream",
   "weakEtags": true,
   "weakCompare": true,
