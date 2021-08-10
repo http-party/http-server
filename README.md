@@ -58,8 +58,8 @@ Using `npx` you can run the script without installing it first:
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
-|`--username` |Username for basic authentication [none] | |
-|`--password` |Password for basic authentication [none] | |
+|`--username` |Username for basic authentication | |
+|`--password` |Password for basic authentication | |
 |`-S` or `--ssl` |Enable https.| |
 |`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
