@@ -47,7 +47,7 @@ Using `npx` you can run the script without installing it first:
 |`-p` or `--port` |Port to use. Use `-p 0` to look for an open port, starting at 8080. It will also read from `process.env.PORT`. |8080 |
 |`-a`   |Address to use |0.0.0.0|
 |`-d`     |Show directory listings |`true` |
-|`-i`   |Address to use | 0.0.0.0 |
+|`-i`   | Display autoIndex | `true` |
 |`-g` or `--gzip` |When enabled it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.|`false`|
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
 |`-e` or `--ext`  |Default file extension if none supplied |`html` | 
