@@ -63,7 +63,7 @@ Using `npx` you can run the script without installing it first:
 |`-S` or `--ssl` |Enable https.| |
 |`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
-|`-r` or `--robots` |Provide a /robots.txt `User-agent: *\nDisallow: /` | |
+|`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
 |`-h` or `--help` |Print this list and exit. |   |
