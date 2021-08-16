@@ -1,0 +1,29 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: '25 12 * * *'
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: actions/stale@v4.0.0
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        days-before-stale: 360
+        days-before-issue-stale: 180
+        days-before-pr-stale: 360
+        stale-issue-message: 'This issue has been inactive for 180 days'
+        stale-pr-message: 'This pull request has been inactive for 360 days'
+        stale-issue-label: 'stale'
+        stale-pr-label: 'stale'
+        exempt-issue-labels: 'no-stale'
+        exempt-pr-labels: 'no-stale'
+        exempt-all-milestones: true
+        days-before-close: -1
