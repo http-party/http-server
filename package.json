@@ -112,7 +112,6 @@
   "license": "MIT",
   "preferGlobal": true,
   "bin": {
-    "http-server": "./bin/http-server",
-    "hs": "./bin/http-server"
+    "http-server": "./bin/http-server"
   }
 }
