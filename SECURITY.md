@@ -4,7 +4,8 @@
 
 | Version | Supported              |
 |---------|------------------------|
-| 0.13.x  | Yes :white_check_mark: |
+| 13.0.x  | Yes :white_check_mark: |
+| 0.13.x  | No :x:                 |
 | 0.12.x  | Security updates only  |
 | < 0.12  | No :x:                 |
 
