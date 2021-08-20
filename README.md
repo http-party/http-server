@@ -2,13 +2,19 @@
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server) [![homebrew](https://img.shields.io/homebrew/v/http-server?style=flat-square)](https://formulae.brew.sh/formula/http-server) [![npm downloads](https://img.shields.io/npm/dm/http-server?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/http-server)
 [![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server)
 
-# http-server: a command-line http server
+# http-server: a simple static HTTP server
 
-`http-server` is a simple, zero-configuration command-line http server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
+`http-server` is a simple, zero-configuration command-line static HTTP server.  It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development and learning.
 
 ![Example of running http-server](https://github.com/http-party/http-server/raw/master/screenshots/public.png)
 
 ## Installation:
+
+#### Running on-demand:
+
+Using `npx` you can run the script without installing it first:
+
+    npx http-server [path] [options]
 
 #### Globally via `npm`
 
@@ -19,12 +25,6 @@ This will install `http-server` globally so that it may be run from the command 
 #### Globally via Homebrew
 
     brew install http-server
-
-#### Running on-demand:
-
-Using `npx` you can run the script without installing it first:
-
-    npx http-server [path] [options]
      
 #### As a dependency in your `npm` package:
 
@@ -106,10 +106,21 @@ This is what should be output if successful:
 
 ``` sh
 Starting up http-server, serving ./ through https
+
+http-server settings:
+CORS: disabled
+Cache: 3600 seconds
+Connection Timeout: 120 seconds
+Directory Listings: visible
+AutoIndex: visible
+Serve GZIP Files: false
+Serve Brotli Files: false
+Default File Extension: none
+
 Available on:
-  https:127.0.0.1:8080
-  https:192.168.1.101:8080
-  https:192.168.1.104:8080
+  https://127.0.0.1:8080
+  https://192.168.1.101:8080
+  https://192.168.1.104:8080
 Hit CTRL-C to stop the server
 ```
 
@@ -119,7 +130,7 @@ Checkout this repository locally, then:
 
 ```sh
 $ npm i
-$ node bin/http-server
+$ npm start
 ```
 
 *Now you can visit http://localhost:8080 to view your server*
