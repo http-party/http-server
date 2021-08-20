@@ -168,9 +168,21 @@ function listen(port) {
 
     logger.info([colors.yellow('Starting up http-server, serving '),
       colors.cyan(server.root),
-      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : '',
-      colors.yellow('\nAvailable on:')
+      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
     ].join(''));
+
+    logger.info([colors.yellow('\nhttp-server settings: '),
+      ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
+      ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
+      ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
+      ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
+      ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
+      ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
+    ].join('\n'));
+
+    logger.info(colors.yellow('\nAvailable on:'));
 
     if (argv.a && host !== '0.0.0.0') {
       logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
