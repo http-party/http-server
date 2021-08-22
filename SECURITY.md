@@ -6,7 +6,7 @@
 |---------|------------------------|
 | 13.0.x  | ✔️ Yes |
 | 0.13.x  | ❌ No  |
-| 0.12.x  | 🔐 Security updates only |
+| 0.12.x  | 🔐 Security updates until January 2022 |
 | < 0.12  | ❌ No |
 
 ## Reporting a Vulnerability
