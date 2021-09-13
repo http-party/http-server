@@ -163,8 +163,7 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var canonicalHost = host,
-        protocol      = ssl ? 'https://' : 'http://';
+    var protocol = ssl ? 'https://' : 'http://';
 
     logger.info([colors.yellow('Starting up http-server, serving '),
       colors.cyan(server.root),
@@ -185,9 +184,8 @@ function listen(port) {
     logger.info(colors.yellow('\nAvailable on:'));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(('  ' + protocol + canonicalHost + ':' + colors.green(port.toString())));
-    }
-    else {
+      logger.info(`  ${protocol}${host}:${colors.green(port.toString())}`);
+    } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
@@ -203,13 +201,17 @@ function listen(port) {
 
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
-      var openUrl = protocol + canonicalHost + ':' + port;
+      const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
+      let openUrl = `${protocol}${openHost}:${port}`;
       if (typeof argv.o === 'string') {
         openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
       }
-      logger.info('open: ' + openUrl);
+      logger.info('Open: ' + openUrl);
       opener(openUrl);
     }
+
+    // Spacing before logs
+    if (!argv.s) logger.info();
   });
 }
 
