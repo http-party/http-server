@@ -46,6 +46,7 @@ if (argv.h || argv.help) {
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
     '  -S --ssl     Enable https.',
+    '  --secure     Enable certificate validation [true]',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
     '',
@@ -132,6 +133,15 @@ function listen(port) {
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
+
+  if (argv.secure) {
+    try {
+      options.secure = JSON.parse(argv.secure || true)
+    } catch(error) {
+      logger.info(colors.red('Error: --secure option must be true or false.'));
+      process.exit(1);
+    }
+  }
 
   if (argv.cors) {
     options.cors = true;
