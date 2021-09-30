@@ -26,7 +26,7 @@ test('url encoding in href', (t) => {
     request.get({
       uri,
     }, (err, res, body) => {
-      t.match(body, /href="\/base\/show-dir%24%24href_encoding%24%24\/aname%2Baplus.txt"/, 'We found the right href');
+      t.match(body, /href="\.\/aname%2Baplus.txt"/, 'We found the right href');
       server.close();
       t.end();
     });

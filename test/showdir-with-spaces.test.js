@@ -26,7 +26,7 @@ test('directory listing when directory name contains spaces', (t) => {
     request.get({
       uri,
     }, (err, res, body) => {
-      t.ok(/href="\/base\/subdir_with%20space\/index.html"/.test(body), 'We found the right href');
+      t.ok(/href="\.\/index.html"/.test(body), 'We found the right href');
       server.close();
       t.end();
     });
