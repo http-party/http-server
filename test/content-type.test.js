@@ -50,3 +50,27 @@ test('content type binary', (t) => {
     t.equal(headers['content-type'], 'application/wasm');
   });
 });
+
+test('charset arabic', (t) => {
+  t.plan(3);
+
+  const server = http.createServer(
+    ecstatic({root})
+  );
+
+  checkHeaders(t, server, 'charset/arabic.html', (t, headers) => {
+    t.equal(headers['content-type'], 'text/html; charset=ISO-8859-6');
+  });
+});
+
+test('charset Shift_JIS', (t) => {
+  t.plan(3);
+
+  const server = http.createServer(
+    ecstatic({root})
+  );
+
+  checkHeaders(t, server, 'charset/shift_jis.html', (t, headers) => {
+    t.equal(headers['content-type'], 'text/html; charset=Shift_JIS');
+  });
+});
