@@ -2,14 +2,16 @@
 
 'use strict';
 
-var colors     = require('colors/safe'),
-    os         = require('os'),
-    httpServer = require('../lib/http-server'),
-    portfinder = require('portfinder'),
-    opener     = require('opener'),
-    fs         = require('fs'),
-    argv       = require('minimist')(process.argv.slice(2));
+var colors = require('colors/safe'),
+  os = require('os'),
+  httpServer = require('../lib/http-server'),
+  portfinder = require('portfinder'),
+  opener = require('opener'),
+  fs = require('fs'),
+  argv = require('minimist')(process.argv.slice(2)),
+  QRCode = require('qrcode');
 var ifaces = os.networkInterfaces();
+var plainIp;
 
 process.title = 'http-server';
 
@@ -59,12 +61,12 @@ if (argv.h || argv.help) {
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
-    ssl = argv.S || argv.ssl,
-    proxy = argv.P || argv.proxy,
-    utc = argv.U || argv.utc,
-    version = argv.v || argv.version,
-    logger;
+  host = argv.a || '0.0.0.0',
+  ssl = argv.S || argv.ssl,
+  proxy = argv.P || argv.proxy,
+  utc = argv.U || argv.utc,
+  version = argv.v || argv.version,
+  logger;
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -72,8 +74,8 @@ if (!argv.s && !argv.silent) {
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       var ip = argv['log-ip']
-          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
-          : '';
+        ? req.headers['x-forwarded-for'] || '' + req.connection.remoteAddress
+        : '';
       if (error) {
         logger.info(
           '[%s] %s "%s %s" Error (%s): "%s"',
@@ -93,8 +95,8 @@ if (!argv.s && !argv.silent) {
 }
 else if (colors) {
   logger = {
-    info: function () {},
-    request: function () {}
+    info: function () { },
+    request: function () { }
   };
 }
 
@@ -166,21 +168,21 @@ function listen(port) {
     var protocol = ssl ? 'https://' : 'http://';
 
     logger.info([colors.yellow('Starting up http-server, serving '),
-      colors.cyan(server.root),
-      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
+    colors.cyan(server.root),
+    ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
     ].join(''));
 
     logger.info([colors.yellow('\nhttp-server version: '), colors.cyan(require('../package.json').version)].join(''));
 
     logger.info([colors.yellow('\nhttp-server settings: '),
-      ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
-      ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
-      ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
-      ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
-      ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
-      ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
+    ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
+    ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
+    ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
+    ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
+    ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
+    ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
+    ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
+    ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
     ].join('\n'));
 
     logger.info(colors.yellow('\nAvailable on:'));
@@ -191,6 +193,7 @@ function listen(port) {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
+            plainIp = protocol + details.address + ':' + port.toString()
             logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
           }
         });
@@ -200,7 +203,9 @@ function listen(port) {
     if (typeof proxy === 'string') {
       logger.info('Unhandled requests will be served from: ' + proxy);
     }
-
+    QRCode.toString(plainIp, { type: 'terminal' }, function (err, qr) {
+      console.log(qr);
+    })
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
