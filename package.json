@@ -96,7 +96,7 @@
     "portfinder": "^1.0.28",
     "secure-compare": "3.0.1",
     "union": "~0.5.0",
-    "url-join": "^2.0.5"
+    "url-join": "^4.0.1"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
