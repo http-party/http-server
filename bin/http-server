@@ -76,7 +76,7 @@ var proxyOptionsBooleanProps = [
 if (proxyOptions) {
   Object.keys(proxyOptions).forEach(function (key) {
     if (proxyOptionsBooleanProps.indexOf(key) > -1) {
-      proxyOptions[key] = proxyOptions[key] === 'true';
+      proxyOptions[key] = proxyOptions[key].toLowerCase() === 'true';
     }
   });
 }
