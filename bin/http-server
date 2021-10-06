@@ -140,6 +140,13 @@ function listen(port) {
     }
   }
 
+  if (proxy) {
+    if (!proxy.startsWith('http://') && !proxy.startsWith('https://')) {
+      logger.info(colors.red('Error: Proxy must specify a protocol'));
+      process.exit(1);
+    }
+  }
+
   if (ssl) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
