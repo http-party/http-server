@@ -85,23 +85,23 @@
     }
   ],
   "dependencies": {
-    "basic-auth": "^1.0.3",
+    "basic-auth": "^2.0.1",
     "colors": "^1.4.0",
     "corser": "^2.0.1",
-    "he": "^1.1.0",
-    "http-proxy": "^1.18.0",
+    "he": "^1.2.0",
+    "http-proxy": "^1.18.1",
     "mime": "^1.6.0",
     "minimist": "^1.2.5",
     "opener": "^1.5.1",
-    "portfinder": "^1.0.25",
+    "portfinder": "^1.0.28",
     "secure-compare": "3.0.1",
     "union": "~0.5.0",
-    "url-join": "^2.0.5"
+    "url-join": "^4.0.1"
   },
   "devDependencies": {
     "common-style": "^3.0.0",
     "eol": "^0.9.1",
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "mkdirp": "^0.5.0",
     "request": "^2.88.2",
     "tap": "^14.11.0"
