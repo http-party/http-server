@@ -63,6 +63,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-S` or `--ssl` |Enable https.| |
 |`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
+|`-Q` or `--qr-code` |Show QR code for public IP | |,
 |`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |

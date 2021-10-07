@@ -9,12 +9,12 @@ var colors = require('colors/safe'),
   opener = require('opener'),
   fs = require('fs'),
   argv = require('minimist')(process.argv.slice(2)),
-  QRCode = require('qrcode');
+  qrcode = require('qrcode-terminal');
 var ifaces = os.networkInterfaces();
 var plainIp;
 
 process.title = 'http-server';
-
+console.log(argv)
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
@@ -50,6 +50,7 @@ if (argv.h || argv.help) {
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
+    '  -Q --qr-code Show QR code for public IP',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -132,7 +133,8 @@ function listen(port) {
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    showQR: argv.Q || argv['qr-code']
   };
 
   if (argv.cors) {
@@ -203,9 +205,11 @@ function listen(port) {
     if (typeof proxy === 'string') {
       logger.info('Unhandled requests will be served from: ' + proxy);
     }
-    QRCode.toString(plainIp, { type: 'terminal' }, function (err, qr) {
-      console.log(qr);
-    })
+    if (options.showQR) {
+      qrcode.generate(plainIp, { small: true }, function (qr) {
+        console.log(qr);
+      })
+    }
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
