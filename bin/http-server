@@ -61,6 +61,7 @@ if (argv.h || argv.help) {
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     ssl = argv.S || argv.ssl,
+    sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
@@ -143,7 +144,8 @@ function listen(port) {
   if (ssl) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
-      key: argv.K || argv.key || 'key.pem'
+      key: argv.K || argv.key || 'key.pem',
+      passphrase: sslPassphrase,
     };
     try {
       fs.lstatSync(options.https.cert);
