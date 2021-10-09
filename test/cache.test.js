@@ -22,7 +22,7 @@ test('custom cache option number', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/a.txt`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200, 'a.txt should be found');
       t.equal(res.headers['cache-control'], 'max-age=3600');
       server.close(() => { t.end(); });
@@ -47,7 +47,7 @@ test('custom cache option string', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/a.txt`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200, 'a.txt should be found');
       t.equal(res.headers['cache-control'], 'max-whatever=3600');
       server.close(() => { t.end(); });
@@ -76,12 +76,12 @@ test('custom cache option function returning a number', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/a.txt`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200, 'a.txt should be found');
       t.equal(res.headers['cache-control'], 'max-age=1');
 
       request.get(`http://localhost:${port}/a.txt`, (err2, res2) => {
-        t.ifError(err2);
+        t.error(err2);
         t.equal(res2.statusCode, 200, 'a.txt should be found');
         t.equal(res2.headers['cache-control'], 'max-age=2');
         server.close(() => { t.end(); });
@@ -111,12 +111,12 @@ test('custom cache option function returning a string', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/a.txt`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200, 'a.txt should be found');
       t.equal(res.headers['cache-control'], 'max-meh=1');
 
       request.get(`http://localhost:${port}/a.txt`, (err2, res2) => {
-        t.ifError(err2);
+        t.error(err2);
         t.equal(res2.statusCode, 200, 'a.txt should be found');
         t.equal(res2.headers['cache-control'], 'max-meh=2');
         server.close(() => { t.end(); });
