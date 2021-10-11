@@ -8,7 +8,7 @@ var colors     = require('colors/safe'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
     fs         = require('fs'),
-    argv       = require('minimist')(process.argv.slice(2));
+    argv       = require('minimist')(process.argv.slice(2)),
     url        = require('url');
 var ifaces = os.networkInterfaces();
 
