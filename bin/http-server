@@ -2,8 +2,6 @@
 
 'use strict';
 
-const { url } = require('inspector');
-
 var colors     = require('colors/safe'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
