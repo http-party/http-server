@@ -41,6 +41,7 @@ if (argv.h || argv.help) {
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
     '  -P --proxy         Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
     '',
     '  --username   Username for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_USERNAME',
@@ -62,12 +63,26 @@ if (argv.h || argv.help) {
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-  host = argv.a || '0.0.0.0',
-  ssl = argv.S || argv.ssl,
-  proxy = argv.P || argv.proxy,
-  utc = argv.U || argv.utc,
-  version = argv.v || argv.version,
-  logger;
+    host = argv.a || '0.0.0.0',
+    ssl = argv.S || argv.ssl,
+    proxy = argv.P || argv.proxy,
+    proxyOptions = argv['proxy-options'],
+    utc = argv.U || argv.utc,
+    version = argv.v || argv.version,
+    logger;
+
+var proxyOptionsBooleanProps = [
+  'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
+  'preserveHeaderKeyCase', 'followRedirects', 'selfHandleResponse'
+];
+
+if (proxyOptions) {
+  Object.keys(proxyOptions).forEach(function (key) {
+    if (proxyOptionsBooleanProps.indexOf(key) > -1) {
+      proxyOptions[key] = proxyOptions[key].toLowerCase() === 'true';
+    }
+  });
+}
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -130,6 +145,7 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
+    proxyOptions: proxyOptions,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
@@ -203,7 +219,12 @@ function listen(port) {
     }
 
     if (typeof proxy === 'string') {
-      logger.info('Unhandled requests will be served from: ' + proxy);
+      if (proxyOptions) {
+        logger.info('Unhandled requests will be served from: ' + proxy + '. Options: ' + JSON.stringify(proxyOptions));
+      }
+      else {
+        logger.info('Unhandled requests will be served from: ' + proxy);
+      }
     }
     if (options.showQR) {
       qrcode.generate(plainIp, { small: true }, function (qr) {
