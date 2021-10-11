@@ -35,6 +35,7 @@ test('proxy options', (t) => {
       brotli: true,
       gzip: true
     })
+    // TODO #723 we should use portfinder
     server.listen(8080, async () => {
       try {
 
@@ -42,7 +43,7 @@ test('proxy options', (t) => {
         const proxyServer = httpServer.createServer({
           proxy: 'http://localhost:8080',
           root: path.join(__dirname, 'fixtures'),
-          ssl: true,
+          tls: true,
           https: httpsOpts,
           proxyOptions: {
             secure: false
