@@ -49,6 +49,7 @@ if (argv.h || argv.help) {
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
+    '  -H --header  Add extra header to all responses, eg. "X-Frame-Options: DENY"',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -153,6 +154,16 @@ function listen(port) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
+    }
+  }
+
+  var extraHeaders = argv.H || argv.header;
+  if (extraHeaders) {
+    if (Array.isArray(extraHeaders)) {
+      options.extraHeaders = extraHeaders;
+    }
+    else {
+      options.extraHeaders = [extraHeaders];
     }
   }
 
