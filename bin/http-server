@@ -2,6 +2,8 @@
 
 'use strict';
 
+const { url } = require('inspector');
+
 var colors     = require('colors/safe'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
@@ -9,6 +11,7 @@ var colors     = require('colors/safe'),
     opener     = require('opener'),
     fs         = require('fs'),
     argv       = require('minimist')(process.argv.slice(2));
+    URL        = require('url');
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -141,8 +144,11 @@ function listen(port) {
   }
 
   if (proxy) {
-    if (!proxy.startsWith('http://') && !proxy.startsWith('https://')) {
-      logger.info(colors.red('Error: Proxy must specify a protocol'));
+    try {
+      new URL.URL(proxy)
+    }
+    catch (err) {
+      logger.info(colors.red('Error: Invalid proxy url'));
       process.exit(1);
     }
   }
