@@ -9,7 +9,7 @@ var colors     = require('colors/safe'),
     opener     = require('opener'),
     fs         = require('fs'),
     argv       = require('minimist')(process.argv.slice(2));
-    URL        = require('url');
+    url        = require('url');
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
