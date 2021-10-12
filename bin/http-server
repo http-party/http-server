@@ -7,9 +7,14 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
+
     fs         = require('fs'),
-    argv       = require('minimist')(process.argv.slice(2)),
     url        = require('url');
+var argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    tls: 'ssl'
+  }
+});
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -39,16 +44,17 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
-    '  -P --proxy         Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  -P --proxy       Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
     '',
     '  --username   Username for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_USERNAME',
     '  --password   Password for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
-    '  -S --ssl     Enable https.',
-    '  -C --cert    Path to ssl cert file (default: cert.pem).',
-    '  -K --key     Path to ssl key file (default: key.pem).',
+    '  -S --tls --ssl   Enable secure request serving with TLS/SSL (HTTPS)',
+    '  -C --cert    Path to TLS cert file (default: cert.pem)',
+    '  -K --key     Path to TLS key file (default: key.pem)',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -61,11 +67,25 @@ if (argv.h || argv.help) {
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
-    ssl = argv.S || argv.ssl,
+    tls = argv.S || argv.tls,
     proxy = argv.P || argv.proxy,
+    proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     logger;
+
+var proxyOptionsBooleanProps = [
+  'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
+  'preserveHeaderKeyCase', 'followRedirects', 'selfHandleResponse'
+];
+
+if (proxyOptions) {
+  Object.keys(proxyOptions).forEach(function (key) {
+    if (proxyOptionsBooleanProps.indexOf(key) > -1) {
+      proxyOptions[key] = proxyOptions[key].toLowerCase() === 'true';
+    }
+  });
+}
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -128,6 +148,7 @@ function listen(port) {
     ext: argv.e || argv.ext,
     logFn: logger.request,
     proxy: proxy,
+    proxyOptions: proxyOptions,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
@@ -151,7 +172,7 @@ function listen(port) {
     }
   }
 
-  if (ssl) {
+  if (tls) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
@@ -174,16 +195,18 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var protocol = ssl ? 'https://' : 'http://';
+    var protocol = tls ? 'https://' : 'http://';
 
-    logger.info([colors.yellow('Starting up http-server, serving '),
+    logger.info([
+      colors.yellow('Starting up http-server, serving '),
       colors.cyan(server.root),
-      ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
+      tls ? (colors.yellow(' through') + colors.cyan(' https')) : ''
     ].join(''));
 
     logger.info([colors.yellow('\nhttp-server version: '), colors.cyan(require('../package.json').version)].join(''));
 
-    logger.info([colors.yellow('\nhttp-server settings: '),
+    logger.info([
+      colors.yellow('\nhttp-server settings: '),
       ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
       ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
       ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
@@ -209,7 +232,12 @@ function listen(port) {
     }
 
     if (typeof proxy === 'string') {
-      logger.info('Unhandled requests will be served from: ' + proxy);
+      if (proxyOptions) {
+        logger.info('Unhandled requests will be served from: ' + proxy + '. Options: ' + JSON.stringify(proxyOptions));
+      }
+      else {
+        logger.info('Unhandled requests will be served from: ' + proxy);
+      }
     }
 
     logger.info('Hit CTRL-C to stop the server');
