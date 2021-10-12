@@ -62,7 +62,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 |`--username` |Username for basic authentication | |
 |`--password` |Password for basic authentication | |
-|`-S` or `--ssl` |Enable https.| |
+|`-S`, `--tls` or `--ssl` |Enable secure request serving with TLS/SSL (HTTPS)|`false`|
 |`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
 |`-Q` or `--qr-code` |Show QR code for public IP | |,

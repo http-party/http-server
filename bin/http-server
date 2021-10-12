@@ -2,14 +2,17 @@
 
 'use strict';
 
-var colors = require('colors/safe'),
-  os = require('os'),
-  httpServer = require('../lib/http-server'),
-  portfinder = require('portfinder'),
-  opener = require('opener'),
-  fs = require('fs'),
-  argv = require('minimist')(process.argv.slice(2)),
-  qrcode = require('qrcode-terminal');
+var colors     = require('colors/safe'),
+    os         = require('os'),
+    httpServer = require('../lib/http-server'),
+    portfinder = require('portfinder'),
+    opener     = require('opener'),
+    fs         = require('fs');
+var argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    tls: 'ssl'
+  }
+});
 var ifaces = os.networkInterfaces();
 var plainIp;
 
@@ -40,7 +43,7 @@ if (argv.h || argv.help) {
     '  -U --utc     Use UTC time format in log messages.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
-    '  -P --proxy         Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  -P --proxy       Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
     '',
     '  --username   Username for basic authentication [none]',
@@ -64,7 +67,7 @@ if (argv.h || argv.help) {
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
-    ssl = argv.S || argv.ssl,
+    tls = argv.S || argv.tls,
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
@@ -160,7 +163,7 @@ function listen(port) {
     }
   }
 
-  if (ssl) {
+  if (tls) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem'
@@ -183,24 +186,26 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var protocol = ssl ? 'https://' : 'http://';
+    var protocol = tls ? 'https://' : 'http://';
 
-    logger.info([colors.yellow('Starting up http-server, serving '),
-    colors.cyan(server.root),
-    ssl ? (colors.yellow(' through') + colors.cyan(' https')) : ''
+    logger.info([
+      colors.yellow('Starting up http-server, serving '),
+      colors.cyan(server.root),
+      tls ? (colors.yellow(' through') + colors.cyan(' https')) : ''
     ].join(''));
 
     logger.info([colors.yellow('\nhttp-server version: '), colors.cyan(require('../package.json').version)].join(''));
 
-    logger.info([colors.yellow('\nhttp-server settings: '),
-    ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
-    ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
-    ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
-    ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
-    ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
-    ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
-    ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
-    ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
+    logger.info([
+      colors.yellow('\nhttp-server settings: '),
+      ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
+      ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
+      ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
+      ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
+      ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
+      ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
     ].join('\n'));
 
     logger.info(colors.yellow('\nAvailable on:'));
