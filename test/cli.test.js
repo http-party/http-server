@@ -106,11 +106,11 @@ test('--proxy requires you to specify a protocol', (t) => {
   t.plan(1);
   
   const options = ['.', '--proxy', 'google.com'];
-  const ecstatic = startEcstatic(options);
+  const server = startServer(options);
 
-  tearDown(ecstatic, t);
+  tearDown(server, t);
 
-  ecstatic.on('exit', (code) => {
+  server.on('exit', (code) => {
     t.equal(code, 1);
   });
 });
