@@ -7,7 +7,9 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
-    fs         = require('fs');
+
+    fs         = require('fs'),
+    url        = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -157,6 +159,16 @@ function listen(port) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
+    }
+  }
+
+  if (proxy) {
+    try {
+      new url.URL(proxy)
+    }
+    catch (err) {
+      logger.info(colors.red('Error: Invalid proxy url'));
+      process.exit(1);
     }
   }
 
