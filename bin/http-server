@@ -17,7 +17,6 @@ var ifaces = os.networkInterfaces();
 var plainIp;
 
 process.title = 'http-server';
-console.log(argv)
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
