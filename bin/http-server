@@ -50,7 +50,7 @@ if (argv.h || argv.help) {
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
-    '  -Q --qr-code Show QR code for public IP',
+    '  --qr-code Show QR code for public IP',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
