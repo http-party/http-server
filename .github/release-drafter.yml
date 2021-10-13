@@ -5,7 +5,10 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&'
 
 categories:
-  - title: 'Features'
+  - title: 'Breaking changes'
+    labels:
+      - 'major version'
+  - title: 'Features and enhancements'
     labels:
       - 'feature'
       - 'enhancement'
