@@ -147,3 +147,10 @@ $ npm start
 
 You should see the turtle image in the screenshot above hosted at that URL. See
 the `./public` folder for demo content.
+
+# Updating Changelog
+
+The [CHANGELOG](CHANGELOG.md) is generated with [auto-changelog](https://www.npmjs.com/package/auto-changelog). Updates can currently be triggered in 2 ways:
+
+1. Running `npm version` locally before a commit
+1. Running `npx auto-changelog` locally
