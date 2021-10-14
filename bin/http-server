@@ -7,14 +7,14 @@ var colors     = require('colors/safe'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
     opener     = require('opener'),
-    fs         = require('fs');
+    fs         = require('fs'),
+    qrcode     = require('qrcode-terminal');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
   }
 });
 var ifaces = os.networkInterfaces();
-var plainIp;
 
 process.title = 'http-server';
 if (argv.h || argv.help) {
@@ -53,7 +53,7 @@ if (argv.h || argv.help) {
     '  -S --ssl     Enable https.',
     '  -C --cert    Path to ssl cert file (default: cert.pem).',
     '  -K --key     Path to ssl key file (default: key.pem).',
-    '  --qr-code Show QR code for public IP',
+    '  --qr-code    (Experimental) Show QR code for public IP',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -72,6 +72,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     logger;
+var plainIp = host;
 
 var proxyOptionsBooleanProps = [
   'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
@@ -231,6 +232,7 @@ function listen(port) {
       }
     }
     if (options.showQR) {
+      logger.info(colors.yellow("WARNING: ") + "This is an experimental feature and is not guaranteed to work properly in all terminals or fonts.")
       qrcode.generate(plainIp, { small: true }, function (qr) {
         console.log(qr);
       })
