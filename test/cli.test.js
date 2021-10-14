@@ -101,3 +101,16 @@ test('setting mimeTypes via cli - directly', (t) => {
     });
   });
 });
+
+test('--proxy requires you to specify a protocol', (t) => {
+  t.plan(1);
+  
+  const options = ['.', '--proxy', 'google.com'];
+  const server = startServer(options);
+
+  tearDown(server, t);
+
+  server.on('exit', (code) => {
+    t.equal(code, 1);
+  });
+});
