@@ -100,12 +100,7 @@
     "url-join": "^4.0.1"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "auto-changelog": "^1.16.2",
-=======
-    "auto-changelog": "^2.3.0",
-    "common-style": "^3.0.0",
->>>>>>> chore: update auto-changelog version to latest
     "eol": "^0.9.1",
     "eslint": "^4.19.1",
     "eslint-config-populist": "^4.2.0",
