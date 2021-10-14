@@ -92,14 +92,19 @@
     "http-proxy": "^1.18.1",
     "mime": "^1.6.0",
     "minimist": "^1.2.5",
-    "opener": "^1.5.1",
+    "opener": "^1.5.2",
     "portfinder": "^1.0.28",
     "secure-compare": "3.0.1",
     "union": "~0.5.0",
     "url-join": "^4.0.1"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "auto-changelog": "^1.16.2",
+=======
+    "auto-changelog": "^2.3.0",
+    "common-style": "^3.0.0",
+>>>>>>> chore: update auto-changelog version to latest
     "eol": "^0.9.1",
     "eslint": "^4.19.1",
     "eslint-config-populist": "^4.2.0",
