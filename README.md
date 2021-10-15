@@ -109,7 +109,7 @@ If you wish to use a passphrase with your private key you can include one in the
 e.g.
 `openssl req -newkey rsa:2048 -passout pass:foobar -keyout key.pem -x509 -days 365 -out cert.pem`
 
-For security reasons rather than the command line http-server will read this from the `NODE_HTTP_SERVER_SSL_PASSPHRASE` environment variable.
+For security reasons, the passphrase will only be read from the `NODE_HTTP_SERVER_SSL_PASSPHRASE` environment variable.
 
 
 This is what should be output if successful:
