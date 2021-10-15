@@ -1,0 +1,11 @@
+{
+  "extends": "eslint-config-populist",
+  "rules": {
+    "strict": "warn",
+    "indent": ["warn", 2],
+    "valid-jsdoc": "warn",
+    "no-undefined": "warn",
+    "comma-dangle": "warn",
+    "callback-return": ["warn", ["next"]]
+  }
+}
