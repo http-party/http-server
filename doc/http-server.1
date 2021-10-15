@@ -86,6 +86,10 @@ Enable logging of the client IP address.
 Fallback proxy if the request cannot be resolved.
 
 .TP
+.BI \-\-proxy\-options
+Pass proxy options using nested dotted objects.
+
+.TP
 .BI \-\-username " " \fIUSERNAME\fR
 Username for basic authentication.
 Can also be specified with the environment variable NODE_HTTP_SERVER_USERNAME.
@@ -98,7 +102,7 @@ Can also be specified with the environment variable NODE_HTTP_SERVER_PASSWORD.
 Defaults to none.
 
 .TP
-.BI \-S ", " \-\-ssl
+.BI \-S ", " \-\-tls ", " \-\-ssl
 Enable https.
 
 .TP

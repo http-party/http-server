@@ -4,13 +4,12 @@ const test = require('tap').test;
 const ecstatic = require('../lib/core');
 const http = require('http');
 const request = require('request');
-const mkdirp = require('mkdirp');
 const path = require('path');
 
 const root = `${__dirname}/public`;
 const baseDir = 'base';
 
-mkdirp.sync(`${root}/emptyDir`);
+require('fs').mkdirSync(`${root}/emptyDir`, {recursive: true});
 
 const cases = require('./fixtures/common-cases-error');
 
