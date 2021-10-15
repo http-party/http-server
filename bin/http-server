@@ -2,14 +2,14 @@
 
 'use strict';
 
-var colors     = require('colors/safe'),
-    os         = require('os'),
-    httpServer = require('../lib/http-server'),
-    portfinder = require('portfinder'),
-    opener     = require('opener'),
-    fs         = require('fs'),
-    qrcode     = require('qrcode-terminal');
-    url        = require('url');
+var colors = require('colors/safe'),
+  os = require('os'),
+  httpServer = require('../lib/http-server'),
+  portfinder = require('portfinder'),
+  opener = require('opener'),
+  fs = require('fs'),
+  qrcode = require('qrcode-terminal'),
+  url = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -66,14 +66,13 @@ if (argv.h || argv.help) {
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
-    tls = argv.S || argv.tls,
-    proxy = argv.P || argv.proxy,
-    proxyOptions = argv['proxy-options'],
-    utc = argv.U || argv.utc,
-    version = argv.v || argv.version,
-    logger;
-var plainIp = host;
+  host = argv.a || '0.0.0.0',
+  tls = argv.S || argv.tls,
+  proxy = argv.P || argv.proxy,
+  proxyOptions = argv['proxy-options'],
+  utc = argv.U || argv.utc,
+  version = argv.v || argv.version,
+  logger;
 
 var proxyOptionsBooleanProps = [
   'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
@@ -154,7 +153,7 @@ function listen(port) {
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
-    showQR: argv.Q || argv['qr-code']
+    showQR: argv['qr-code']
   };
 
   if (argv.cors) {
@@ -198,6 +197,7 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var protocol = tls ? 'https://' : 'http://';
+    var plainIp = protocol + host;
 
     logger.info([
       colors.yellow('Starting up http-server, serving '),
