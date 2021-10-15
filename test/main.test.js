@@ -87,6 +87,19 @@ test('http-server main', (t) => {
                   .indexOf('X-Test') >= 0, 204);
             }).catch(err => t.fail(err.toString())),
 
+            t.test(
+              "Regression: don't crash on control characters in query strings",
+              {},
+              (t) => {
+                requestAsync({
+                  uri: encodeURI('http://localhost:8080/file?\x0cfoo'),
+                }).then(res => {
+                  t.equal(res.statusCode, 200);
+                }).catch(err => t.fail(err.toString()))
+                  .finally(() => t.end());
+              }
+            ),
+
             // Light compression testing. Heavier compression tests exist in
             // compression.test.js
             requestAsync({
