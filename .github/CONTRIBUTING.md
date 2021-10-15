@@ -9,7 +9,7 @@ Sorry! It happens to the best of us. If you've found a bug in http-server, **ple
 Please include _as much detail as possible_ to help us reproduce and diagnose the bug. Most importantly:
 
 - Make use of the issue template!
-- Let us know _how_ you're running http-server (options, flags, environment, browser or Node.js, etc.)
+- Let us know _how_ you're running http-server (options, flags, environment, etc.)
 - Include your test code or file(s). If large, please provide a link to a repository or [gist](https://gist.github.com).
 - Please show code in JavaScript only (any version)
 
@@ -37,7 +37,7 @@ Follow these steps to get going.
 1. Commit your changes.
   - See [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/).
 1. Push your changes to your fork.
-1. In your browser, navigate to [http-party/http-server](https://github.com/http-party/http-server). You should see a notification about your recent changes in your fork's branch, with a (green?) button to create a pull request. Click it.
+1. Now on [http-party/http-server](https://github.com/http-party/http-server), you should see a notification about your recent changes in your fork's branch, with a green button to create a pull request. Click the button.
 1. Describe your changes in detail here, following the template. Once you're satisfied, submit the form.
 1. Be patient while your PR is reviewed. This can take a while. We may request changes, but don't be afraid to question them.
 1. Your PR might become conflicted with the code in `master`. If this is the case, you will need to [update your PR](#up-to-date) and resolve your conflicts.
