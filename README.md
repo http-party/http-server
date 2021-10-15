@@ -103,6 +103,15 @@ Then you need to run the server with `-S` for enabling SSL and `-C` for your cer
 http-server -S -C cert.pem
 ```
 
+If you wish to use a passphrase with your private key you can include one in the openssl command via the -passout parameter (using password of foobar)
+
+
+e.g.
+`openssl req -newkey rsa:2048 -passout pass:foobar -keyout key.pem -x509 -days 365 -out cert.pem`
+
+For security reasons, the passphrase will only be read from the `NODE_HTTP_SERVER_SSL_PASSPHRASE` environment variable.
+
+
 This is what should be output if successful:
 
 ``` sh
