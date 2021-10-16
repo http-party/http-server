@@ -99,8 +99,9 @@
     "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "common-style": "^3.0.0",
     "eol": "^0.9.1",
+    "eslint": "^4.19.1",
+    "eslint-config-populist": "^4.2.0",
     "express": "^4.17.1",
     "request": "^2.88.2",
     "tap": "^15.0.10"

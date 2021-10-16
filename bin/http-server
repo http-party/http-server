@@ -68,6 +68,7 @@ if (argv.h || argv.help) {
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
+    sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
@@ -175,7 +176,8 @@ function listen(port) {
   if (tls) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
-      key: argv.K || argv.key || 'key.pem'
+      key: argv.K || argv.key || 'key.pem',
+      passphrase: sslPassphrase,
     };
     try {
       fs.lstatSync(options.https.cert);
