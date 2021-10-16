@@ -1,6 +1,6 @@
 {
   "output": "CHANGELOG.md",
-  "template": "keepachangelog",
+  "template": "changelog_template.hbs",
   "unreleased": true,
   "commitLimit": false
 }
