@@ -36,6 +36,7 @@ Follow these steps to get going.
    - Tests will also run on your PR, but running them locally will let you catch problems ahead-of-time.
 1. Commit your changes.
    - See [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/).
+   - **Please do not use "Conventional Commits" style**
 1. Push your changes to your fork.
 1. Now on [http-party/http-server](https://github.com/http-party/http-server), you should see a notification about your recent changes in your fork's branch, with a green button to create a pull request. Click the button.
 1. Describe your changes in detail here, following the template. Once you're satisfied, submit the form.
