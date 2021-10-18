@@ -5,6 +5,7 @@ const ecstatic = require('../lib/core');
 const http = require('http');
 const request = require('request');
 const path = require('path');
+const portfinder = require('portfinder');
 
 const test = tap.test;
 
@@ -24,7 +25,7 @@ test('create test directory', (t) => {
 });
 
 test('directory listing with pathname including HTML characters', (t) => {
-  require('portfinder').getPort((err, port) => {
+  portfinder.getPort((err, port) => {
     const uri = `http://localhost:${port}${path.join('/', baseDir, '/%3Cdir%3E')}`;
     const server = http.createServer(
       ecstatic({
@@ -45,6 +46,30 @@ test('directory listing with pathname including HTML characters', (t) => {
         t.end();
       });
     });
+  });
+});
+
+test('NULL byte in request path does not crash server', (t) => {
+  portfinder.getPort((err, port) => {
+    const uri = `http://localhost:${port}${path.join('/', baseDir, '/%00')}`;
+    const server = http.createServer(
+      ecstatic({
+        root,
+        baseDir,
+      })
+    );
+
+    try {
+    server.listen(port, () => {
+      request.get({uri}, (err, res, body) => {
+        t.pass('server did not crash')
+        server.close();
+        t.end();
+      });
+    });
+    } catch (err) {
+      t.fail(err.toString());
+    }
   });
 });
 
