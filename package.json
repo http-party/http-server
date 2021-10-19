@@ -89,6 +89,7 @@
     "colors": "^1.4.0",
     "corser": "^2.0.1",
     "he": "^1.2.0",
+    "html-encoding-sniffer": "^3.0.0",
     "http-proxy": "^1.18.1",
     "mime": "^1.6.0",
     "minimist": "^1.2.5",
