@@ -245,7 +245,7 @@ function listen(port) {
       }
     }
     if (options.showQR) {
-      logger.info(colors.yellow("WARNING: ") + "This is an experimental feature and is not guaranteed to work properly in all terminals or fonts.")
+      logger.info(colors.yellow("\nWARNING: ") + "The QR Code is an experimental feature and is not guaranteed to work properly in all terminals or fonts.")
       qrcode.generate(plainIp, { small: true }, function (qr) {
         console.log(qr);
       })
