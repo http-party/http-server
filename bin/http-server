@@ -2,14 +2,14 @@
 
 'use strict';
 
-var colors     = require('colors/safe'),
-    os         = require('os'),
-    httpServer = require('../lib/http-server'),
-    portfinder = require('portfinder'),
-    opener     = require('opener'),
-
-    fs         = require('fs'),
-    url        = require('url');
+var colors = require('colors/safe'),
+  os = require('os'),
+  httpServer = require('../lib/http-server'),
+  portfinder = require('portfinder'),
+  opener = require('opener'),
+  fs = require('fs'),
+  qrcode = require('qrcode-terminal'),
+  url = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -18,7 +18,6 @@ var argv = require('minimist')(process.argv.slice(2), {
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
-
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
@@ -52,9 +51,10 @@ if (argv.h || argv.help) {
     '  --password   Password for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
-    '  -S --tls --ssl   Enable secure request serving with TLS/SSL (HTTPS)',
-    '  -C --cert    Path to TLS cert file (default: cert.pem)',
-    '  -K --key     Path to TLS key file (default: key.pem)',
+    '  -S --ssl     Enable https.',
+    '  -C --cert    Path to ssl cert file (default: cert.pem).',
+    '  -K --key     Path to ssl key file (default: key.pem).',
+    '  --qr-code    (Experimental) Show QR code for public IP',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -94,8 +94,8 @@ if (!argv.s && !argv.silent) {
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       var ip = argv['log-ip']
-          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
-          : '';
+        ? req.headers['x-forwarded-for'] || '' + req.connection.remoteAddress
+        : '';
       if (error) {
         logger.info(
           '[%s] %s "%s %s" Error (%s): "%s"',
@@ -115,8 +115,8 @@ if (!argv.s && !argv.silent) {
 }
 else if (colors) {
   logger = {
-    info: function () {},
-    request: function () {}
+    info: function () { },
+    request: function () { }
   };
 }
 
@@ -153,7 +153,8 @@ function listen(port) {
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    showQR: argv['qr-code']
   };
 
   if (argv.cors) {
@@ -198,6 +199,7 @@ function listen(port) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
     var protocol = tls ? 'https://' : 'http://';
+    var plainIp = protocol + host;
 
     logger.info([
       colors.yellow('Starting up http-server, serving '),
@@ -227,6 +229,7 @@ function listen(port) {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
+            plainIp = protocol + details.address + ':' + port.toString()
             logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
           }
         });
@@ -241,7 +244,12 @@ function listen(port) {
         logger.info('Unhandled requests will be served from: ' + proxy);
       }
     }
-
+    if (options.showQR) {
+      logger.info(colors.yellow("\nWARNING: ") + "The QR Code is an experimental feature and is not guaranteed to work properly in all terminals or fonts.")
+      qrcode.generate(plainIp, { small: true }, function (qr) {
+        console.log(qr);
+      })
+    }
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
       const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
