@@ -67,7 +67,23 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+const configFile = (typeof argv.config) == 'string' && argv.config || 'http-server-config.js';
+const isRootConfig = configFile.length && (configFile[0] == '/' || configFile[0] == '\\') ||
+  configFile.length > 1 && configFile[1] == ':';
+const configPath = isRootConfig && configFile || path.join(process.cwd(), configFile);
+let defaultOptions = {};
+try {
+  defaultOptions = require(configPath);
+  console.log('Read config', configPath);
+} catch(e) {
+  if( argv.config ) {
+    console.log(e);
+    throw new Error(`Couldn't load ${configPath}`);
+  }
+}
+
+
+var port = argv.p || argv.port || parseInt(process.env.PORT, 10) || defaultOptions.port,
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
@@ -141,6 +157,7 @@ else {
 
 function listen(port) {
   var options = {
+    ...defaultOptions,
     root: argv._[0],
     cache: argv.c,
     timeout: argv.t,
@@ -158,20 +175,6 @@ function listen(port) {
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
-
-  const configFile = (typeof argv.config) == 'string' && argv.config || 'http-server-config.js';
-  const isRootConfig = configFile.length && (configFile[0] == '/' || configFile[0] == '\\') ||
-    configFile.length > 1 && configFile[1] == ':';
-  const configPath = isRootConfig && configFile || path.join(process.cwd(), configFile);
-  try {
-    const configLoad = require(configPath);
-    console.log('Read config', configPath);
-    Object.assign(options, configLoad);
-  } catch(e) {
-    if( argv.config ) {
-      throw new Error(`Couldn't load ${configPath}`);
-    }
-  }
 
   if (argv.cors) {
     options.cors = true;
