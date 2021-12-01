@@ -10,6 +10,7 @@ var colors     = require('colors/safe'),
 
     fs         = require('fs'),
     url        = require('url');
+const path = require('path');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -56,6 +57,7 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to TLS cert file (default: cert.pem)',
     '  -K --key     Path to TLS key file (default: key.pem)',
     '',
+    '  --config     Read the JavaScript file for initial options (http-server-config.js if it exists)',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
@@ -87,6 +89,7 @@ if (proxyOptions) {
     }
   });
 }
+
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -155,6 +158,20 @@ function listen(port) {
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
+
+  const configFile = (typeof argv.config) == 'string' && argv.config || 'http-server-config.js';
+  const isRootConfig = configFile.length && (configFile[0] == '/' || configFile[0] == '\\') ||
+    configFile.length > 1 && configFile[1] == ':';
+  const configPath = isRootConfig && configFile || path.join(process.cwd(), configFile);
+  try {
+    const configLoad = require(configPath);
+    console.log('Read config', configPath);
+    Object.assign(options, configLoad);
+  } catch(e) {
+    if( argv.config ) {
+      throw new Error(`Couldn't load ${configPath}`);
+    }
+  }
 
   if (argv.cors) {
     options.cors = true;

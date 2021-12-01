@@ -16,6 +16,8 @@ Using `npx` you can run the script without installing it first:
 
     npx http-server [path] [options]
 
+Optionally you can create a JavaScript module file 'http-server-config.js' that exports any of the configuration options you want to include.  This can be used to create redirects, apply custom content types etc.
+
 #### Globally via `npm`
 
     npm install --global http-server
@@ -44,6 +46,7 @@ This will install `http-server` globally so that it may be run from the command 
 
 | Command         | 	Description         | Defaults  |
 | -------------  |-------------|-------------|
+| --config | Configuration file to read.  Defaults to http-server-config.js |
 |`-p` or `--port` |Port to use. Use `-p 0` to look for an open port, starting at 8080. It will also read from `process.env.PORT`. |8080 |
 |`-a`   |Address to use |0.0.0.0|
 |`-d`     |Show directory listings |`true` |
@@ -132,6 +135,24 @@ Available on:
   https://192.168.1.101:8080
   https://192.168.1.104:8080
 Hit CTRL-C to stop the server
+```
+
+# configuration file
+You can configure http-server automatically with a file named http-server-config.js, located in the directory
+you run the command from, or as specified by the --config option.
+
+An example configuration:
+```js
+module.exports = {
+  gzip: true,
+  before: [
+	  (req,res) => {
+		  console.log('Hello req', req);
+		  console.log('Hello res', res);
+		  res.emit('next');
+	  },
+  ],
+};
 ```
 
 # Development
