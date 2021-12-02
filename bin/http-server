@@ -10,6 +10,7 @@ var colors     = require('colors/safe'),
 
     fs         = require('fs'),
     url        = require('url');
+const path = require('path');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -56,6 +57,7 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to TLS cert file (default: cert.pem)',
     '  -K --key     Path to TLS key file (default: key.pem)',
     '',
+    '  --config     Read the JavaScript file for initial options (http-server-config.js if it exists)',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
@@ -65,7 +67,23 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+const configFile = (typeof argv.config) == 'string' && argv.config || 'http-server-config.js';
+const isRootConfig = configFile.length && (configFile[0] == '/' || configFile[0] == '\\') ||
+  configFile.length > 1 && configFile[1] == ':';
+const configPath = isRootConfig && configFile || path.join(process.cwd(), configFile);
+let defaultOptions = {};
+try {
+  defaultOptions = require(configPath);
+  console.log('Read config', configPath);
+} catch(e) {
+  if( argv.config ) {
+    console.log(e);
+    throw new Error(`Couldn't load ${configPath}`);
+  }
+}
+
+
+var port = argv.p || argv.port || parseInt(process.env.PORT, 10) || defaultOptions.port,
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
@@ -87,6 +105,7 @@ if (proxyOptions) {
     }
   });
 }
+
 
 if (!argv.s && !argv.silent) {
   logger = {
@@ -153,7 +172,8 @@ function listen(port) {
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    ...defaultOptions,
   };
 
   if (argv.cors) {
@@ -209,14 +229,14 @@ function listen(port) {
 
     logger.info([
       colors.yellow('\nhttp-server settings: '),
-      ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
-      ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
+      ([colors.yellow('CORS: '), options.cors ? colors.cyan(options.cors) : colors.red('disabled')].join('')),
+      ([colors.yellow('Cache: '), options.cache ? (options.cache === '-1' ? colors.red('disabled') : colors.cyan(options.cache + ' seconds')) : colors.cyan('3600 seconds')].join('')),
       ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
-      ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
+      ([colors.yellow('Directory Listings: '), options.showDir ? colors.red('not visible') : colors.cyan('visible')].join('')),
       ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
-      ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
+      ([colors.yellow('Serve GZIP Files: '), options.gzip ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Serve Brotli Files: '), options.brotli ? colors.cyan('true') : colors.red('false')].join('')),
+      ([colors.yellow('Default File Extension: '), options.ext ? colors.cyan(options.ext) : colors.red('none')].join(''))
     ].join('\n'));
 
     logger.info(colors.yellow('\nAvailable on:'));
