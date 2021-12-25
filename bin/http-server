@@ -15,6 +15,17 @@ var argv = require('minimist')(process.argv.slice(2), {
     tls: 'ssl'
   }
 });
+
+process.on('error', (e)=> {
+      let etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')   
+      console.log(colors.green(etime)) 
+      console.log(colors.red("Fatal error: ")+ e.code + ": "+e.message)
+      let fname = ".httpserver-"+etime.split(" ")[0]+"-"+etime.split(" ")[1]
+      console.log(colors.bold(`Check ${fname} file in this folder.`))
+      fs.writeFileSync(fname, JSON.stringify(e))
+      process.exit(1)
+});
+
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
