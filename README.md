@@ -69,7 +69,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
 |`-h` or `--help` |Print this list and exit. |   |
 |`-v` or `--version`|Print the version and exit. | |
-| `--no-panic` | Don't print error stack in the console, put it in a log file | `false`|
+| `-n` or `--no-panic` | Don't print error stack in the console, put it in a log file | `false`|
 
 ## Magic Files
 

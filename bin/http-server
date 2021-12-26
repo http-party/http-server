@@ -65,14 +65,14 @@ if (argv.h || argv.help) {
     '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.',
-    '  --no-panic         If error occurs, gracefully shut down and create log file',
+    '  -n --no-panic      If error occurs, gracefully shut down and create log file',
     '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC'   
   ].join('\n'));
   process.exit();
 }
 //console.log("Life")
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    nopanic = argv["no-panic"] || process.env.NODE_HTTP_SERVER_NO_PANIC,
+    nopanic = argv["no-panic"] || argv.n || process.env.NODE_HTTP_SERVER_NO_PANIC,
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
