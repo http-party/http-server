@@ -10,21 +10,14 @@ var colors     = require('colors/safe'),
 
     fs         = require('fs'),
     url        = require('url');
+
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
   }
 });
 
-process.on('error', (e)=> {
-      let etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')   
-      console.log(colors.green(etime)) 
-      console.log(colors.red("Fatal error: ")+ e.code + ": "+e.message)
-      let fname = ".httpserver-"+etime.split(" ")[0]+"-"+etime.split(" ")[1]
-      console.log(colors.bold(`Check ${fname} file in this folder.`))
-      fs.writeFileSync(fname, JSON.stringify(e))
-      process.exit(1)
-});
+
 
 var ifaces = os.networkInterfaces();
 
@@ -71,12 +64,15 @@ if (argv.h || argv.help) {
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
-    '  -v --version       Print the version and exit.'
+    '  -v --version       Print the version and exit.',
+    '  --panic            Panic and print error stack on console instead of gracefully shutting down',
+    '                     Can also be specified with the env variable NODE_HTTP_SERVER_PANIC'   
   ].join('\n'));
   process.exit();
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+    panic = argv.panic || process.env.NODE_HTTP_SERVER_PANIC,
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
@@ -85,6 +81,22 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     logger;
+
+
+if (panic){
+
+    process.on('error', (e)=> {
+      let etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')   
+      console.log(colors.green(etime)) 
+      console.log(colors.red("Fatal error: ")+ e.code + ": "+e.message)
+      let fname = ".httpserver-"+etime.split(" ")[0]+"-"+etime.split(" ")[1]
+      console.log(colors.bold(`Check ${fname} file in this folder.`))
+      fs.writeFileSync(fname, JSON.stringify(e))
+      process.exit(1)
+});
+
+}
+
 
 var proxyOptionsBooleanProps = [
   'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
