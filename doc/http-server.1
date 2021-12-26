@@ -58,6 +58,10 @@ Default file extension is none is provided.
 Suppress log messages from output.
 
 .TP
+.BI \ ", " \-\-no-panic
+Gracefully shut down whenever a fatal error occurs, sending stack to log file, not console.
+
+.TP
 .BI \-\-cors " " [\fIHEADERS\fR]
 Enable CORS via the "Access-Control-Allow-Origin" header.
 Optionally provide CORS headers list separated by commas.
