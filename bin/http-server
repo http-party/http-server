@@ -71,13 +71,6 @@ if (argv.h || argv.help) {
   process.exit();
 }
 
-//console.log("Life")
-//console.log(argv['no-panic'])
-
-//console.log(argv.n)
-
-//console.log(argv)
-
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     nopanic = !argv['panic'] || argv.n || process.env.NODE_HTTP_SERVER_NO_PANIC,
     host = argv.a || '0.0.0.0',
@@ -89,10 +82,9 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     version = argv.v || argv.version,
     logger;
 
-//console.log(nopanic)
 
 if (nopanic){
-//   console.log("no panic")
+
     process.on('error', (e)=> {
       let etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')   
       console.log(colors.green(etime)) 
@@ -307,5 +299,3 @@ process.on('SIGTERM', function () {
   logger.info(colors.red('http-server stopped.'));
   process.exit();
 });
-
-//process.emit('error', { code: "ELIFE", message: "Mission failed succesfuly"})
