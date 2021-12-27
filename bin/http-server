@@ -70,9 +70,14 @@ if (argv.h || argv.help) {
   ].join('\n'));
   process.exit();
 }
+
 //console.log("Life")
+//console.log(argv['no-panic'])
+
+//console.log(argv.n)
+
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    nopanic = argv["no-panic"] || argv.n || process.env.NODE_HTTP_SERVER_NO_PANIC,
+    nopanic = argv['no-panic'] || argv.n || process.env.NODE_HTTP_SERVER_NO_PANIC,
     host = argv.a || '0.0.0.0',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
@@ -82,9 +87,10 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     version = argv.v || argv.version,
     logger;
 
+//console.log(nopanic)
 
 if (nopanic){
-//    console.log("no panic")
+//   console.log("no panic")
     process.on('error', (e)=> {
       let etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')   
       console.log(colors.green(etime)) 
@@ -300,4 +306,4 @@ process.on('SIGTERM', function () {
   process.exit();
 });
 
-//process.emit('error', { code: "ELIFE", message: "Mission failed succesfuly"})
+process.emit('error', { code: "ELIFE", message: "Mission failed succesfuly"})
