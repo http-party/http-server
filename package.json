@@ -86,7 +86,7 @@
   ],
   "dependencies": {
     "basic-auth": "^2.0.1",
-    "colors": "^1.4.0",
+    "colors": "1.4.0",
     "corser": "^2.0.1",
     "he": "^1.2.0",
     "html-encoding-sniffer": "^3.0.0",
