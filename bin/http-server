@@ -2,7 +2,7 @@
 
 'use strict';
 
-var colors     = require('colors/safe'),
+var chalk     = require('chalk'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
     portfinder = require('portfinder'),
@@ -99,21 +99,21 @@ if (!argv.s && !argv.silent) {
       if (error) {
         logger.info(
           '[%s] %s "%s %s" Error (%s): "%s"',
-          date, ip, colors.red(req.method), colors.red(req.url),
-          colors.red(error.status.toString()), colors.red(error.message)
+          date, ip, chalk.red(req.method), chalk.red(req.url),
+          chalk.red(error.status.toString()), chalk.red(error.message)
         );
       }
       else {
         logger.info(
           '[%s] %s "%s %s" "%s"',
-          date, ip, colors.cyan(req.method), colors.cyan(req.url),
+          date, ip, chalk.cyan(req.method), chalk.cyan(req.url),
           req.headers['user-agent']
         );
       }
     }
   };
 }
-else if (colors) {
+else if (chalk) {
   logger = {
     info: function () {},
     request: function () {}
@@ -168,7 +168,7 @@ function listen(port) {
       new url.URL(proxy)
     }
     catch (err) {
-      logger.info(colors.red('Error: Invalid proxy url'));
+      logger.info(chalk.red('Error: Invalid proxy url'));
       process.exit(1);
     }
   }
@@ -183,14 +183,14 @@ function listen(port) {
       fs.lstatSync(options.https.cert);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find certificate ' + options.https.cert));
+      logger.info(chalk.red('Error: Could not find certificate ' + options.https.cert));
       process.exit(1);
     }
     try {
       fs.lstatSync(options.https.key);
     }
     catch (err) {
-      logger.info(colors.red('Error: Could not find private key ' + options.https.key));
+      logger.info(chalk.red('Error: Could not find private key ' + options.https.key));
       process.exit(1);
     }
   }
@@ -200,34 +200,34 @@ function listen(port) {
     var protocol = tls ? 'https://' : 'http://';
 
     logger.info([
-      colors.yellow('Starting up http-server, serving '),
-      colors.cyan(server.root),
-      tls ? (colors.yellow(' through') + colors.cyan(' https')) : ''
+      chalk.yellow('Starting up http-server, serving '),
+      chalk.cyan(server.root),
+      tls ? (chalk.yellow(' through') + chalk.cyan(' https')) : ''
     ].join(''));
 
-    logger.info([colors.yellow('\nhttp-server version: '), colors.cyan(require('../package.json').version)].join(''));
+    logger.info([chalk.yellow('\nhttp-server version: '), chalk.cyan(require('../package.json').version)].join(''));
 
     logger.info([
-      colors.yellow('\nhttp-server settings: '),
-      ([colors.yellow('CORS: '), argv.cors ? colors.cyan(argv.cors) : colors.red('disabled')].join('')),
-      ([colors.yellow('Cache: '), argv.c ? (argv.c === '-1' ? colors.red('disabled') : colors.cyan(argv.c + ' seconds')) : colors.cyan('3600 seconds')].join('')),
-      ([colors.yellow('Connection Timeout: '), argv.t === '0' ? colors.red('disabled') : (argv.t ? colors.cyan(argv.t + ' seconds') : colors.cyan('120 seconds'))].join('')),
-      ([colors.yellow('Directory Listings: '), argv.d ? colors.red('not visible') : colors.cyan('visible')].join('')),
-      ([colors.yellow('AutoIndex: '), argv.i ? colors.red('not visible') : colors.cyan('visible')].join('')),
-      ([colors.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? colors.cyan('true') : colors.red('false')].join('')),
-      ([colors.yellow('Default File Extension: '), argv.e ? colors.cyan(argv.e) : (argv.ext ? colors.cyan(argv.ext) : colors.red('none'))].join(''))
+      chalk.yellow('\nhttp-server settings: '),
+      ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
+      ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
+      ([chalk.yellow('Connection Timeout: '), argv.t === '0' ? chalk.red('disabled') : (argv.t ? chalk.cyan(argv.t + ' seconds') : chalk.cyan('120 seconds'))].join('')),
+      ([chalk.yellow('Directory Listings: '), argv.d ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
+      ([chalk.yellow('AutoIndex: '), argv.i ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
+      ([chalk.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? chalk.cyan('true') : chalk.red('false')].join('')),
+      ([chalk.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? chalk.cyan('true') : chalk.red('false')].join('')),
+      ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join(''))
     ].join('\n'));
 
-    logger.info(colors.yellow('\nAvailable on:'));
+    logger.info(chalk.yellow('\nAvailable on:'));
 
     if (argv.a && host !== '0.0.0.0') {
-      logger.info(`  ${protocol}${host}:${colors.green(port.toString())}`);
+      logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
-            logger.info(('  ' + protocol + details.address + ':' + colors.green(port.toString())));
+            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
           }
         });
       });
@@ -268,11 +268,11 @@ if (process.platform === 'win32') {
 }
 
 process.on('SIGINT', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.info(chalk.red('http-server stopped.'));
   process.exit();
 });
 
 process.on('SIGTERM', function () {
-  logger.info(colors.red('http-server stopped.'));
+  logger.info(chalk.red('http-server stopped.'));
   process.exit();
 });
