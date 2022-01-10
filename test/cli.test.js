@@ -40,7 +40,7 @@ function tearDown(ps, t) {
 }
 
 const getPort = () => new Promise((resolve, reject) => {
-  portfinder.getPort((err, port) => {
+  portfinder.getPort({ port: 8080 }, (err, port) => {
     if (err) reject(err);
     resolve(port);
   });
