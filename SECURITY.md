@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---------|------------------------|
-| 14.0.x  | ✔️ Yes |
-| 13.0.x  | 🔐 Security updates until April 2022 |
+| 14.x  | ✔️ Yes |
+| 13.x  | 🔐 Security updates until April 2022 |
 | <= 0.13.x  | ❌ No  |
 
 ## Reporting a Vulnerability
