@@ -50,13 +50,16 @@ test('setting port via cli - custom port', (t) => {
   t.plan(2);
 
   getPort().then((port) => {
-    const options = ['.', '--port', port];
-    const server = startServer(options);
+    return new Promise((resolve) => {
+      const options = ['.', '--port', port];
+      const server = startServer(options);
 
-    tearDown(server, t);
+      tearDown(server, t);
 
-    server.stdout.on('data', (msg) => {
-      checkServerIsRunning(`http://localhost:${port}`, msg, t);
+      server.stdout.on('data', (msg) => {
+        checkServerIsRunning(`http://localhost:${port}`, msg, t);
+        resolve();
+      });
     });
   });
 });
@@ -65,17 +68,20 @@ test('setting mimeTypes via cli - .types file', (t) => {
   t.plan(4);
 
   getPort().then((port) => {
-    const root = path.resolve(__dirname, 'public/');
-    const pathMimetypeFile = path.resolve(__dirname, 'fixtures/custom_mime_type.types');
-    const options = [root, '--port', port, '--mimetypes', pathMimetypeFile];
-    const server = startServer(options);
+    return new Promise((resolve) => {
+      const root = path.resolve(__dirname, 'public/');
+      const pathMimetypeFile = path.resolve(__dirname, 'fixtures/custom_mime_type.types');
+      const options = [root, '--port', port, '--mimetypes', pathMimetypeFile];
+      const server = startServer(options);
 
-    tearDown(server, t);
+      tearDown(server, t);
 
-    server.stdout.on('data', (msg) => {
-      checkServerIsRunning(`http://localhost:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
-        t.error(err);
-        t.equal(res.headers['content-type'], 'application/secret');
+      server.stdout.on('data', (msg) => {
+        checkServerIsRunning(`http://localhost:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
+          t.error(err);
+          t.equal(res.headers['content-type'], 'application/secret');
+          resolve();
+        });
       });
     });
   });
@@ -85,18 +91,21 @@ test('setting mimeTypes via cli - directly', (t) => {
   t.plan(4);
 
   getPort().then((port) => {
-    const root = path.resolve(__dirname, 'public/');
-    const mimeType = ['--mimetypes', '{ "application/x-my-type": ["opml"] }'];
-    const options = [root, '--port', port].concat(mimeType);
-    const server = startServer(options);
+    return new Promise((resolve) => {
+      const root = path.resolve(__dirname, 'public/');
+      const mimeType = ['--mimetypes', '{ "application/x-my-type": ["opml"] }'];
+      const options = [root, '--port', port].concat(mimeType);
+      const server = startServer(options);
 
-    // TODO: remove error handler
-    tearDown(server, t);
+      // TODO: remove error handler
+      tearDown(server, t);
 
-    server.stdout.on('data', (msg) => {
-      checkServerIsRunning(`http://localhost:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
-        t.error(err);
-        t.equal(res.headers['content-type'], 'application/x-my-type');
+      server.stdout.on('data', (msg) => {
+        checkServerIsRunning(`http://localhost:${port}/custom_mime_type.opml`, msg, t, (err, res) => {
+          t.error(err);
+          t.equal(res.headers['content-type'], 'application/x-my-type');
+          resolve();
+        });
       });
     });
   });
