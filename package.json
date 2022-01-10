@@ -86,7 +86,7 @@
   ],
   "dependencies": {
     "basic-auth": "^1.0.3",
-    "colors": "^1.4.0",
+    "chalk": "^4.1.2",
     "corser": "^2.0.1",
     "he": "^1.1.0",
     "http-proxy": "^1.18.0",
