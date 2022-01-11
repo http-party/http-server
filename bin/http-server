@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 'use strict';
-
 var chalk     = require('chalk'),
     os         = require('os'),
     httpServer = require('../lib/http-server'),
@@ -53,9 +52,9 @@ if (argv.h || argv.help) {
     '  --password   Password for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
-    '  -S --tls --ssl   Enable secure request serving with TLS/SSL (HTTPS)',
-    '  -C --cert    Path to TLS cert file (default: cert.pem)',
-    '  -K --key     Path to TLS key file (default: key.pem)',
+    '  -S --tls --ssl     Enable secure request serving with TLS/SSL (HTTPS)',
+    '  -C --cert          Path to TLS cert file (default: cert.pem)',
+    '  -K --key           Path to TLS key file (default: key.pem)',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -74,7 +73,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
-    redirect = !!argv.R || !!argv['https-redirect'],
+    redirect = !!argv.R || !!argv['https-redirect'],
     logger;
 
 var proxyOptionsBooleanProps = [
@@ -128,40 +127,40 @@ if (version) {
 }
 
 if (port === true) {
-  logger.info(colors.red('Error: --port needs a value'));
+  logger.info(chalk.red('Error: --port needs a value'));
   process.exit(1);
   return;
 }
 
-if (ssl && redirect) {
+if (tls && redirect) {
   var ports = [];
   if (!port) {
     ports = [8080,443];
   }
   else if (typeof port === 'string') {
-    ports = (port.toString() || '').split(',').map(function (s) { parseInt(s, 10) });
+    ports = (port.toString() || '').split(',').map(function (s) {  return parseInt(s, 10) });
   }
   else {
-    logger.info(colors.red('Error: Cannot parse "--port ' + port + '" of type ' + typeof port + '. Port has to be in the format [httpPort,httpsPort]\nExample: --port 8080,443'));
+    logger.info(chalk.red('Error: Cannot parse "--port ' + port + '" of type ' + typeof port + '. Port has to be in the format [httpPort,httpsPort]\nExample: --port 8080,443'));
     process.exit(1);
   }
 
   if (ports.length === 2) {
-    if (isNaN(ports[0]) || isNaN(ports[1])) {
-      logger.info(colors.red('Error parsing "--port ' + port + '". [' + ports + '] is not of type [number,number]'));
+    if (isNaN(ports[0]) || isNaN(ports[1])) {
+      logger.info(chalk.red('Error parsing "--port ' + port + '". [' + ports + '] is not of type [number,number]'));
       process.exit(1);
     }
   }
   else {
-    logger.info(colors.red('Error: Cannot parse "--port ' + port + '"\nExample: --port 8080,443'));
+    logger.info(chalk.red('Error: Cannot parse "--port ' + port + '"\nExample: --port 8080,443'));
     process.exit(1);
   }
 
   listen(ports[1]);
   listen(ports[0], ports[1]);
 }
-else if (!ssl && redirect) {
-  logger.info(colors.red('Error: Can\'t redirect to https when the main server runs on http!'));
+else if (!tls && redirect) {
+  logger.info(chalk.red('Error: Can\'t redirect to https when the main server runs on http!'));
 }
 else {
   if (!port) {
@@ -197,7 +196,7 @@ function listen(port, redirectPort) {
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
-  var isSSLServer = (ssl && !redirectPort);
+  var isTLSServer = (tls && !redirectPort);
 
   if (argv.cors) {
     options.cors = true;
@@ -216,7 +215,7 @@ function listen(port, redirectPort) {
     }
   }
 
-  if (isSSLServer) {
+  if (isTLSServer) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem',
@@ -241,13 +240,13 @@ function listen(port, redirectPort) {
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
 
-    var protocol      = isSSLServer ? 'https://' : 'http://';
+    var protocol      = isTLSServer ? 'https://' : 'http://';
 
     logger.info([
-      colors.yellow('Starting up http-server, serving '),
-      colors.cyan(server.root),
-      isSSLServer ? (colors.yellow(' through') + colors.cyan(' https')) : '',
-      colors.yellow('\nAvailable on:')
+      chalk.yellow('Starting up http-server, serving '),
+      chalk.cyan(server.root),
+      isTLSServer ? (chalk.yellow(' through') + chalk.cyan(' https')) : '',
+      chalk.yellow('\nAvailable on:')
     ].join(''));
 
     logger.info([chalk.yellow('\nhttp-server version: '), chalk.cyan(require('../package.json').version)].join(''));
