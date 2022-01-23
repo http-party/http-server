@@ -29,7 +29,7 @@
   ],
   "man": "./doc/http-server.1",
   "engines": {
-    "node": ">=12"
+    "node": ">=12.16"
   },
   "contributors": [
     {
