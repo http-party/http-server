@@ -58,6 +58,12 @@ Default file extension is none is provided.
 Suppress log messages from output.
 
 .TP
+.BI \-\-coop " " [\fIMODE\fR]
+Enable COOP via the "Cross-Origin-Opener-Policy" header and sets
+the "Cross-Origin-Embedder-Policy" header to "require-corp".
+Optionally provide COOP mode which defaults to "same-origin".
+
+.TP
 .BI \-\-cors " " [\fIHEADERS\fR]
 Enable CORS via the "Access-Control-Allow-Origin" header.
 Optionally provide CORS headers list separated by commas.
