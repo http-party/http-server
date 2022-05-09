@@ -224,6 +224,7 @@ function listen(port) {
     if (argv.a && host !== '0.0.0.0') {
       logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
     } else {
+      var ipv4Family = parseInt(process.versions.node.split('.')[0], 10) >= 18 ? 4 : 'IPv4';
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
