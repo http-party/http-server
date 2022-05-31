@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "14.1.0",
+  "version": "14.1.1",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
@@ -29,7 +29,7 @@
   ],
   "man": "./doc/http-server.1",
   "engines": {
-    "node": ">=12"
+    "node": ">=12.16"
   },
   "contributors": [
     {
