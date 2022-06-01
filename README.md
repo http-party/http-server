@@ -57,6 +57,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
+|`--spa` |Fallback to index.html (for single page applications)` |`false`|
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
 |`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false |
 |`--username` |Username for basic authentication | |
@@ -73,17 +74,10 @@ This will install `http-server` globally so that it may be run from the command 
 ## Magic Files
 
 - `index.html` will be served as the default file to any directory requests.
-- `404.html` will be served if a file is not found. This can be used for Single-Page App (SPA) hosting to serve the entry page.
+- `404.html` will be served if a file is not found.
 
-## Catch-all redirect
+For Single-Page App (SPA) hosting, use the `--spa` option. That will serve the entry page by `index.html`.
 
-To implement a catch-all redirect, use the index page itself as the proxy with:
-
-```
-http-server --proxy http://localhost:8080?
-```
-
-Note the `?` at the end of the proxy URL. Thanks to [@houston3](https://github.com/houston3) for this clever hack!
 
 ## TLS/SSL
 
