@@ -65,7 +65,7 @@ if (argv.h || argv.help) {
     '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.',
-    '  -n --no-panic      If error occurs, gracefully shut down and create log file',
+    '  --no-panic         If error occurs, gracefully shut down and create log file',
     '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC'   
   ].join('\n'));
   process.exit();
@@ -88,7 +88,7 @@ if (nopanic){
     const etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
     console.log(colors.green(etime));
     console.log(`${colors.red('Fatal error: ')}${e.code}: ${e.message}`);
-    const filename = `.httpserver-${etime.split(' ').join('-')}`;
+    const filename = `httpserver-${etime.split(' ').join('_')}.log`;
     console.log(colors.bold(`Check ${filename} file in this folder.`));
     fs.writeFileSync(filename, JSON.stringify(e));
     process.exit(1);
