@@ -55,6 +55,7 @@ if (argv.h || argv.help) {
     '  -S --tls --ssl   Enable secure request serving with TLS/SSL (HTTPS)',
     '  -C --cert    Path to TLS cert file (default: cert.pem)',
     '  -K --key     Path to TLS key file (default: key.pem)',
+    '  -H --header  Add extra header to all response, eg. "X-Frame-Options: DENY"',
     '',
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
@@ -170,6 +171,16 @@ function listen(port) {
     catch (err) {
       logger.info(chalk.red('Error: Invalid proxy url'));
       process.exit(1);
+    }
+  }
+
+  var extraHeaders = argv.H || argv.header;
+  if (extraHeaders) {
+    if (Array.isArray(extraHeaders)) {
+      options.extraHeaders = extraHeaders;
+    }
+    else {
+      options.extraHeaders = [extraHeaders];
     }
   }
 

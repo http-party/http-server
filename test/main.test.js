@@ -30,7 +30,11 @@ test('http-server main', (t) => {
         corsHeaders: 'X-Test',
         ext: true,
         brotli: true,
-        gzip: true
+        gzip: true,
+        extraHeaders: [
+          'Authorization:CustomToken',
+          'X-API-Key:VerySecureAndRandomToken'
+        ]
       });
       server.listen(8080, async () => {
         try {
@@ -63,6 +67,10 @@ test('http-server main', (t) => {
               // Custom headers
               t.equal(res.headers['access-control-allow-origin'], '*');
               t.equal(res.headers['access-control-allow-credentials'], 'true');
+
+              // Custom extra headers
+              t.equal(res.headers['authorization'], 'CustomToken');
+              t.equal(res.headers['x-api-key'], 'VerySecureAndRandomToken');
             }).catch(err => t.fail(err.toString())),
 
             // Get robots
