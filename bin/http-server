@@ -255,24 +255,23 @@ function listen(port) {
 
     // Spacing before logs
     if (!argv.s) logger.info();
+
+    function stopServer() {
+      server.close();
+      logger.info(chalk.red('http-server stopped.'));
+      process.exit();
+    }
+
+    process.on('SIGINT', stopServer);
+    process.on('SIGTERM', stopServer);
+
+    if (process.platform === 'win32') {
+      require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+      }).on('SIGINT', function () {
+        process.emit('SIGINT');
+      });
+    }
   });
 }
-
-if (process.platform === 'win32') {
-  require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  }).on('SIGINT', function () {
-    process.emit('SIGINT');
-  });
-}
-
-process.on('SIGINT', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});
-
-process.on('SIGTERM', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});
