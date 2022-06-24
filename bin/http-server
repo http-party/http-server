@@ -242,20 +242,7 @@ function listen(port) {
       }
     }
 
-    logger.info('Hit CTRL-C to stop the server');
-    if (argv.o) {
-      const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
-      let openUrl = `${protocol}${openHost}:${port}`;
-      if (typeof argv.o === 'string') {
-        openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
-      }
-      logger.info('Open: ' + openUrl);
-      opener(openUrl);
-    }
-
-    // Spacing before logs
-    if (!argv.s) logger.info();
-
+    // Set up "CTRL-C" hook, before printing out "Hit CTRL-C to stop the server"
     function stopServer() {
       server.close();
       logger.info(chalk.red('http-server stopped.'));
@@ -273,5 +260,20 @@ function listen(port) {
         process.emit('SIGINT');
       });
     }
+
+    logger.info('Hit CTRL-C to stop the server');
+
+    if (argv.o) {
+      const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
+      let openUrl = `${protocol}${openHost}:${port}`;
+      if (typeof argv.o === 'string') {
+        openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
+      }
+      logger.info('Open: ' + openUrl);
+      opener(openUrl);
+    }
+
+    // Spacing before logs
+    if (!argv.s) logger.info();
   });
 }
