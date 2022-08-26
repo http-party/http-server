@@ -25,7 +25,7 @@ if (argv.h || argv.help) {
     '',
     'options:',
     '  -p --port    Port to use. If 0, look for open port. [8080]',
-    '  -a           Address to use [0.0.0.0]',
+    '  -a           Address to use [0.0.0.0] or [::]',
     '  -d           Show directory listings [true]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
@@ -66,7 +66,7 @@ if (argv.h || argv.help) {
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
+    host = argv.a || '::',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
@@ -221,12 +221,15 @@ function listen(port) {
 
     logger.info(chalk.yellow('\nAvailable on:'));
 
-    if (argv.a && host !== '0.0.0.0') {
+    if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
       logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
+            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
+          }
+          if (details.family === 'IPv6' && !details.address.startsWith("fe80") ) { // Ignoring Ipv6-Link Local addresses
             logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
           }
         });
@@ -244,7 +247,10 @@ function listen(port) {
 
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
-      const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
+      let openHost = host
+      if ('::' === host || '0.0.0.0'===host){
+        openHost = '127.0.0.1'
+      }
       let openUrl = `${protocol}${openHost}:${port}`;
       if (typeof argv.o === 'string') {
         openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;
