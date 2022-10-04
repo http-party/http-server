@@ -14,5 +14,6 @@
   "contentType": "application/octet-stream",
   "weakEtags": true,
   "weakCompare": true,
-  "handleOptionsMethod": false
+  "handleOptionsMethod": false,
+  "serveDirZip": true
 }
