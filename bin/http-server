@@ -224,8 +224,9 @@ function listen(port) {
     if (argv.a && host !== '0.0.0.0') {
       logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
     } else {
-      // In Node 18+, interface family is a number, whereas earlier versions provide a string
-      var ipv4Family = parseInt(process.versions.node.split('.')[0], 10) >= 18 ? 4 : 'IPv4';
+      // In Node [18, 18.4), interface family is a number, whereas earlier versions provide a string
+      var nodeVer = process.versions.node.split('.');
+      var ipv4Family = (nodeVer[0] === '18' && parseInt(nodeVer[1], 10) < 4) ? 4 : 'IPv4';
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === ipv4Family) {
