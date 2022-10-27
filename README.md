@@ -64,7 +64,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-S`, `--tls` or `--ssl` |Enable secure request serving with TLS/SSL (HTTPS)|`false`|
 |`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
-|`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
+|`-r` or `--robots` | Automatically creates a /robots.txt file (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
 |`-h` or `--help` |Print this list and exit. |   |
