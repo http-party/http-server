@@ -56,7 +56,7 @@ if (argv.h || argv.help) {
     '  -C --cert    Path to TLS cert file (default: cert.pem)',
     '  -K --key     Path to TLS key file (default: key.pem)',
     '',
-    '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
+    '  -r --robots        Creates a /robots.txt file [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
