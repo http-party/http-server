@@ -1,7 +1,7 @@
 {
   "name": "http-server",
   "version": "0.11.1",
-  "description": "A simple zero-configuration command-line http server test",
+  "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
     "type": "git",
