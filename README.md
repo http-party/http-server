@@ -52,7 +52,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
 |`-e` or `--ext`  |Default file extension if none supplied |`html` | 
 |`-s` or `--silent` |Suppress log messages from output  | |
-|`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header  | |
+|`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header and also the value set is assigned to the `Access-Control-Allow-Headers`  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
