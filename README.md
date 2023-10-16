@@ -40,6 +40,20 @@ This will install `http-server` globally so that it may be run from the command 
 
 **Note:** Caching is on by default. Add `-c-1` as an option to disable caching.
 
+#### Using Docker
+
+Run the following command in any directory to serve its contents:
+```bash
+docker run -d -p 8080:8080 -v "$(PWD):/public" jammer99/http-server
+```
+*Now you can visit http://localhost:8080 to view your server*
+
+You can also use [available options](#available-options) as the last argument of `docker run` command.
+
+```bash
+docker run -d -p 8080:8080 -v "$(PWD):/public" jammer99/http-server "-c-1"
+```
+
 ## Available Options:
 
 | Command         | 	Description         | Defaults  |
