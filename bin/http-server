@@ -10,6 +10,7 @@ var chalk     = require('chalk'),
 
     fs         = require('fs'),
     url        = require('url');
+const {getPort} = require("../lib/core/get-port.js");
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl'
@@ -126,11 +127,7 @@ if (version) {
 }
 
 if (!port) {
-  portfinder.basePort = 8080;
-  portfinder.getPort(function (err, port) {
-    if (err) { throw err; }
-    listen(port);
-  });
+  getPort(8080).then(listen)
 }
 else {
   listen(port);
