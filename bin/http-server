@@ -27,6 +27,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
+    '  -H --headers add response headers e.g.: --headers=Cross-Origin-Opener-Policy:same-origin',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
@@ -138,6 +139,7 @@ else {
 
 function listen(port) {
   var options = {
+    H: argv.headers || argv.header || argv.H,
     root: argv._[0],
     cache: argv.c,
     timeout: argv.t,
