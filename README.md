@@ -67,6 +67,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
+|`-H` or `--headers` |Semi-colon separated list of headers to use (Ex.: `Cross-Origin-Resource-Policy:same-site;Cross-Origin-Opener-Policy:same-origin`)| |
 |`-h` or `--help` |Print this list and exit. |   |
 |`-v` or `--version`|Print the version and exit. | |
 
