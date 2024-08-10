@@ -59,6 +59,7 @@ if (argv.h || argv.help) {
     '  -r --robots        Respond to /robots.txt [User-agent: *\\nDisallow: /]',
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
+    '  -H --headers       Semi-colon separated list of headers to use',
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.'
   ].join('\n'));
@@ -156,6 +157,13 @@ function listen(port) {
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
   };
 
+  if (argv.H || argv.headers) {
+    options.headers = {};
+    for (let h of (argv.H || argv.headers).split(/\s*;\s*/).map((x) => {x = x.split(/\s*:\s*/); x.push(''); return x.slice(0, 2);})) {
+      options.headers[h[0]] = h[1];
+    }
+  }
+
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
@@ -211,6 +219,7 @@ function listen(port) {
       chalk.yellow('\nhttp-server settings: '),
       ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
       ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
+      ([chalk.yellow('Headers: ', argv.H || argv.headers ? chalk.cyan(argv.H || argv.headers) : chalk.red('none'))]),
       ([chalk.yellow('Connection Timeout: '), argv.t === '0' ? chalk.red('disabled') : (argv.t ? chalk.cyan(argv.t + ' seconds') : chalk.cyan('120 seconds'))].join('')),
       ([chalk.yellow('Directory Listings: '), argv.d ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
       ([chalk.yellow('AutoIndex: '), argv.i ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
