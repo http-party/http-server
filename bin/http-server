@@ -12,7 +12,8 @@ var chalk     = require('chalk'),
     url        = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
-    tls: 'ssl'
+    tls: 'ssl',
+    header: 'H'
   }
 });
 var ifaces = os.networkInterfaces();
@@ -35,6 +36,9 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
+    '  -H',
+    '  --header="key: val"',
+    '               Add an arbitrary header (repeatable)',
     '  -o [path]    Open browser window after starting the server.',
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
@@ -153,13 +157,32 @@ function listen(port) {
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    headers: {}
   };
+
+  function setHeader(str) {
+    const m = /^(.+?)\s*:\s*(.*)$/.exec(str);
+    if (!m) {
+      options.headers[str] = true;
+    } else {
+      options.headers[m[1]] = m[2];
+    }
+  }
 
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
+    }
+  }
+
+  if (argv.header) {
+    if (Array.isArray(argv.header)) {
+      argv.header.forEach(h => setHeader(h));
+    }
+    else {
+      setHeader(argv.header);
     }
   }
 
@@ -218,6 +241,14 @@ function listen(port) {
       ([chalk.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? chalk.cyan('true') : chalk.red('false')].join('')),
       ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join(''))
     ].join('\n'));
+
+    if (options.headers) {
+      logger.info(chalk.yellow('Additional Headers:'));
+      for (let k in options.headers) {
+        let v = options.headers[k];
+        logger.info(chalk.yellow(`\t${k}:`) + chalk.cyan(` ${v}`));
+      }
+    }
 
     logger.info(chalk.yellow('\nAvailable on:'));
 
