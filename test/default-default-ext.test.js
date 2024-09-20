@@ -13,7 +13,7 @@ test('default defaultExt', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}`, (err, res, body) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(eol.lf(body), 'index!!!\n');
       server.close(() => { t.end(); });

@@ -6,7 +6,7 @@ module.exports = (t, server, path, check) => {
     const uri = `http://localhost:${port}/${path}`;
 
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       check(t, res.headers);
     });

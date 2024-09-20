@@ -24,7 +24,7 @@ test('cors defaults to false', (t) => {
     const uri = `http://localhost:${port}/subdir/index.html`;
 
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.type(res.headers['access-control-allow-origin'], 'undefined');
       t.type(res.headers['access-control-allow-headers'], 'undefined');
@@ -52,7 +52,7 @@ test('cors set to false', (t) => {
     const uri = `http://localhost:${port}/subdir/index.html`;
 
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.type(res.headers['access-control-allow-origin'], 'undefined');
       t.type(res.headers['access-control-allow-headers'], 'undefined');
@@ -79,7 +79,7 @@ test('cors set to true', (t) => {
     const port = httpServer.address().port;
     const uri = `http://localhost:${port}/subdir/index.html`;
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['access-control-allow-origin'], '*');
       t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
@@ -106,7 +106,7 @@ test('CORS set to true', (t) => {
     const port = httpServer.address().port;
     const uri = `http://localhost:${port}/subdir/index.html`;
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['access-control-allow-origin'], '*');
       t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
