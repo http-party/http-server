@@ -105,7 +105,7 @@
     "eslint-config-populist": "^4.2.0",
     "express": "^4.17.1",
     "request": "^2.88.2",
-    "tap": "^14.11.0"
+    "tap": "^21.0.1"
   },
   "bugs": {
     "url": "https://github.com/http-party/http-server/issues"
