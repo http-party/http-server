@@ -34,7 +34,7 @@ function checkServerIsRunning(url, msg, t, _cb) {
 }
 
 function tearDown(ps, t) {
-  t.tearDown(() => {
+  t.teardown(() => {
     ps.kill('SIGTERM');
   });
 }
