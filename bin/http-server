@@ -27,7 +27,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0]',
     '  -d           Show directory listings [true]',
-    '  --dir-overrides-404   Whether -d should override magic 404.html',
+    '  --dir-overrides-404   Whether -d should override magic 404.html [false]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
