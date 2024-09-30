@@ -30,6 +30,22 @@ This will install `http-server` globally so that it may be run from the command 
 
     npm install http-server
 
+#### Using Docker
+
+Note: a public image is not provided currently, but you can build one yourself
+with the provided Dockerfile.
+
+1. Create an image
+   ```
+   docker build -t my-image .
+   ```
+2. Run a container
+   ```
+   docker run -p 8080:8080 -v "${pwd}:/public" my-image
+   ```
+   In the example above we're serving the directory `./` (working directory).
+   If you wanted to serve `./test` you'd replace `${pwd}` with `${pwd}/test`.
+
 ## Usage:
 
      http-server [path] [options]
