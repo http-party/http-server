@@ -35,6 +35,8 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
+    '  --private-network-access Enable Private Network Access via the',
+    '                           "Access-Control-Allow-Private-Network" header',
     '  -o [path]    Open browser window after starting the server.',
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
@@ -163,6 +165,10 @@ function listen(port) {
     }
   }
 
+  if (argv['private-network-access']) {
+    options.privateNetworkAccess = true;
+  }
+
   if (proxy) {
     try {
       new url.URL(proxy)
@@ -210,6 +216,7 @@ function listen(port) {
     logger.info([
       chalk.yellow('\nhttp-server settings: '),
       ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
+      ([chalk.yellow('Private Network Access: '), argv['private-network-access'] ? chalk.cyan(argv['private-network-access']) : chalk.red('disabled')].join('')),
       ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
       ([chalk.yellow('Connection Timeout: '), argv.t === '0' ? chalk.red('disabled') : (argv.t ? chalk.cyan(argv.t + ' seconds') : chalk.cyan('120 seconds'))].join('')),
       ([chalk.yellow('Directory Listings: '), argv.d ? chalk.red('not visible') : chalk.cyan('visible')].join('')),

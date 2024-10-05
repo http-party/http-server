@@ -7,6 +7,7 @@
   "si": [ "si", "index" ],
   "handleError": [ "handleError", "handleerror" ],
   "cors": [ "cors", "CORS" ],
+  "privateNetworkAccess": [ "privateNetworkAccess", "privatenetworkaccess", "private-network-access" ],
   "headers": [ "H", "header", "headers" ],
   "contentType": [ "contentType", "contenttype", "content-type" ],
   "mimeType": [
