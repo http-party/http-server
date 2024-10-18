@@ -1,6 +1,7 @@
 {
   "autoIndex": true,
   "showDir": true,
+  "dirOverrides404": false,
   "showDotfiles": true,
   "humanReadable": true,
   "hidePermissions": false,
