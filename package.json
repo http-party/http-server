@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "test": "tap --reporter=spec test/*.test.js",
-    "test-watch": "tap --reporter=spec --watch test/*.test.js"
+    "test": "tap --reporter=terse --allow-incomplete-coverage test/*.test.js",
+    "test-watch": "tap --reporter=terse --allow-incomplete-coverage --watch test/*.test.js"
   },
   "files": [
     "lib",
