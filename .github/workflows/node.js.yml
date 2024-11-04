@@ -21,9 +21,9 @@ jobs:
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4.2.2
     - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
