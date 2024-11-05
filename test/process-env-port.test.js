@@ -40,7 +40,7 @@ function startServer(url, port, t) {
     });
   } else {
     ecstatic.on('exit', (evt) => {
-         t.notEqual(evt.code, 0, 'err:Running on invalid port not allowed');
+         t.not(evt.code, 0, 'err:Running on invalid port not allowed');
     });
   }
 }

@@ -34,7 +34,7 @@ function checkServerIsRunning(url, msg, t, _cb) {
 }
 
 function tearDown(ps, t) {
-  t.tearDown(() => {
+  t.teardown(() => {
     ps.kill('SIGTERM');
   });
 }
@@ -113,4 +113,67 @@ test('--proxy requires you to specify a protocol', (t) => {
   server.on('exit', (code) => {
     t.equal(code, 1);
   });
+});
+
+function doHeaderOptionTest(t, argv, obj) {
+  const options = ['.', '--port', defaultPort].concat(argv);
+  const server = startServer(options);
+
+  tearDown(server, t);
+
+  server.stdout.on('data', (msg) => {
+    checkServerIsRunning(`http://localhost:${defaultPort}`, msg, t, (err, res) => {
+      t.error(err);
+
+      for (const [k, v] of Object.entries(obj)) {
+        t.equal(res.headers[k], v, 'expected header value matches in response');
+      }
+    });
+  });
+}
+
+test('single --header option is applied', (t) => {
+  t.plan(4);
+
+  doHeaderOptionTest(t,
+    ['--header=X-http-server-test-A: hello'],
+    { 'x-http-server-test-a': 'hello' }
+  );
+});
+
+test('single -H option is applied', (t) => {
+  t.plan(4);
+
+  doHeaderOptionTest(t,
+    ['-H', 'X-http-server-test-A: hello'],
+    { 'x-http-server-test-a': 'hello' }
+  );
+});
+
+test('mix of multiple --header and -H options are applied', (t) => {
+  t.plan(7);
+
+  doHeaderOptionTest(t,
+    [
+      '--header=X-http-server-test-A: Lorem ipsum dolor sit amet',
+      '-H', 'X-http-server-test-B: consectetur=adipiscing; elit',
+      '-H', 'X-http-server-test-C: c',
+      '--header=X-http-server-test-D: d'
+    ],
+    {
+      'x-http-server-test-a': 'Lorem ipsum dolor sit amet',
+      'x-http-server-test-b': 'consectetur=adipiscing; elit',
+      'x-http-server-test-c': 'c',
+      'x-http-server-test-d': 'd'
+    }
+  );
+});
+
+test('empty header value is allowed (RFC 7230)', (t) => {
+  t.plan(5);
+
+  doHeaderOptionTest(t,
+    ['-H', 'X-http-server-test-empty-a:', '-H', 'X-http-server-test-empty-b'],
+    { 'x-http-server-test-empty-a': '', 'x-http-server-test-empty-b': '' }
+  );
 });

@@ -1,6 +1,6 @@
-[![GitHub Workflow Status (master)](https://img.shields.io/github/workflow/status/http-party/http-server/Node.js%20CI/master?style=flat-square)](https://github.com/http-party/http-server/actions)
+[![GitHub Workflow Status (master)](https://img.shields.io/github/actions/workflow/status/http-party/http-server/node.js.yml?style=flat-square&branch=master)](https://github.com/http-party/http-server/actions)
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server) [![homebrew](https://img.shields.io/homebrew/v/http-server?style=flat-square)](https://formulae.brew.sh/formula/http-server) [![npm downloads](https://img.shields.io/npm/dm/http-server?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/http-server)
-[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server)
+[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server/blob/master/LICENSE)
 
 # http-server: a simple static HTTP server
 
@@ -30,6 +30,22 @@ This will install `http-server` globally so that it may be run from the command 
 
     npm install http-server
 
+#### Using Docker
+
+Note: a public image is not provided currently, but you can build one yourself
+with the provided Dockerfile.
+
+1. Create an image
+   ```
+   docker build -t my-image .
+   ```
+2. Run a container
+   ```
+   docker run -p 8080:8080 -v "${pwd}:/public" my-image
+   ```
+   In the example above we're serving the directory `./` (working directory).
+   If you wanted to serve `./test` you'd replace `${pwd}` with `${pwd}/test`.
+
 ## Usage:
 
      http-server [path] [options]
@@ -54,6 +70,7 @@ This will install `http-server` globally so that it may be run from the command 
 |`-e` or `--ext`  |Default file extension if none supplied |`html` | 
 |`-s` or `--silent` |Suppress log messages from output  | |
 |`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header  | |
+|`-H` or `--header` |Add an extra response header (can be used several times)  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |

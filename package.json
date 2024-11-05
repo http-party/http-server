@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "test": "tap --reporter=spec test/*.test.js",
-    "test-watch": "tap --reporter=spec --watch test/*.test.js"
+    "test": "tap --reporter=terse --allow-incomplete-coverage test/*.test.js",
+    "test-watch": "tap --reporter=terse --allow-incomplete-coverage --watch test/*.test.js"
   },
   "files": [
     "lib",
@@ -29,7 +29,7 @@
   ],
   "man": "./doc/http-server.1",
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.20.2"
   },
   "contributors": [
     {
@@ -105,7 +105,7 @@
     "eslint-config-populist": "^4.2.0",
     "express": "^4.17.1",
     "request": "^2.88.2",
-    "tap": "^14.11.0"
+    "tap": "^21.0.1"
   },
   "bugs": {
     "url": "https://github.com/http-party/http-server/issues"
