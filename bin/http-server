@@ -12,7 +12,8 @@ var chalk     = require('chalk'),
     url        = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
-    tls: 'ssl'
+    tls: 'ssl',
+    header: 'H'
   }
 });
 var ifaces = os.networkInterfaces();
@@ -25,8 +26,9 @@ if (argv.h || argv.help) {
     '',
     'options:',
     '  -p --port    Port to use. If 0, look for open port. [8080]',
-    '  -a           Address to use [0.0.0.0]',
+    '  -a           Address to use [0.0.0.0] or [::]',
     '  -d           Show directory listings [true]',
+    '  --base-dir   Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
@@ -35,6 +37,9 @@ if (argv.h || argv.help) {
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
+    '  -H',
+    '  --header',
+    '               Add an extra response header (can be used several times)',
     '  -o [path]    Open browser window after starting the server.',
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
@@ -66,13 +71,14 @@ if (argv.h || argv.help) {
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
-    host = argv.a || '0.0.0.0',
+    host = argv.a || '::',
     tls = argv.S || argv.tls,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
+    baseDir = argv['base-dir'],
     logger;
 
 var proxyOptionsBooleanProps = [
@@ -142,6 +148,7 @@ function listen(port) {
     cache: argv.c,
     timeout: argv.t,
     showDir: argv.d,
+    baseDir: baseDir,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
     brotli: argv.b || argv.brotli,
@@ -153,13 +160,32 @@ function listen(port) {
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
-    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD
+    password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
+    headers: {}
   };
+
+  function setHeader(str) {
+    const m = /^(.+?)\s*(:\s*(.*))$/.exec(str);
+    if (!m || m.length < 4) {
+      options.headers[str] = '';
+    } else {
+      options.headers[m[1]] = m[3];
+    }
+  }
 
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
+    }
+  }
+
+  if (argv.header) {
+    if (Array.isArray(argv.header)) {
+      argv.header.forEach(h => setHeader(h));
+    }
+    else {
+      setHeader(argv.header);
     }
   }
 
@@ -197,7 +223,8 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
-    var protocol = tls ? 'https://' : 'http://';
+    var protocol = tls ? 'https://' : 'http://',
+      path = baseDir ? '/' + baseDir.replace(/^\//, '') : '';
 
     logger.info([
       chalk.yellow('Starting up http-server, serving '),
@@ -216,17 +243,30 @@ function listen(port) {
       ([chalk.yellow('AutoIndex: '), argv.i ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
       ([chalk.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? chalk.cyan('true') : chalk.red('false')].join('')),
       ([chalk.yellow('Serve Brotli Files: '), argv.b || argv.brotli ? chalk.cyan('true') : chalk.red('false')].join('')),
-      ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join(''))
+      ([chalk.yellow('Default File Extension: '), argv.e ? chalk.cyan(argv.e) : (argv.ext ? chalk.cyan(argv.ext) : chalk.red('none'))].join('')),
+      ([chalk.yellow('Base directory: '), baseDir ? chalk.cyan(baseDir) : chalk.cyan('/')].join(''))
     ].join('\n'));
+
+    if (options.headers) {
+      logger.info(chalk.yellow('Additional Headers:'));
+      for (let k in options.headers) {
+        let v = options.headers[k];
+        logger.info(chalk.yellow(`\t${k}:`) + chalk.cyan(` ${v}`));
+      }
+    }
 
     logger.info(chalk.yellow('\nAvailable on:'));
 
-    if (argv.a && host !== '0.0.0.0') {
-      logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}`);
+
+    if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
+      logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
           if (details.family === 'IPv4') {
+            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString()) + path));
+          }
+          if (details.family === 'IPv6' && !details.address.startsWith("fe80") ) { // Ignoring Ipv6-Link Local addresses
             logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
           }
         });
@@ -244,7 +284,10 @@ function listen(port) {
 
     logger.info('Hit CTRL-C to stop the server');
     if (argv.o) {
-      const openHost = host === '0.0.0.0' ? '127.0.0.1' : host;
+      let openHost = host
+      if ('::' === host || '0.0.0.0'===host){
+        openHost = '127.0.0.1'
+      }
       let openUrl = `${protocol}${openHost}:${port}`;
       if (typeof argv.o === 'string') {
         openUrl += argv.o[0] === '/' ? argv.o : '/' + argv.o;

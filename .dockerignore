@@ -1,0 +1,8 @@
+node_modules
+yarn-error.log
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+testdir/privatefile

@@ -57,8 +57,8 @@ test('http-server main', (t) => {
             requestAsync("http://localhost:8080/").then(res => {
               t.ok(res);
               t.equal(res.statusCode, 200);
-              t.includes(res.body, './file');
-              t.includes(res.body, './canYouSeeMe');
+              t.match(res.body, './file');
+              t.match(res.body, './canYouSeeMe');
 
               // Custom headers
               t.equal(res.headers['access-control-allow-origin'], '*');
@@ -282,6 +282,37 @@ test('http-server main', (t) => {
               const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
               t.equal(res.body.trim(), fileData.trim(), 'numeric auth with good auth has expected file content');
             }).catch(err => t.fail(err.toString()))
+          ]);
+        } catch (err) {
+          t.fail(err.toString());
+        } finally {
+          server.close();
+          resolve();
+        }
+      });
+    }),
+
+    new Promise((resolve) => {
+      const server = httpServer.createServer({
+        root,
+        baseDir: '/test'
+      });
+
+      server.listen(8084, async () => {
+        try {
+          await Promise.all([
+            // should serve files at the specified baseDir
+            requestAsync("http://localhost:8084/test/file").then(async (res) => {
+              t.equal(res.statusCode, 200);
+              const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
+              t.equal(res.body.trim(), fileData.trim());
+            }).catch(err => t.fail(err.toString())),
+
+            // should not serve files at the root
+            requestAsync("http://localhost:8084/file").then((res) => {
+              t.equal(res.statusCode, 403);
+              t.equal(res.body, '');
+            }).catch(err => t.fail(err.toString())),
           ]);
         } catch (err) {
           t.fail(err.toString());

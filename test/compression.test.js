@@ -26,7 +26,7 @@ test('serves brotli-encoded file when available', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'br');
     });
@@ -56,7 +56,7 @@ test('serves gzip-encoded file when brotli not available', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'gzip');
     });
@@ -86,7 +86,7 @@ test('serves gzip-encoded file when brotli not accepted', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'gzip');
     });
@@ -116,7 +116,7 @@ test('serves gzip-encoded file when brotli not enabled', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'gzip');
     });
@@ -146,7 +146,7 @@ test('serves unencoded file when compression not accepted', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], undefined);
     });
@@ -176,7 +176,7 @@ test('serves unencoded file when compression not enabled', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], undefined);
     });
