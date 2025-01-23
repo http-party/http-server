@@ -1,0 +1,156 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orgy Meme Coin</title>
+    <link 
+href="https://fonts.googleapis.com/css2?family=Slap+Face&display=swap" 
+rel="stylesheet">
+    <style>
+        /* Basic CSS Styles */
+        body {
+            font-family: 'Slap Face', cursive;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 2s infinite;
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 2rem;
+        }
+
+        .offer-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1 style="text-align: center; font-size: 3rem; margin-bottom: 
+2rem;">-orgy</h1>
+        <nav style="display: flex; justify-content: space-between;">
+            <a href="#home">Home</a>
+            <a href="#offers">Offers</a>
+            <a href="#leaderboard">Leaderboard</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Current Offers Section -->
+        <div class="offer-section">
+            <h2 style="text-align: center; font-size: 2rem;">Current Airdrops</h2>
+            <div style="max-width: 600px; margin: 2rem auto;">
+                <p>Refer your friend and earn 10% of any airdrop!</p>
+                <!-- Add more offers here -->
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <h2 style="text-align: center; font-size: 2rem;">Leaderboard</h2>
+        <div style="max-width: 600px; margin: 2rem auto;">
+            <!-- Leaderboard data will be added here -->
+        </div>
+
+        <!-- Interactive Element -->
+        <button onclick="showGreetings()" style="text-align: center; font-size: 1.5rem;">Join Airdrop</button>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 2rem; border-top: 1px solid #eee;">
+        <p style="margin-bottom: 1rem;">#orgycoin | Meme Memes</p>
+        <p style="margin-bottom: 1rem;">Contact Us: [email protected]</p>
+        <div style="margin-bottom: 1rem; text-align: center;">
+            <img src="https://via.placeholder.com/300x200" alt="Social Media">
+            <a href="#" style="color: white; margin-top: 1rem;">Follow on Social</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Basic interactivity for the button
+        function showGreetings() {
+            alert("Welcome to the orgy! Click 'Join Airdrop' to participate.");
+        }
+
+        // Add more interactive features here if needed
+    </script>
+</body>
+</html>
+```
+
+### 2. **CSS Styling**
+
+The CSS styles are embedded in the `<style>` tag above. This includes:
+
+- A gradient background with a meme font.
+- Animated header text.
+- Responsive layout that works on different screen sizes.
+
+### 3. **JavaScript Functionality**
+
+Basic JavaScript is included for interactivity—currently, just an alert when clicking the "Join Airdrop" button.
+
+```javascript
+// Add more JavaScript functionality as needed
+function^[[B^[[B showGreetings() {
+    alert("Welcome to the orgy! Click 'Join Airdrop' to participate.");
+}
+
+// You can add more features here like real-time updates or notifications.
+```
+
+### 4. **Adding Referral Links**
+
+To include referral links, you'll need to implement a system where each user gets a unique link:
+
+1. **User Registration**: Ensure users have an account (or sign-in through their Solana wallet).
+2. **Unique Link Generation**: Assign each user a unique string that can be used as the referral link.
+3. **Link Display**: Show the link on your website and in promotional materials.
+
+### 5. **Orgy Coin Payment**
+
+For payments, you could implement:
+
+- Airdrop amounts directly to Solana wallets using the generated links.
+- Donate to an "Orgy Meme Fund" with a percentage of earnings going towards community projects or events.
+
+### 6. **Legal and Privacy**
+
+Add a `<section>` for Terms and Conditions and Privacy Policy at the bottom of your page, similar to this:
+
+```html
+<!-- Legal Section -->
+<div style="text-align: center; margin-top: 2rem; padding: 2rem; background: white;">
+    <h2 style="text-size: 2rem;">Terms & Conditions</h2>
+    <p style="margin-bottom: 1rem;">By participating in our airdrop program, you agree to the following terms...</p>
+    <!-- Add more content as needed -->
+</div>
+
+<!-- Privacy Policy Section -->
+<div style="text-align: center; margin-top: 2rem; padding: 2rem; background: white;">
+    <h2 style="text-size: 2rem;">Privacy Policy</h2>
+    <p style="margin-bottom: 1rem;">Your personal information is protected according to [relevant data protection laws].</p>
+    <!-- Add more content as needed -->
+</div>
+
+<!-- Footer Links -->
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="#">Privacy Policy</a> | 
+    <a href="#">Terms & Conditions</a>
+</div>
+</footer>
+```
