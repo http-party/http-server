@@ -267,7 +267,7 @@ function listen(port) {
             logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString()) + path));
           }
           if (details.family === 'IPv6' && !details.address.startsWith("fe80") ) { // Ignoring Ipv6-Link Local addresses
-            logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString())));
+            logger.info(('  ' + protocol + '[' + details.address + ']' + ':' + chalk.green(port.toString())));
           }
         });
       });
