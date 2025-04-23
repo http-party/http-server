@@ -1,0 +1,1189 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ميامي - برنامج إدارة المطاعم</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/dexie@3.2.2/dist/dexie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-red-600 text-white p-4">
+      <h1 class="text-2xl font-bold mb-6">ميامي</h1>
+      <select id="language" class="mb-4 p-2 bg-white text-black rounded">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+      <nav>
+        <ul>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="dashboard">لوحة التحكم</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="menu">المنيو</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="sales">المبيعات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="purchases">المشتريات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="inventory">المخزون</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="tables">الطاولات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="employees">الموظفون</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="clients">العملاء</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="loyalty">نظام الولاء</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="reports">التقارير</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 overflow-auto">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="section">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="dashboard">لوحة التحكم</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="daily-sales">إجمالي المبيعات اليوم</h3>
+            <p id="daily-sales" class="text-2xl font-bold text-red-600">0 جنيه</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="menu-items">الأصناف في المنيو</h3>
+            <p id="menu-items-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="clients-count">عدد العملاء</h3>
+            <p id="clients-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="low-inventory">تنبيهات المخزون</h3>
+            <p id="low-inventory-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Section -->
+      <div id="menu" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="menu">إدارة المنيو</h2>
+        <div class="bg-white p-6 rounded-lg shadow mb-4">
+          <h3 class="text-lg mb-2 lang" data-key="add-item">إضافة صنف جديد</h3>
+          <input id="item-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-name">
+          <input id="item-price" type="number" class="border p-2 mb-2 w-full" data-placeholder="item-price">
+          <input id="item-barcode" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-barcode">
+          <input id="item-ingredients" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-ingredients">
+          <button id="add-item" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-item-btn">إضافة الصنف</button>
+        </div>
+        <div id="menu-items" class="grid grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- Sales Section -->
+      <div id="sales" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="sales">المبيعات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="create-invoice">إنشاء فاتورة</h3>
+          <select id="sale-client" class="border p-2 mb-2 w-full"></select>
+          <select id="sale-type" class="border p-2 mb-2 w-full">
+            <option value="dine-in" class="lang" data-key="dine-in">تناول في المطعم</option>
+            <option value="takeaway" class="lang" data-key="takeaway">تيك أواي</option>
+            <option value="delivery" class="lang" data-key="delivery">توصيل</option>
+          </select>
+          <select id="sale-table" class="border p-2 mb-2 w-full hidden"></select>
+          <input id="sale-discount" type="number" class="border p-2 mb-2 w-full" data-placeholder="discount">
+          <select id="sale-item" class="border p-2 mb-2 w-full"></select>
+          <input id="sale-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <button id="add-to-invoice" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-to-invoice">إضافة إلى الفاتورة</button>
+          <div id="invoice-items" class="mt-4"></div>
+          <p class="text-lg font-bold mt-4 lang" data-key="total">الإجمالي: <span id="invoice-total">0</span> جنيه</p>
+          <button id="save-invoice" class="bg-red-600 text-white px-4 py-2 rounded mt-4 lang" data-key="save-invoice">حفظ الفاتورة</button>
+          <button id="print-invoice" class="bg-gray-600 text-white px-4 py-2 rounded mt-4 ml-2 lang" data-key="print-invoice">طباعة الفاتورة</button>
+          <button id="export-invoice" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 ml-2 lang" data-key="export-invoice">تصدير كـ PDF</button>
+        </div>
+      </div>
+
+      <!-- Purchases Section -->
+      <div id="purchases" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="purchases">المشتريات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-purchase">تسجيل مشتريات</h3>
+          <input id="purchase-item" type="text" class="border p-2 mb-2 w-full" data-placeholder="purchase-item">
+          <input id="purchase-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <input id="purchase-price" type="number" class="border p-2 mb-2 w-full" data-placeholder="purchase-price">
+          <button id="add-purchase" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-purchase-btn">تسجيل المشتريات</button>
+        </div>
+        <div id="purchase-list" class="mt-4"></div>
+      </div>
+
+      <!-- Inventory Section -->
+      <div id="inventory" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="inventory">إدارة المخزون</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-inventory">إضافة مكون إلى المخزون</h3>
+          <input id="inventory-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="inventory-name">
+          <input id="inventory-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <input id="inventory-min" type="number" class="border p-2 mb-2 w-full" data-placeholder="min-quantity">
+          <button id="add-inventory" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-inventory-btn">إضافة المكون</button>
+        </div>
+        <div id="inventory-list" class="mt-4"></div>
+      </div>
+
+      <!-- Tables Section -->
+      <div id="tables" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="tables">إدارة الطاولات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-table">إضافة طاولة</h3>
+          <input id="table-number" type="text" class="border p-2 mb-2 w-full" data-placeholder="table-number">
+          <input id="table-capacity" type="number" class="border p-2 mb-2 w-full" data-placeholder="table-capacity">
+          <button id="add-table" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-table-btn">إضافة الطاولة</button>
+        </div>
+        <div id="table-list" class="mt-4"></div>
+      </div>
+
+      <!-- Employees Section -->
+      <div id="employees" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="employees">إدارة الموظفين</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-employee">إضافة موظف</h3>
+          <input id="employee-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="employee-name">
+          <input id="employee-role" type="text" class="border p-2 mb-2 w-full" data-placeholder="employee-role">
+          <input id="employee-salary" type="number" class="border p-2 mb-2 w-full" data-placeholder="employee-salary">
+          <button id="add-employee" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-employee-btn">إضافة الموظف</button>
+        </div>
+        <div id="employee-list" class="mt-4"></div>
+      </div>
+
+      <!-- Clients Section -->
+      <div id="clients" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="clients">العملاء</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-client">إضافة عميل</h3>
+          <input id="client-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="client-name">
+          <input id="client-phone" type="text" class="border p-2 mb-2 w-full" data-placeholder="client-phone">
+          <button id="add-client" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-client-btn">إضافة العميل</button>
+        </div>
+        <div id="client-list" class="mt-4"></div>
+      </div>
+
+      <!-- Loyalty Section -->
+      <div id="loyalty" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="loyalty">نظام الولاء</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-points">إضافة نقاط لعميل</h3>
+          <select id="loyalty-client" class="border p-2 mb-2 w-full"></select>
+          <input id="loyalty-points" type="number" class="border p-2 mb-2 w-full" data-placeholder="loyalty-points">
+          <button id="add-points" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-points-btn">إضافة النقاط</button>
+        </div>
+        <div id="loyalty-list" class="mt-4"></div>
+      </div>
+
+      <!-- Reports Section -->
+      <div id="reports" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="reports">التقارير</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="daily-report">التقرير اليومي</h3>
+          <p class="lang" data-key="total-sales">إجمالي المبيعات: <span id="report-sales">0</span> جنيه</p>
+          <p class="lang" data-key="total-purchases">إجمالي المشتريات: <span id="report-purchases">0</span> جنيه</p>
+          <button id="export-daily-report" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 lang" data-key="export-report">تصدير كـ PDF</button>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow mt-4">
+          <h3 class="text-lg mb-2 lang" data-key="weekly-report">التقرير الأسبوعي</h3>
+          <table class="w-full text-right">
+            <thead>
+              <tr class="bg-red-600 text-white">
+                <th class="p-2 lang" data-key="date">التاريخ</th>
+                <th class="p-2 lang" data-key="total-sales">إجمالي المبيعات</th>
+                <th class="p-2 lang" data-key="invoice-count">عدد الفواتير</th>
+              </tr>
+            </thead>
+            <tbody id="weekly-report"></tbody>
+          </table>
+          <button id="export-weekly-report" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 lang" data-key="export-report">تصدير كـ PDF</button>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow mt-4">
+          <h3 class="text-lg mb-2 lang" data-key="top-items">الأصناف الأكثر مبيعًا</h3>
+          <table class="w Давайте продолжим с обновлением программы "Мiami" для управления ресторанами, добавив все возможные функции, которые могут понадобиться ресторану. Я интегрирую предыдущие функции (меню, продажи, закупки, клиенты, счета, еженедельные отчеты, штрих-коды, валюту в египетских фунтах) и добавлю новые, такие как управление запасами, бронирование столов, акции и скидки, управление сотрудниками, расширенные отчеты, уведомления о низком уровне запасов, поддержку нескольких языков, экспорт отчетов в PDF, систему лояльности и управление заказами на доставку. Я сохраню тот же `artifact_id`, так как это обновление предыдущей версии, и использую HTML, JavaScript, Tailwind CSS, Dexie.js, JsBarcode и добавлю jsPDF для экспорта документов.
+
+<xaiArtifact artifact_id="357f6abe-af61-4033-8e31-73137e25f21c" artifact_version_id="2d40210b-fb01-4079-a44a-b09cb82e214c" title="index.html" contentType="text/html">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ميامي - برنامج إدارة المطاعم</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/dexie@3.2.2/dist/dexie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-red-600 text-white p-4">
+      <h1 class="text-2xl font-bold mb-6">ميامي</h1>
+      <select id="language" class="mb-4 p-2 bg-white text-black rounded">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+      <nav>
+        <ul>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="dashboard">لوحة التحكم</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="menu">المنيو</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="sales">المبيعات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="purchases">المشتريات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="inventory">المخزون</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="tables">الطاولات</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="employees">الموظفون</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="clients">العملاء</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="loyalty">نظام الولاء</a></li>
+          <li class="mb-4"><a href="#" class="nav-link" data-section="reports">التقارير</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 overflow-auto">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="section">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="dashboard">لوحة التحكم</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="daily-sales">إجمالي المبيعات اليوم</h3>
+            <p id="daily-sales" class="text-2xl font-bold text-red-600">0 جنيه</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="menu-items">الأصناف في المنيو</h3>
+            <p id="menu-items-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="clients-count">عدد العملاء</h3>
+            <p id="clients-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg lang" data-key="low-inventory">تنبيهات المخزون</h3>
+            <p id="low-inventory-count" class="text-2xl font-bold text-red-600">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Section -->
+      <div id="menu" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="menu">إدارة المنيو</h2>
+        <div class="bg-white p-6 rounded-lg shadow mb-4">
+          <h3 class="text-lg mb-2 lang" data-key="add-item">إضافة صنف جديد</h3>
+          <input id="item-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-name">
+          <input id="item-price" type="number" class="border p-2 mb-2 w-full" data-placeholder="item-price">
+          <input id="item-barcode" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-barcode">
+          <input id="item-ingredients" type="text" class="border p-2 mb-2 w-full" data-placeholder="item-ingredients">
+          <button id="add-item" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-item-btn">إضافة الصنف</button>
+        </div>
+        <div id="menu-items" class="grid grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- Sales Section -->
+      <div id="sales" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="sales">المبيعات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="create-invoice">إنشاء فاتورة</h3>
+          <select id="sale-client" class="border p-2 mb-2 w-full"></select>
+          <select id="sale-type" class="border p-2 mb-2 w-full">
+            <option value="dine-in" class="lang" data-key="dine-in">تناول في المطعم</option>
+            <option value="takeaway" class="lang" data-key="takeaway">تيك أواي</option>
+            <option value="delivery" class="lang" data-key="delivery">توصيل</option>
+          </select>
+          <select id="sale-table" class="border p-2 mb-2 w-full hidden"></select>
+          <input id="sale-discount" type="number" class="border p-2 mb-2 w-full" data-placeholder="discount">
+          <select id="sale-item" class="border p-2 mb-2 w-full"></select>
+          <input id="sale-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <button id="add-to-invoice" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-to-invoice">إضافة إلى الفاتورة</button>
+          <div id="invoice-items" class="mt-4"></div>
+          <p class="text-lg font-bold mt-4 lang" data-key="total">الإجمالي: <span id="invoice-total">0</span> جنيه</p>
+          <button id="save-invoice" class="bg-red-600 text-white px-4 py-2 rounded mt-4 lang" data-key="save-invoice">حفظ الفاتورة</button>
+          <button id="print-invoice" class="bg-gray-600 text-white px-4 py-2 rounded mt-4 ml-2 lang" data-key="print-invoice">طباعة الفاتورة</button>
+          <button id="export-invoice" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 ml-2 lang" data-key="export-invoice">تصدير كـ PDF</button>
+        </div>
+      </div>
+
+      <!-- Purchases Section -->
+      <div id="purchases" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="purchases">المشتريات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-purchase">تسجيل مشتريات</h3>
+          <input id="purchase-item" type="text" class="border p-2 mb-2 w-full" data-placeholder="purchase-item">
+          <input id="purchase-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <input id="purchase-price" type="number" class="border p-2 mb-2 w-full" data-placeholder="purchase-price">
+          <button id="add-purchase" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-purchase-btn">تسجيل المشتريات</button>
+        </div>
+        <div id="purchase-list" class="mt-4"></div>
+      </div>
+
+      <!-- Inventory Section -->
+      <div id="inventory" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="inventory">إدارة المخزون</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-inventory">إضافة مكون إلى المخزون</h3>
+          <input id="inventory-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="inventory-name">
+          <input id="inventory-quantity" type="number" class="border p-2 mb-2 w-full" data-placeholder="quantity">
+          <input id="inventory-min" type="number" class="border p-2 mb-2 w-full" data-placeholder="min-quantity">
+          <button id="add-inventory" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-inventory-btn">إضافة المكون</button>
+        </div>
+        <div id="inventory-list" class="mt-4"></div>
+      </div>
+
+      <!-- Tables Section -->
+      <div id="tables" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="tables">إدارة الطاولات</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-table">إضافة طاولة</h3>
+          <input id="table-number" type="text" class="border p-2 mb-2 w-full" data-placeholder="table-number">
+          <input id="table-capacity" type="number" class="border p-2 mb-2 w-full" data-placeholder="table-capacity">
+          <button id="add-table" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-table-btn">إضافة الطاولة</button>
+        </div>
+        <div id="table-list" class="mt-4"></div>
+      </div>
+
+      <!-- Employees Section -->
+      <div id="employees" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="employees">إدارة الموظفين</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-employee">إضافة موظف</h3>
+          <input id="employee-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="employee-name">
+          <input id="employee-role" type="text" class="border p-2 mb-2 w-full" data-placeholder="employee-role">
+          <input id="employee-salary" type="number" class="border p-2 mb-2 w-full" data-placeholder="employee-salary">
+          <button id="add-employee" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-employee-btn">إضافة الموظف</button>
+        </div>
+        <div id="employee-list" class="mt-4"></div>
+      </div>
+
+      <!-- Clients Section -->
+      <div id="clients" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="clients">العملاء</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-client">إضافة عميل</h3>
+          <input id="client-name" type="text" class="border p-2 mb-2 w-full" data-placeholder="client-name">
+          <input id="client-phone" type="text" class="border p-2 mb-2 w-full" data-placeholder="client-phone">
+          <button id="add-client" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-client-btn">إضافة العميل</button>
+        </div>
+        <div id="client-list" class="mt-4"></div>
+      </div>
+
+      <!-- Loyalty Section -->
+      <div id="loyalty" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="loyalty">نظام الولاء</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="add-points">إضافة نقاط لعميل</h3>
+          <select id="loyalty-client" class="border p-2 mb-2 w-full"></select>
+          <input id="loyalty-points" type="number" class="border p-2 mb-2 w-full" data-placeholder="loyalty-points">
+          <button id="add-points" class="bg-red-600 text-white px-4 py-2 rounded lang" data-key="add-points-btn">إضافة النقاط</button>
+        </div>
+        <div id="loyalty-list" class="mt-4"></div>
+      </div>
+
+      <!-- Reports Section -->
+      <div id="reports" class="section hidden">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 lang" data-key="reports">التقارير</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg mb-2 lang" data-key="daily-report">التقرير اليومي</h3>
+          <p class="lang" data-key="total-sales">إجمالي المبيعات: <span id="report-sales">0</span> جنيه</p>
+          <p class="lang" data-key="total-purchases">إجمالي المشتريات: <span id="report-purchases">0</span> جنيه</p>
+          <button id="export-daily-report" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 lang" data-key="export-report">تصدير كـ PDF</button>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow mt-4">
+          <h3 class="text-lg mb-2 lang" data-key="weekly-report">التقرير الأسبوعي</h3>
+          <table class="w-full text-right">
+            <thead>
+              <tr class="bg-red-600 text-white">
+                <th class="p-2 lang" data-key="date">التاريخ</th>
+                <th class="p-2 lang" data-key="total-sales">إجمالي المبيعات</th>
+                <th class="p-2 lang" data-key="invoice-count">عدد الفواتير</th>
+              </tr>
+            </thead>
+            <tbody id="weekly-report"></tbody>
+          </table>
+          <button id="export-weekly-report" class="bg-blue-600 text-white px-4 py-2 rounded mt-4 lang" data-key="export-report">تصدير كـ PDF</button>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow mt-4">
+          <h3 class="text-lg mb-2 lang" data-key="top-items">الأصناف الأكثر مبيعًا</h3>
+          <table class="w-full text-right">
+            <thead>
+              <tr class="bg-red-600 text-white">
+                <th class="p-2 lang" data-key="item-name">اسم الصنف</th>
+                <th class="p-2 lang" data-key="total-sold">الكمية المباعة</th>
+                <th class="p-2 lang" data-key="total-revenue">إجمالي الإيرادات</th>
+              </tr>
+            </thead>
+            <tbody id="top-items-report"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Print Invoice (Hidden) -->
+      <div id="print-area" class="hidden">
+        <div class="p-6 bg-white">
+          <h2 class="text-2xl font-bold text-center">فاتورة ميامي</h2>
+          <p class="text-center lang" data-key="invoice-number">رقم الفاتورة: <span id="invoice-number"></span></p>
+          <p class="text-center lang" data-key="date">التاريخ: <span id="invoice-date"></span></p>
+          <p class="text-center lang" data-key="time">الساعة: <span id="invoice-time"></span></p>
+          <p class="text-center lang" data-key="client">العميل: <span id="invoice-client"></span></p>
+          <p class="text-center lang" data-key="order-type">نوع الطلب: <span id="invoice-type"></span></p>
+          <p class="text-center lang" data-key="table-number">رقم الطاولة: <span id="invoice-table"></span></p>
+          <table class="w-full mt-4">
+            <thead>
+              <tr>
+                <th class="p-2 lang" data-key="item-name">الصنف</th>
+                <th class="p-2 lang" data-key="quantity">الكمية</th>
+                <th class="p-2 lang" data-key="price">السعر</th>
+                <th class="p-2 lang" data-key="subtotal">الإجمالي</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-print-items"></tbody>
+          </table>
+          <p class="text-lg font-bold mt-4 lang" data-key="discount">الخصم: <span id="invoice-discount">0</span> جنيه</p>
+          <p class="text-lg font-bold mt-4 lang" data-key="total">الإجمالي: <span id="invoice-print-total"></span> جنيه</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Dexie database
+    const db = new Dexie("MiamiDB");
+    db.version(3).stores({
+      items: "++id,name,price,barcode,ingredients",
+      sales: "++id,items,total,clientId,clientName,orderNumber,orderType,tableId,discount,date",
+      purchases: "++id,item,quantity,price,date",
+      clients: "++id,name,phone,loyaltyPoints",
+      inventory: "++id,name,quantity,minQuantity",
+      tables: "++id,number,capacity,status",
+      employees: "++id,name,role,salary"
+    });
+
+    // Language Support
+    const translations = {
+      ar: {
+        dashboard: "لوحة التحكم",
+        menu: "إدارة المنيو",
+        sales: "المبيعات",
+        purchases: "المشتريات",
+        inventory: "إدارة المخزون",
+        tables: "إدارة الطاولات",
+        employees: "إدارة الموظفين",
+        clients: "العملاء",
+        loyalty: "نظام الولاء",
+        reports: "التقارير",
+        daily-sales: "إجمالي المبيعات اليوم",
+        menu-items: "الأصناف في المنيو",
+        clients-count: "عدد العملاء",
+        low-inventory: "تنبيهات المخزون",
+        add-item: "إضافة صنف جديد",
+        add-item-btn: "إضافة الصنف",
+        create-invoice: "إنشاء فاتورة",
+        add-to-invoice: "إضافة إلى الفاتورة",
+        save-invoice: "حفظ الفاتورة",
+        print-invoice: "طباعة الفاتورة",
+        export-invoice: "تصدير كـ PDF",
+        add-purchase: "تسجيل مشتريات",
+        add-purchase-btn: "تسجيل المشتريات",
+        add-inventory: "إضافة مكون إلى المخزون",
+        add-inventory-btn: "إضافة المكون",
+        add-table: "إضافة طاولة",
+        add-table-btn: "إضافة الطاولة",
+        add-employee: "إضافة موظف",
+        add-employee-btn: "إضافة الموظف",
+        add-client: "إضافة عميل",
+        add-client-btn: "إضافة العميل",
+        add-points: "إضافة نقاط لعميل",
+        add-points-btn: "إضافة النقاط",
+        daily-report: "التقرير اليومي",
+        weekly-report: "التقرير الأسبوعي",
+        top-items: "الأصناف الأكثر مبيعًا",
+        total-sales: "إجمالي المبيعات",
+        total-purchases: "إجمالي المشتريات",
+        invoice-count: "عدد الفواتير",
+        date: "التاريخ",
+        item-name: "اسم الصنف",
+        total-sold: "الكمية المباعة",
+        total-revenue: "إجمالي الإيرادات",
+        invoice-number: "رقم الفاتورة",
+        time: "الساعة",
+        client: "العميل",
+        order-type: "نوع الطلب",
+        table-number: "رقم الطاولة",
+        quantity: "الكمية",
+        price: "السعر",
+        subtotal: "الإجمالي",
+        discount: "الخصم",
+        total: "الإجمالي",
+        dine-in: "تناول في المطعم",
+        takeaway: "تيك أواي",
+        delivery: "توصيل",
+        export-report: "تصدير كـ PDF"
+      },
+      en: {
+        dashboard: "Dashboard",
+        menu: "Menu Management",
+        sales: "Sales",
+        purchases: "Purchases",
+        inventory: "Inventory Management",
+        tables: "Table Management",
+        employees: "Employee Management",
+        clients: "Clients",
+        loyalty: "Loyalty Program",
+        reports: "Reports",
+        daily-sales: "Total Daily Sales",
+        menu-items: "Menu Items",
+        clients-count: "Number of Clients",
+        low-inventory: "Inventory Alerts",
+        add-item: "Add New Item",
+        add-item-btn: "Add Item",
+        create-invoice: "Create Invoice",
+        add-to-invoice: "Add to Invoice",
+        save-invoice: "Save Invoice",
+        print-invoice: "Print Invoice",
+        export-invoice: "Export as PDF",
+        add-purchase: "Record Purchase",
+        add-purchase-btn: "Record Purchase",
+        add-inventory: "Add Inventory Component",
+        add-inventory-btn: "Add Component",
+        add-table: "Add Table",
+        add-table-btn: "Add Table",
+        add-employee: "Add Employee",
+        add-employee-btn: "Add Employee",
+        add-client: "Add Client",
+        add-client-btn: "Add Client",
+        add-points: "Add Points to Client",
+        add-points-btn: "Add Points",
+        daily-report: "Daily Report",
+        weekly-report: "Weekly Report",
+        top-items: "Top Selling Items",
+        total-sales: "Total Sales",
+        total-purchases: "Total Purchases",
+        invoice-count: "Number of Invoices",
+        date: "Date",
+        item-name: "Item Name",
+        total-sold: "Total Sold",
+        total-revenue: "Total Revenue",
+        invoice-number: "Invoice Number",
+        time: "Time",
+        client: "Client",
+        order-type: "Order Type",
+        table-number: "Table Number",
+        quantity: "Quantity",
+        price: "Price",
+        subtotal: "Subtotal",
+        discount: "Discount",
+        total: "Total",
+        dine-in: "Dine-In",
+        takeaway: "Takeaway",
+        delivery: "Delivery",
+        export-report: "Export as PDF"
+      }
+    };
+
+    const placeholders = {
+      ar: {
+        "item-name": "اسم الصنف",
+        "item-price": "السعر",
+        "item-barcode": "الباركود",
+        "item-ingredients": "المكونات (مفصولة بفواصل)",
+        quantity: "الكمية",
+        "purchase-item": "اسم الصنف",
+        "purchase-price": "السعر",
+        "inventory-name": "اسم المكون",
+        "min-quantity": "الحد الأدنى للكمية",
+        "table-number": "رقم الطاولة",
+        "table-capacity": "السعة",
+        "employee-name": "اسم الموظف",
+        "employee-role": "الدور",
+        "employee-salary": "الراتب",
+        "client-name": "اسم العميل",
+        "client-phone": "رقم الهاتف",
+        "loyalty-points": "النقاط",
+        discount: "الخصم"
+      },
+      en: {
+        "item-name": "Item Name",
+        "item-price": "Price",
+        "item-barcode": "Barcode",
+        "item-ingredients": "Ingredients (comma-separated)",
+        quantity: "Quantity",
+        "purchase-item": "Item Name",
+        "purchase-price": "Price",
+        "inventory-name": "Component Name",
+        "min-quantity": "Minimum Quantity",
+        "table-number": "Table Number",
+        "table-capacity": "Capacity",
+        "employee-name": "Employee Name",
+        "employee-role": "Role",
+        "employee-salary": "Salary",
+        "client-name": "Client Name",
+        "client-phone": "Phone Number",
+        "loyalty-points": "Points",
+        discount: "Discount"
+      }
+    };
+
+    let currentLang = 'ar';
+    function updateLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang').forEach(el => {
+        const key = el.dataset.key;
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+          if (el.tagName === 'P' && el.children.length > 0) {
+            el.innerHTML = translations[lang][key].replace(/<span/, '<span id="' + el.children[0].id + '"');
+          }
+        }
+      });
+      document.querySelectorAll('[data-placeholder]').forEach(el => {
+        const key = el.dataset.placeholder;
+        el.placeholder = placeholders[lang][key];
+      });
+      document.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    }
+
+    document.getElementById('language').addEventListener('change', (e) => {
+      updateLanguage(e.target.value);
+    });
+
+    // Navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+        document.getElementById(link.dataset.section).classList.remove('hidden');
+      });
+    });
+
+    // Menu Management
+    async function loadMenu() {
+      const items = await db.items.toArray();
+      document.getElementById('menu-items-count').textContent = items.length;
+      const menuItems = document.getElementById('menu-items');
+      const saleItems = document.getElementById('sale-item');
+      menuItems.innerHTML = '';
+      saleItems.innerHTML = `<option value="">${translations[currentLang]['select-item'] || 'اختر الصنف'}</option>`;
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'bg-white p-4 rounded-lg shadow';
+        div.innerHTML = `
+          <h3 class="text-lg">${item.name}</h3>
+          <p>${translations[currentLang].price}: ${item.price} ${translations[currentLang].currency || 'جنيه'}</p>
+          <p>${translations[currentLang]['item-ingredients']}: ${item.ingredients || 'غير محدد'}</p>
+          <svg id="barcode-${item.id}"></svg>
+        `;
+        menuItems.appendChild(div);
+        JsBarcode(`#barcode-${item.id}`, item.barcode, { format: "CODE128" });
+        saleItems.innerHTML += `<option value="${item.id}">${item.name} - ${item.price} ${translations[currentLang].currency || 'جنيه'}</option>`;
+      });
+    }
+
+    document.getElementById('add-item').addEventListener('click', async () => {
+      const name = document.getElementById('item-name').value;
+      const price = parseFloat(document.getElementById('item-price').value);
+      const barcode = document.getElementById('item-barcode').value;
+      const ingredients = document.getElementById('item-ingredients').value;
+      if (name && price && barcode) {
+        await db.items.add({ name, price, barcode, ingredients });
+        document.getElementById('item-name').value = '';
+        document.getElementById('item-price').value = '';
+        document.getElementById('item-barcode').value = '';
+        document.getElementById('item-ingredients').value = '';
+        loadMenu();
+      }
+    });
+
+    // Sales Management
+    let invoiceItems = [];
+    async function loadClientsForSales() {
+      const clients = await db.clients.toArray();
+      const saleClient = document.getElementById('sale-client');
+      const loyaltyClient = document.getElementById('loyalty-client');
+      saleClient.innerHTML = `<option value="">${translations[currentLang]['select-client'] || 'اختر العميل'}</option>`;
+      loyaltyClient.innerHTML = `<option value="">${translations[currentLang]['select-client'] || 'اختر العميل'}</option>`;
+      clients.forEach(client => {
+        saleClient.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+        loyaltyClient.innerHTML += `<option value="${client.id}">${client.name}</option>`;
+      });
+    }
+
+    async function loadTablesForSales() {
+      const tables = await db.tables.toArray();
+      const saleTable = document.getElementById('sale-table');
+      saleTable.innerHTML = `<option value="">${translations[currentLang]['select-table'] || 'اختر الطاولة'}</option>`;
+      tables.forEach(table => {
+        if (table.status !== 'occupied') {
+          saleTable.innerHTML += `<option value="${table.id}">${table.number}</option>`;
+        }
+      });
+    }
+
+    document.getElementById('sale-type').addEventListener('change', (e) => {
+      const saleTable = document.getElementById('sale-table');
+      if (e.target.value === 'dine-in') {
+        saleTable.classList.remove('hidden');
+        loadTablesForSales();
+      } else {
+        saleTable.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('add-to-invoice').addEventListener('click', async () => {
+      const itemId = document.getElementById('sale-item').value;
+      const quantity = parseInt(document.getElementById('sale-quantity').value);
+      if (itemId && quantity) {
+        const item = await db.items.get(parseInt(itemId));
+        invoiceItems.push({ itemId, name: item.name, price: item.price, quantity, ingredients: item.ingredients });
+        updateInvoice();
+      }
+    });
+
+    function updateInvoice() {
+      const invoiceDiv = document.getElementById('invoice-items');
+      invoiceDiv.innerHTML = '';
+      let total = 0;
+      invoiceItems.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        invoiceDiv.innerHTML += `
+          <div class="flex justify-between">
+            <p>${item.name} (x${item.quantity})</p>
+            <p>${subtotal} ${translations[currentLang].currency || 'جنيه'}</p>
+          </div>`;
+      });
+      const discount = parseFloat(document.getElementById('sale-discount').value) || 0;
+      total -= discount;
+      document.getElementById('invoice-total').textContent = total;
+    }
+
+    document.getElementById('sale-discount').addEventListener('input', updateInvoice);
+
+    document.getElementById('save-invoice').addEventListener('click', async () => {
+      if (invoiceItems.length > 0) {
+        const clientId = document.getElementById('sale-client').value;
+        const client = clientId ? await db.clients.get(parseInt(clientId)) : null;
+        const orderType = document.getElementById('sale-type').value;
+        const tableId = orderType === 'dine-in' ? document.getElementById('sale-table').value : null;
+        const discount = parseFloat(document.getElementById('sale-discount').value) || 0;
+        const total = invoiceItems.reduce((sum, item) => sum + item.price * item.quantity, 0) - discount;
+        const orderNumber = `ORD-${Date.now()}`;
+        await db.sales.add({
+          items: invoiceItems,
+          total,
+          clientId: clientId || null,
+          clientName: client ? client.name : 'غير محدد',
+          orderNumber,
+          orderType,
+          tableId: tableId || null,
+          discount,
+          date: new Date()
+        });
+        if (clientId) {
+          const points = Math.floor(total / 10);
+          await db.clients.update(parseInt(clientId), { loyaltyPoints: (client.loyaltyPoints || 0) + points });
+        }
+        if (tableId) {
+          await db.tables.update(parseInt(tableId), { status: 'occupied' });
+        }
+        invoiceItems = [];
+        document.getElementById('sale-discount').value = '';
+        updateInvoice();
+        updateDashboard();
+        loadWeeklyReport();
+        loadTopItemsReport();
+        loadClientsForSales();
+        loadTablesForSales();
+      }
+    });
+
+    document.getElementById('print-invoice').addEventListener('click', async () => {
+      if (invoiceItems.length > 0) {
+        const clientId = document.getElementById('sale-client').value;
+        const client = clientId ? await db.clients.get(parseInt(clientId)) : null;
+        const orderType = document.getElementById('sale-type').value;
+        const tableId = document.getElementById('sale-table').value;
+        const table = tableId ? await db.tables.get(parseInt(tableId)) : null;
+        const discount = parseFloat(document.getElementById('sale-discount').value) || 0;
+        const orderNumber = `ORD-${Date.now()}`;
+        const date = new Date();
+        const time = date.toLocaleTimeString('ar-EG');
+        const dateStr = date.toLocaleDateString('ar-EG');
+
+        document.getElementById('invoice-number').textContent = orderNumber;
+        document.getElementById('invoice-date').textContent = dateStr;
+        document.getElementById('invoice-time').textContent = time;
+        document.getElementById('invoice-client').textContent = client ? client.name : 'غير محدد';
+        document.getElementById('invoice-type').textContent = translations[currentLang][orderType] || orderType;
+        document.getElementById('invoice-table').textContent = table ? table.number : 'غير محدد';
+        document.getElementById('invoice-discount').textContent = discount;
+        const printItems = document.getElementById('invoice-print-items');
+        printItems.innerHTML = '';
+        let total = 0;
+        invoiceItems.forEach(item => {
+          const subtotal = item.price * item.quantity;
+          total += subtotal;
+          printItems.innerHTML += `
+            <tr>
+              <td class="p-2">${item.name}</td>
+              <td class="p-2">${item.quantity}</td>
+              <td class="p-2">${item.price}</td>
+              <td class="p-2">${subtotal}</td>
+            </tr>`;
+        });
+        total -= discount;
+        document.getElementById('invoice-print-total').textContent = total;
+
+        const printArea = document.getElementById('print-area');
+        printArea.classList.remove('hidden');
+        window.print();
+        printArea.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('export-invoice').addEventListener('click', async () => {
+      if (invoiceItems.length > 0) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const clientId = document.getElementById('sale-client').value;
+        const client = clientId ? await db.clients.get(parseInt(clientId)) : null;
+        const orderType = document.getElementById('sale-type').value;
+        const tableId = document.getElementById('sale-table').value;
+        const table = tableId ? await db.tables.get(parseInt(tableId)) : null;
+        const discount = parseFloat(document.getElementById('sale-discount').value) || 0;
+        const orderNumber = `ORD-${Date.now()}`;
+        const date = new Date();
+        const time = date.toLocaleTimeString('ar-EG');
+        const dateStr = date.toLocaleDateString('ar-EG');
+
+        doc.setFont("Amiri", "normal");
+        doc.setFontSize(16);
+        doc.text("فاتورة ميامي", 105, 20, { align: "center" });
+        doc.setFontSize(12);
+        doc.text(`${translations[currentLang]['invoice-number']}: ${orderNumber}`, 105, 30, { align: "center" });
+        doc.text(`${translations[currentLang].date}: ${dateStr}`, 105, 40, { align: "center" });
+        doc.text(`${translations[currentLang].time}: ${time}`, 105, 50, { align: "center" });
+        doc.text(`${translations[currentLang].client}: ${client ? client.name : 'غير محدد'}`, 105, 60, { align: "center" });
+        doc.text(`${translations[currentLang]['order-type']}: ${translations[currentLang][orderType] || orderType}`, 105, 70, { align: "center" });
+        doc.text(`${translations[currentLang]['table-number']}: ${table ? table.number : 'غير محدد'}`, 105, 80, { align: "center" });
+
+        let y = 90;
+        doc.text(translations[currentLang]['item-name'], 20, y);
+        doc.text(translations[currentLang].quantity, 80, y);
+        doc.text(translations[currentLang].price, 120, y);
+        doc.text(translations[currentLang].subtotal, 160, y);
+        y += 10;
+        let total = 0;
+        invoiceItems.forEach(item => {
+          const subtotal = item.price * item.quantity;
+          total += subtotal;
+          doc.text(item.name, 20, y);
+          doc.text(item.quantity.toString(), 80, y);
+          doc.text(item.price.toString(), 120, y);
+          doc.text(subtotal.toString(), 160, y);
+          y += 10;
+        });
+        total -= discount;
+        doc.text(`${translations[currentLang].discount}: ${discount} ${translations[currentLang].currency || 'جنيه'}`, 20, y);
+        doc.text(`${translations[currentLang].total}: ${total} ${translations[currentLang].currency || 'جنيه'}`, 20, y + 10);
+        doc.save(`invoice-${orderNumber}.pdf`);
+      }
+    });
+
+    // Purchases Management
+    document.getElementById('add-purchase').addEventListener('click', async () => {
+      const item = document.getElementById('purchase-item').value;
+      const quantity = parseInt(document.getElementById('purchase-quantity').value);
+      const price = parseFloat(document.getElementById('purchase-price').value);
+      if (item && quantity && price) {
+        await db.purchases.add({ item, quantity, price, date: new Date() });
+        await db.inventory.update(item, { quantity: db.inventory.get(item).quantity + quantity });
+        document.getElementById('purchase-item').value = '';
+        document.getElementById('purchase-quantity').value = '';
+        document.getElementById('purchase-price').value = '';
+        loadPurchases();
+        loadInventory();
+      }
+    });
+
+    async function loadPurchases() {
+      const purchases = await db.purchases.toArray();
+      const purchaseList = document.getElementById('purchase-list');
+      purchaseList.innerHTML = '';
+      purchases.forEach(purchase => {
+        purchaseList.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow mb-2">
+            <p>${translations[currentLang]['item-name']}: ${purchase.item}</p>
+            <p>${translations[currentLang].quantity}: ${purchase.quantity}</p>
+            <p>${translations[currentLang].price}: ${purchase.price} ${translations[currentLang].currency || 'جنيه'}</p>
+          </div>`;
+      });
+    }
+
+    // Inventory Management
+    async function loadInventory() {
+      const inventory = await db.inventory.toArray();
+      const inventoryList = document.getElementById('inventory-list');
+      let lowInventoryCount = 0;
+      inventoryList.innerHTML = '';
+      inventory.forEach(item => {
+        if (item.quantity <= item.minQuantity) lowInventoryCount++;
+        inventoryList.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow mb-2 ${item.quantity <= item.minQuantity ? 'border-red-600 border-2' : ''}">
+            <p>${translations[currentLang]['item-name']}: ${item.name}</p>
+            <p>${translations[currentLang].quantity}: ${item.quantity}</p>
+            <p>${translations[currentLang]['min-quantity']}: ${item.minQuantity}</p>
+          </div>`;
+      });
+      document.getElementById('low-inventory-count').textContent = lowInventoryCount;
+    }
+
+    document.getElementById('add-inventory').addEventListener('click', async () => {
+      const name = document.getElementById('inventory-name').value;
+      const quantity = parseInt(document.getElementById('inventory-quantity').value);
+      const minQuantity = parseInt(document.getElementById('inventory-min').value);
+      if (name && quantity && minQuantity) {
+        await db.inventory.add({ name, quantity, minQuantity });
+        document.getElementById('inventory-name').value = '';
+        document.getElementById('inventory-quantity').value = '';
+        document.getElementById('inventory-min').value = '';
+        loadInventory();
+      }
+    });
+
+    // Tables Management
+    async function loadTables() {
+      const tables = await db.tables.toArray();
+      const tableList = document.getElementById('table-list');
+      tableList.innerHTML = '';
+      tables.forEach(table => {
+        tableList.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow mb-2">
+            <p>${translations[currentLang]['table-number']}: ${table.number}</p>
+            <p>${translations[currentLang]['table-capacity']}: ${table.capacity}</p>
+            <p>${translations[currentLang].status}: ${translations[currentLang][table.status] || table.status}</p>
+          </div>`;
+      });
+    }
+
+    document.getElementById('add-table').addEventListener('click', async () => {
+      const number = document.getElementById('table-number').value;
+      const capacity = parseInt(document.getElementById('table-capacity').value);
+      if (number && capacity) {
+        await db.tables.add({ number, capacity, status: 'available' });
+        document.getElementById('table-number').value = '';
+        document.getElementById('table-capacity').value = '';
+        loadTables();
+        loadTablesForSales();
+      }
+    });
+
+    // Employees Management
+    async function loadEmployees() {
+      const employees = await db.employees.toArray();
+      const employeeList = document.getElementById('employee-list');
+      employeeList.innerHTML = '';
+      employees.forEach(employee => {
+        employeeList.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow mb-2">
+            <p>${translations[currentLang]['employee-name']}: ${employee.name}</p>
+            <p>${translations[currentLang]['employee-role']}: ${employee.role}</p>
+            <p>${translations[currentLang]['employee-salary']}: ${employee.salary} ${translations[currentLang].currency || 'جنيه'}</p>
+          </div>`;
+      });
+    }
+
+    document.getElementById('add-employee').addEventListener('click', async () => {
+      const name = document.getElementById('employee-name').value;
+      const role = document.getElementById('employee-role').value;
+      const salary = parseFloat(document.getElementById('employee-salary').value);
+      if (name && role && salary) {
+        await db.employees.add({ name, role, salary });
+        document.getElementById('employee-name').value = '';
+        document.getElementById('employee-role').value = '';
+        document.getElementById('employee-salary').value = '';
+        loadEmployees();
+      }
+    });
+
+    // Clients Management
+    document.getElementById('add-client').addEventListener('click', async () => {
+      const name = document.getElementById('client-name').value;
+      const phone = document.getElementById('client-phone').value;
+      if (name && phone) {
+        await db.clients.add({ name, phone, loyaltyPoints: 0 });
+        document.getElementById('client-name').value = '';
+        document.getElementById('client-phone').value = '';
+        loadClients();
+        loadClientsForSales();
+      }
+    });
+
+    async function loadClients() {
+      const clients = await db.clients.toArray();
+      document.getElementById('clients-count').textContent = clients.length;
+      const clientList = document.getElementById('client-list');
+      clientList.innerHTML = '';
+      clients.forEach(client => {
+        clientList.innerHTML += `
+          <div class="bg-white p-4 rounded-lg shadow mb-2">
+            <p>${translations[currentLang]['client-name']}: ${client.name}</p>
+            <p>${translations[currentLang]['client-phone']}: ${client.phone}</p>
+            <p>${translations[currentLang]['loyalty-points']}: ${client.loyaltyPoints || 0}</p>
+          </div>`;
+      });
+    }
+
+    // Loyalty Management
+    async function loadLoyalty() {
+      const clients = await db.clients.toArray();
+      const loyaltyList = document.getElementById('loyalty-list');
+      loyaltyList.innerHTML = '';
+      clients.forEach(client => {
+        if (client.loyaltyPoints > 0) {
+          loyaltyList.innerHTML += `
+            <div class="bg-white p-4 rounded-lg shadow mb-2">
+              <p>${translations[currentLang]['client-name']}: ${client.name}</p>
+              <p>${translations[currentLang]['loyalty-points']}: ${client.loyaltyPoints}</p>
+            </div>`;
+        }
+      });
+    }
+
+    document.getElementById('add-points').addEventListener('click', async () => {
+      const clientId = document.getElementById('loyalty-client').value;
+      const points = parseInt(document.getElementById('loyalty-points').value);
+      if (clientId && points) {
+        const client = await db.clients.get(parseInt(clientId));
+        await db.clients.update(parseInt(clientId), { loyaltyPoints: (client.loyaltyPoints || 0) + points });
+        document.getElementById('loyalty-points').value = '';
+        loadLoyalty();
+        loadClients();
+      }
+    });
+
+    // Dashboard Updates
+    async function updateDashboard() {
+      const sales = await db.sales.toArray();
+      const today = new Date().toLocaleDateString('ar-EG');
+      const dailySales = sales
+        .filter(sale => new Date(sale.date).toLocaleDateString('ar-EG') === today)
+        .reduce((sum, sale) => sum + sale.total, 0);
+      document.getElementById('daily-sales').textContent = `${dailySales} ${translations[currentLang].currency || 'جنيه'}`;
+      document.getElementById('report-sales').textContent = dailySales;
+      const purchases = await db.purchases.toArray();
+      const totalPurchases = purchases.reduce((sum, p) => sum + p.price * p.quantity, 0);
+      document.getElementById('report-purchases').textContent = totalPurchases;
+    }
+
+    // Weekly Report
+    async function loadWeeklyReport() {
+      const sales = await db.sales.toArray();
+      const weeklyReport = document.getElementById('weekly-report');
+      weeklyReport.innerHTML = '';
+
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(today.getDate() - 7);
+
+      const dailySales = {};
+      sales
+        .filter(sale => new Date(sale.date) >= weekAgo)
+        .forEach(sale => {
+          const date = new Date(sale.date).toLocaleDateString('ar-EG');
+          if (!dailySales[date]) {
+            dailySales[date] = { total: 0, count: 0 };
+          }
+          dailySales[date].total += sale.total;
+          dailySales[date].count += 1;
+        });
+
+      Object.keys(dailySales).forEach(date => {
+        weeklyReport.innerHTML += `
+          <tr>
+            <td class="p-2">${date}</td>
+            <td class="p-2">${dailySales[date].total} ${translations[currentLang].currency || 'جنيه'}</td>
+            <td class="p-2">${dailySales[date].count}</td>
+          </tr>`;
+      });
+    }
+
+    document.getElementById('export-weekly-report').addEventListener('click', async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const sales = await db.sales.toArray();
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(today.getDate() - 7);
+
+      const dailySales = {};
+      sales
+        .filter(sale => new Date(sale.date) >= weekAgo)
+        .forEach(sale => {
+          const date = new Date(sale.date).toLocaleDateString('ar-EG');
+          if (!dailySales[date]) {
+            dailySales[date] = { total: 0, count: 0 };
+          }
+          dailySales[date].total += sale.total;
+          dailySales[date].count += 1;
+        });
+
+      doc.setFont("Amiri", "normal");
+      doc.setFontSize(16);
+      doc.text(translations[currentLang]['weekly-report'], 105, 20, { align: "center" });
+      doc.setFontSize(12);
+      let y = 30;
+      doc.text(translations[currentLang].date, 20, y);
+      doc.text(translations[currentLang]['total-sales'], 80, y);
+      doc.text(translations[currentLang]['invoice-count'], 140, y);
+      y += 10;
+      Object.keys(dailySales).forEach(date => {
+        doc.text(date, 20, y);
+        doc.text(`${dailySales[date].total} ${translations[currentLang].currency || 'جنيه'}`, 80, y);
+        doc.text(dailySales[date].count.toString(), 140, y);
+        y += 10;
+      });
+      doc.save('weekly-report.pdf');
+    });
+
+    document.getElementById('export-daily-report').addEventListener('click', async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const sales = await db.sales.toArray();
+      const today = new Date().toLocaleDateString('ar-EG');
+      const dailySales = sales
+        .filter(sale => new Date(sale.date).toLocaleDateString('ar-EG') === today)
+        .reduce((sum, sale) => sum
