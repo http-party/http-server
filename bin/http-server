@@ -35,6 +35,8 @@ if (argv.h || argv.help) {
     '               If both brotli and gzip are enabled, brotli takes precedence',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --coop[=mode]   Enable COOP via the "Cross-Origin-Opener-Policy" header',
+    '                  Optionally provide COOP mode.',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     Optionally provide CORS headers list separated by commas',
     '  -H',
@@ -173,6 +175,13 @@ function listen(port) {
     }
   }
 
+  if (argv.coop) {
+    options.coop = true;
+    if (typeof argv.coop === 'string') {
+      options.coopHeader = argv.coop;
+    }
+  }
+
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
@@ -236,6 +245,7 @@ function listen(port) {
 
     logger.info([
       chalk.yellow('\nhttp-server settings: '),
+      ([chalk.yellow('COOP: '), argv.coop ? chalk.cyan(argv.coop) : chalk.red('disabled')].join('')),
       ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
       ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
       ([chalk.yellow('Connection Timeout: '), argv.t === '0' ? chalk.red('disabled') : (argv.t ? chalk.cyan(argv.t + ' seconds') : chalk.cyan('120 seconds'))].join('')),

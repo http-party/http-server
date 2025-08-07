@@ -26,6 +26,7 @@ test('http-server main', (t) => {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Credentials': 'true'
         },
+        coop: true,
         cors: true,
         corsHeaders: 'X-Test',
         ext: true,
@@ -63,6 +64,8 @@ test('http-server main', (t) => {
               // Custom headers
               t.equal(res.headers['access-control-allow-origin'], '*');
               t.equal(res.headers['access-control-allow-credentials'], 'true');
+              t.equal(res.headers['cross-origin-opener-policy'], 'same-origin');
+              t.equal(res.headers['cross-origin-embedder-policy'], 'require-corp');
             }).catch(err => t.fail(err.toString())),
 
             // Get robots
