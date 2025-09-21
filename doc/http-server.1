@@ -59,8 +59,9 @@ Suppress log messages from output.
 
 .TP
 .BI \-\-cors " " [\fIHEADERS\fR]
-Enable CORS via the "Access-Control-Allow-Origin" header.
-Optionally provide CORS headers list separated by commas.
+Enable CORS by setting "Access-Control-Allow-Origin" to "*".
+Optional comma-separated headers list adds to "Access-Control-Allow-Headers".
+Default Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Range.
 
 .TP
 .BI \-H ", " \-\-header " " \fIHEADER\fR
