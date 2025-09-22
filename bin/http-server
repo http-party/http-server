@@ -33,6 +33,13 @@ if (argv.h || argv.help) {
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
     '               If both brotli and gzip are enabled, brotli takes precedence',
+    '',
+    '  --force-content-encoding',
+    '               When using --gzip or --brotli, includes the content encoding',
+    '               header even when the extension for the compressed file is',
+    '               specified in the URL. "test.png.br" will be served the same',
+    '               way as "test.png".',
+    '',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
@@ -179,6 +186,10 @@ function listen(port) {
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+  
+  if ( argv['force-content-encoding'] ) {
+    options.forceContentEncoding = true;
   }
 
   if (argv.header) {
