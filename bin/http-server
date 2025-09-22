@@ -264,7 +264,7 @@ function listen(port) {
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
-          if (details.family === 'IPv4') {
+          if (details.family === 'IPv4' || details.family === 4) {
             logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString()) + path));
           }
           if (details.family === 'IPv6' && !details.address.startsWith("fe80") ) { // Ignoring Ipv6-Link Local addresses
