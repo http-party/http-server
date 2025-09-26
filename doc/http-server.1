@@ -50,6 +50,13 @@ If both brotli and gzip are enabled, brotli takes precedence.
 Default is false.
 
 .TP
+.BI \-\-force\-content\-encoding
+When using --gzip or --brotli, includes the content encoding
+header even when the extension for the compressed file is
+specified in the URL. "test.png.br" will be served the same
+way as "test.png".
+
+.TP
 .BI \-e ", " \-\-ext " " \fIEXTENSION\fR
 Default file extension is none is provided.
 
