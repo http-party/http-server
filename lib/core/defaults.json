@@ -9,6 +9,7 @@
   "cors": false,
   "gzip": true,
   "brotli": false,
+  "forceContentEncoding": false,
   "defaultExt": ".html",
   "handleError": true,
   "contentType": "application/octet-stream",
