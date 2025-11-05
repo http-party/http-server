@@ -12,6 +12,7 @@
   "forceContentEncoding": false,
   "defaultExt": ".html",
   "handleError": true,
+  "spa": false,
   "contentType": "application/octet-stream",
   "weakEtags": true,
   "weakCompare": true,
