@@ -42,6 +42,7 @@ if (argv.h || argv.help) {
     '',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --content-type     Default content type for unknown file types [application/octet-stream]',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     When enabled, sets Access-Control-Allow-Origin to "*"',
     '                     Optional value adds to Access-Control-Allow-Headers',
@@ -169,6 +170,7 @@ function listen(port) {
     proxyOptions: proxyOptions,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
+    contentType: argv['content-type'],
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
     headers: {}

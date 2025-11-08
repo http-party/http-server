@@ -177,3 +177,22 @@ test('empty header value is allowed (RFC 7230)', (t) => {
     { 'x-http-server-test-empty-a': '', 'x-http-server-test-empty-b': '' }
   );
 });
+
+test('setting default content-type via cli', (t) => {
+  t.plan(4);
+
+  getPort().then((port) => {
+    const root = path.resolve(__dirname, 'public/');
+    const options = [root, '--port', port, '--content-type', 'text/custom'];
+    const server = startServer(options);
+
+    tearDown(server, t);
+
+    server.stdout.on('data', (msg) => {
+      checkServerIsRunning(`http://localhost:${port}/f_f`, msg, t, (err, res) => {
+        t.error(err);
+        t.equal(res.headers['content-type'], 'text/custom; charset=UTF-8');
+      });
+    });
+  });
+});
