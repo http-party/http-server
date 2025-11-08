@@ -14,8 +14,10 @@ var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl',
     header: 'H'
-  }
+  },
+  boolean: ['proxy-all']
 });
+
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -59,6 +61,7 @@ if (argv.h || argv.help) {
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
     '  -P --proxy       Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxy-all      Send every request to the proxy target instead of serving local files',
     '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
     '  --websocket      Enable websocket proxy',
     '',
@@ -87,6 +90,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
     websocket = argv.websocket,
+    proxyAll = Boolean(argv['proxy-all']),
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     baseDir = argv['base-dir'],
@@ -168,6 +172,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     proxyOptions: proxyOptions,
+    proxyAll: proxyAll,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
     contentType: argv['content-type'],
@@ -221,6 +226,11 @@ function listen(port) {
       logger.info(chalk.red('Error: Invalid proxy url'));
       process.exit(1);
     }
+  }
+
+  if (proxyAll && !proxy) {
+    logger.info(chalk.red('Error: --proxy-all requires --proxy to be set'));
+    process.exit(1);
   }
 
   if (tls) {
