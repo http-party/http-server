@@ -18,16 +18,11 @@ const httpsOpts = {
 }
 
 const proxyConfigTest = {
-  "/rewrite/*": {
+  "/rewrite/**": {
     "target": "http://localhost:8082",
     "pathRewrite": {
       "^/rewrite": ""
     }
-  },
-  "*": {
-    "target": "http://localhost:8082",
-    "changeOrigin": true,
-    "secure": false
   }
 }
 
@@ -55,6 +50,7 @@ test('proxy config', (t) => {
 
         // Another server proxies 8083 to 8082
         const proxyServer = httpServer.createServer({
+          root,
           //tls: true,
           //https: httpsOpts,
           proxyConfig: proxyConfigTest
@@ -70,7 +66,7 @@ test('proxy config', (t) => {
 
                 // File content matches
                 const fileData = await fsReadFile(path.join(root, 'file'), 'utf8')
-                t.equal(res.body.trim(), fileData.trim(), 'proxied file content matches')
+                t.equal(res.body.trim(), fileData.trim(), 'none proxied file content matches')
               }).catch(err => t.fail(err.toString()))
 
               // Serve files from proxy with rewrite
