@@ -111,6 +111,12 @@ if (!argv.s && !argv.silent) {
           chalk.red(error.status.toString()), chalk.red(error.message)
         );
       }
+      else if (req.proxy) {
+        logger.info(
+          '[%s] %s "%s" (%s)-> "%s"',
+          date, ip, chalk.cyan(req.url), chalk.magenta('Proxy'), chalk.cyan(req.proxy.target)
+        );
+      }
       else {
         logger.info(
           '[%s] %s "%s %s" "%s"',
