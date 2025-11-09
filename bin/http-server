@@ -204,10 +204,18 @@ function listen(port) {
 
   if (proxyConfig) {
     try {
-      proxyConfig = JSON.parse(fs.readFileSync(proxyConfig));
+      if (fs.existsSync(proxyConfig)) {
+        proxyConfig = fs.readFileSync(proxyConfig, 'utf8');
+      }
+      if (typeof proxyConfig === 'string') {
+        proxyConfig = JSON.parse(proxyConfig);
+      }
+      if (typeof proxyConfig !== 'object') {
+        throw new Error('Invalid proxy config');
+      }
     }
     catch (err) {
-      logger.info(chalk.red('Error: Invalid proxy config file'));
+      logger.info(chalk.red('Error: Invalid proxy config or file'));
       process.exit(1);
     }
     // Proxy file overrides cli config
