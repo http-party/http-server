@@ -14,8 +14,10 @@ var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl',
     header: 'H'
-  }
+  },
+  boolean: ['proxy-all']
 });
+
 var ifaces = os.networkInterfaces();
 
 process.title = 'http-server';
@@ -33,10 +35,19 @@ if (argv.h || argv.help) {
     '  -g --gzip    Serve gzip files when possible [false]',
     '  -b --brotli  Serve brotli files when possible [false]',
     '               If both brotli and gzip are enabled, brotli takes precedence',
+    '',
+    '  --force-content-encoding',
+    '               When using --gzip or --brotli, includes the content encoding',
+    '               header even when the extension for the compressed file is',
+    '               specified in the URL. "test.png.br" will be served the same',
+    '               way as "test.png".',
+    '',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --content-type     Default content type for unknown file types [application/octet-stream]',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
-    '                     Optionally provide CORS headers list separated by commas',
+    '                     When enabled, sets Access-Control-Allow-Origin to "*"',
+    '                     Optional value adds to Access-Control-Allow-Headers',
     '  -H',
     '  --header',
     '               Add an extra response header (can be used several times)',
@@ -50,8 +61,10 @@ if (argv.h || argv.help) {
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
     '  -P --proxy       Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
+    '  --proxy-all      Send every request to the proxy target instead of serving local files',
     '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
     '  --proxy-config   Pass in .json configuration file. e.g.: ./path/to/config.json',
+    '  --websocket      Enable websocket proxy',
     '',
     '  --username   Username for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_USERNAME',
@@ -78,6 +91,8 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
     proxyConfig = argv['proxy-config'],
+    websocket = argv.websocket,
+    proxyAll = Boolean(argv['proxy-all']),
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     baseDir = argv['base-dir'],
@@ -166,8 +181,10 @@ function listen(port) {
     proxy: proxy,
     proxyOptions: proxyOptions,
     proxyConfig: proxyConfig,
+    proxyAll: proxyAll,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
+    contentType: argv['content-type'],
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
     headers: {}
@@ -182,11 +199,23 @@ function listen(port) {
     }
   }
 
+  if (websocket) {
+    if (!proxy) {
+      logger.warning(colors.yellow('WebSocket proxy will not be enabled because proxy is not enabled'));
+    } else {
+      options.websocket = true;
+    }
+  }
+
   if (argv.cors) {
     options.cors = true;
     if (typeof argv.cors === 'string') {
       options.corsHeaders = argv.cors;
     }
+  }
+  
+  if ( argv['force-content-encoding'] ) {
+    options.forceContentEncoding = true;
   }
 
   if (argv.header) {
@@ -227,6 +256,12 @@ function listen(port) {
     // Proxy file overrides cli config
     proxy = undefined;
     proxyOptions = undefined;
+  }
+
+  // TODO: handle this in respect of proxyConfig
+  if (proxyAll && !proxy) {
+    logger.info(chalk.red('Error: --proxy-all requires --proxy to be set'));
+    process.exit(1);
   }
 
   if (tls) {
@@ -293,7 +328,7 @@ function listen(port) {
     } else {
       Object.keys(ifaces).forEach(function (dev) {
         ifaces[dev].forEach(function (details) {
-          if (details.family === 'IPv4') {
+          if (details.family === 'IPv4' || details.family === 4) {
             logger.info(('  ' + protocol + details.address + ':' + chalk.green(port.toString()) + path));
           }
           if (details.family === 'IPv6' && !details.address.startsWith("fe80") ) { // Ignoring Ipv6-Link Local addresses
