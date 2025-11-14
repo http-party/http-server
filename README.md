@@ -1,6 +1,6 @@
 [![GitHub Workflow Status (master)](https://img.shields.io/github/actions/workflow/status/http-party/http-server/node.js.yml?style=flat-square&branch=master)](https://github.com/http-party/http-server/actions)
 [![npm](https://img.shields.io/npm/v/http-server.svg?style=flat-square)](https://www.npmjs.com/package/http-server) [![homebrew](https://img.shields.io/homebrew/v/http-server?style=flat-square)](https://formulae.brew.sh/formula/http-server) [![npm downloads](https://img.shields.io/npm/dm/http-server?color=blue&label=npm%20downloads&style=flat-square)](https://www.npmjs.com/package/http-server)
-[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server)
+[![license](https://img.shields.io/github/license/http-party/http-server.svg?style=flat-square)](https://github.com/http-party/http-server/blob/master/LICENSE)
 
 # http-server: a simple static HTTP server
 
@@ -30,6 +30,22 @@ This will install `http-server` globally so that it may be run from the command 
 
     npm install http-server
 
+#### Using Docker
+
+Note: a public image is not provided currently, but you can build one yourself
+with the provided Dockerfile.
+
+1. Create an image
+   ```
+   docker build -t my-image .
+   ```
+2. Run a container
+   ```
+   docker run -p 8080:8080 -v "${pwd}:/public" my-image
+   ```
+   In the example above we're serving the directory `./` (working directory).
+   If you wanted to serve `./test` you'd replace `${pwd}` with `${pwd}/test`.
+
 ## Usage:
 
      http-server [path] [options]
@@ -46,6 +62,7 @@ This will install `http-server` globally so that it may be run from the command 
 | -------------  |-------------|-------------|
 |`-p` or `--port` |Port to use. Use `-p 0` to look for an open port, starting at 8080. It will also read from `process.env.PORT`. |8080 |
 |`-a`   |Address to use |0.0.0.0|
+|`--base-dir` | Base path to serve files from | `/` |
 |`-d`     |Show directory listings |`true` |
 |`-dir-overrides-404` | Whether `-d` should override magic `404.html` | `false`
 |`-i`   | Display autoIndex | `true` |
@@ -53,12 +70,14 @@ This will install `http-server` globally so that it may be run from the command 
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
 |`-e` or `--ext`  |Default file extension if none supplied |`html` | 
 |`-s` or `--silent` |Suppress log messages from output  | |
-|`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header  | |
+|`--cors` | Enable CORS via the `Access-Control-Allow-Origin: *` header. Optionally provide comma-separated values to add to `Access-Control-Allow-Headers`  | |
+|`-H` or `--header` |Add an extra response header (can be used several times)  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
+|`--proxy-all` |Forward every request to the proxy target instead of serving local files|`false`|
 |`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false |
 |`--username` |Username for basic authentication | |
 |`--password` |Password for basic authentication | |

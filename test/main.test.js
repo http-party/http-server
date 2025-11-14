@@ -32,14 +32,15 @@ test('http-server main', (t) => {
         brotli: true,
         gzip: true
       });
-      server.listen(8080, async () => {
+      server.listen(0, async () => {
+        const port = server.address().port;
         try {
 
           // Since none of these depend on anything not already declared, they
           // can run on the event loop at their own leisure
           await Promise.all([
             // request file from root
-            requestAsync("http://localhost:8080/file").then(async (res) => {
+            requestAsync(`http://localhost:${port}/file`).then(async (res) => {
               // files should be served from the root
               t.equal(res.statusCode, 200);
 
@@ -48,13 +49,13 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             // Request non-existent file
-            requestAsync("http://localhost:8080/404").then(res => {
+            requestAsync(`http://localhost:${port}/404`).then(res => {
               t.ok(res);
               t.equal(res.statusCode, 404);
             }).catch(err => t.fail(err.toString())),
 
             // Request root
-            requestAsync("http://localhost:8080/").then(res => {
+            requestAsync(`http://localhost:${port}/`).then(res => {
               t.ok(res);
               t.equal(res.statusCode, 200);
               t.match(res.body, './file');
@@ -66,13 +67,13 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             // Get robots
-            requestAsync("http://localhost:8080/robots.txt").then(res => {
+            requestAsync(`http://localhost:${port}/robots.txt`).then(res => {
               t.equal(res.statusCode, 200);
             }).catch(err => t.fail(err.toString())),
 
             // CORS time
             requestAsync({
-              uri: 'http://localhost:8080',
+              uri: `http://localhost:${port}`,
               method: 'OPTIONS',
               headers: {
                 'Access-Control-Request-Method': 'GET',
@@ -92,7 +93,7 @@ test('http-server main', (t) => {
               {},
               (t) => {
                 requestAsync({
-                  uri: encodeURI('http://localhost:8080/file?\x0cfoo'),
+                  uri: encodeURI(`http://localhost:${port}/file?\x0cfoo`),
                 }).then(res => {
                   t.equal(res.statusCode, 200);
                 }).catch(err => t.fail(err.toString()))
@@ -103,7 +104,7 @@ test('http-server main', (t) => {
             // Light compression testing. Heavier compression tests exist in
             // compression.test.js
             requestAsync({
-              uri: 'http://localhost:8080/compression/',
+              uri: `http://localhost:${port}/compression/`,
               headers: {
                 'accept-encoding': 'gzip'
               }
@@ -113,7 +114,7 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             requestAsync({
-              uri: 'http://localhost:8080/compression/',
+              uri: `http://localhost:${port}/compression/`,
               headers: {
                 'accept-encoding': 'gzip, br'
               }
@@ -122,23 +123,24 @@ test('http-server main', (t) => {
               t.equal(res.headers['content-encoding'], 'br');
             }).catch(err => t.fail(err.toString())),
 
-            requestAsync("http://localhost:8080/htmlButNot").then(res => {
+            requestAsync(`http://localhost:${port}/htmlButNot`).then(res => {
               t.equal(res.statusCode, 200);
               t.match(res.headers['content-type'], /^text\/html/);
             }).catch(err => t.fail(err.toString()))
           ]);
 
-          // Another server proxies 8081 to 8080
+          // Another server proxies to the main server
           const proxyServer = httpServer.createServer({
-            proxy: "http://localhost:8080",
+            proxy: `http://localhost:${port}`,
             root: path.join(__dirname, 'fixtures')
           });
 
           await new Promise((resolve) => {
-            proxyServer.listen(8081, async () => {
+            proxyServer.listen(0, async () => {
+              const proxyPort = proxyServer.address().port;
               try {
                 // Serve files from proxy root
-                await requestAsync("http://localhost:8081/root/file").then(async (res) => {
+                await requestAsync(`http://localhost:${proxyPort}/root/file`).then(async (res) => {
                   t.ok(res);
                   t.equal(res.statusCode, 200);
 
@@ -148,7 +150,7 @@ test('http-server main', (t) => {
                 }).catch(err => t.fail(err.toString()));
 
                 // Proxy fallback
-                await requestAsync("http://localhost:8081/file").then(async (res) => {
+                await requestAsync(`http://localhost:${proxyPort}/file`).then(async (res) => {
                   t.ok(res);
                   t.equal(res.statusCode, 200);
 
@@ -180,17 +182,18 @@ test('http-server main', (t) => {
         password: 'correct_password'
       });
 
-      server.listen(8082, async () => {
+      server.listen(0, async () => {
+        const authPort1 = server.address().port;
         try {
           await Promise.all([
             // Bad request with no auth
-            requestAsync("http://localhost:8082/file").then((res) => {
+            requestAsync(`http://localhost:${authPort1}/file`).then((res) => {
               t.equal(res.statusCode, 401);
               t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
             }).catch(err => t.fail(err.toString())),
 
             // bad user
-            requestAsync("http://localhost:8082/file", {
+            requestAsync(`http://localhost:${authPort1}/file`, {
               auth: {
                 user: 'wrong_username',
                 pass: 'correct_password'
@@ -201,7 +204,7 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             // bad password
-            requestAsync("http://localhost:8082/file", {
+            requestAsync(`http://localhost:${authPort1}/file`, {
               auth: {
                 user: 'correct_username',
                 pass: 'wrong_password'
@@ -212,7 +215,7 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             // nonexistant file, and bad auth
-            requestAsync("http://localhost:8082/404", {
+            requestAsync(`http://localhost:${authPort1}/404`, {
               auth: {
                 user: 'correct_username',
                 pass: 'wrong_password'
@@ -223,7 +226,7 @@ test('http-server main', (t) => {
             }).catch(err => t.fail(err.toString())),
 
             // good path, good auth
-            requestAsync("http://localhost:8082/file", {
+            requestAsync(`http://localhost:${authPort1}/file`, {
               auth: {
                 user: 'correct_username',
                 pass: 'correct_password'
@@ -250,17 +253,18 @@ test('http-server main', (t) => {
         password: 123456
       });
 
-      server.listen(8083, async () => {
+      server.listen(0, async () => {
+        const authPort2 = server.address().port;
         try {
           await Promise.all([
             // regression test
-            requestAsync("http://localhost:8083/file").then(res => {
+            requestAsync(`http://localhost:${authPort2}/file`).then(res => {
               t.equal(res.statusCode, 401);
               t.equal(res.body, 'Access denied', 'Bad auth returns expected body');
             }).catch(err => t.fail(err.toString())),
 
             // regression test, bad username
-            requestAsync("http://localhost:8083/file", {
+            requestAsync(`http://localhost:${authPort2}/file`, {
               auth: {
                 user: 'wrong_username',
                 pass: '123456'
@@ -272,7 +276,7 @@ test('http-server main', (t) => {
 
             // regression test, correct auth, even though the password is a
             // different type.
-            requestAsync("http://localhost:8083/file", {
+            requestAsync(`http://localhost:${authPort2}/file`, {
               auth: {
                 user: 'correct_username',
                 pass: '123456'
@@ -291,9 +295,41 @@ test('http-server main', (t) => {
         }
       });
     }),
+
+    new Promise((resolve) => {
+      const server = httpServer.createServer({
+        root,
+        baseDir: '/test'
+      });
+
+      server.listen(0, async () => {
+        const baseDirPort = server.address().port;
+        try {
+          await Promise.all([
+            // should serve files at the specified baseDir
+            requestAsync(`http://localhost:${baseDirPort}/test/file`).then(async (res) => {
+              t.equal(res.statusCode, 200);
+              const fileData = await fsReadFile(path.join(root, 'file'), 'utf8');
+              t.equal(res.body.trim(), fileData.trim());
+            }).catch(err => t.fail(err.toString())),
+
+            // should not serve files at the root
+            requestAsync(`http://localhost:${baseDirPort}/file`).then((res) => {
+              t.equal(res.statusCode, 403);
+              t.equal(res.body, '');
+            }).catch(err => t.fail(err.toString())),
+          ]);
+        } catch (err) {
+          t.fail(err.toString());
+        } finally {
+          server.close();
+          resolve();
+        }
+      });
+    }),
   ]).then(() => t.end())
     .catch(err => {
       t.fail(err.toString());
       t.end();
-  });
+    });
 });
