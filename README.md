@@ -64,6 +64,7 @@ with the provided Dockerfile.
 |`-a`   |Address to use |0.0.0.0|
 |`--base-dir` | Base path to serve files from | `/` |
 |`-d`     |Show directory listings |`true` |
+|`-dir-overrides-404` | Whether `-d` should override magic `404.html` | `false`
 |`-i`   | Display autoIndex | `true` |
 |`-g` or `--gzip` |When enabled it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.|`false`|
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
