@@ -258,7 +258,17 @@ function listen(port) {
     proxyOptions = undefined;
   }
 
-  // TODO: handle this in respect of proxyConfig
+  if (proxyAll && proxyConfig) {
+    logger.info(chalk.red('Error: --proxy-all cannot be used with --proxy-config'));
+    logger.info(
+      '%s\n%s\n%s',
+      chalk.yellow('Hint: Use'),
+      chalk.cyan('"/**": {\n  "target": "your-proxy"\n}'),
+      chalk.yellow('in the proxy config to achieve the same effect.')
+    );
+    process.exit(1);
+  }
+
   if (proxyAll && !proxy) {
     logger.info(chalk.red('Error: --proxy-all requires --proxy to be set'));
     process.exit(1);
