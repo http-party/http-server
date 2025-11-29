@@ -1,6 +1,7 @@
 {
   "autoIndex": true,
   "showDir": true,
+  "dirOverrides404": false,
   "showDotfiles": true,
   "humanReadable": true,
   "hidePermissions": false,
@@ -10,6 +11,7 @@
   "cors": false,
   "gzip": true,
   "brotli": false,
+  "forceContentEncoding": false,
   "defaultExt": ".html",
   "handleError": true,
   "contentType": "application/octet-stream",

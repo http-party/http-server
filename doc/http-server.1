@@ -34,6 +34,11 @@ Show directory listings.
 Default is true.
 
 .TP
+.BI \-d
+Whether -d should override magic 404.html
+Default is false.
+
+.TP
 .BI \-i
 Display autoIndex.
 Default is true.
@@ -48,6 +53,13 @@ Default is false.
 Serve brotli files when possible.
 If both brotli and gzip are enabled, brotli takes precedence.
 Default is false.
+
+.TP
+.BI \-\-force\-content\-encoding
+When using --gzip or --brotli, includes the content encoding
+header even when the extension for the compressed file is
+specified in the URL. "test.png.br" will be served the same
+way as "test.png".
 
 .TP
 .BI \-e ", " \-\-ext " " \fIEXTENSION\fR
@@ -65,8 +77,9 @@ Optionally provide COOP mode which defaults to "same-origin".
 
 .TP
 .BI \-\-cors " " [\fIHEADERS\fR]
-Enable CORS via the "Access-Control-Allow-Origin" header.
-Optionally provide CORS headers list separated by commas.
+Enable CORS by setting "Access-Control-Allow-Origin" to "*".
+Optional comma-separated headers list adds to "Access-Control-Allow-Headers".
+Default Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Range.
 
 .TP
 .BI \-H ", " \-\-header " " \fIHEADER\fR
@@ -94,6 +107,11 @@ Enable logging of the client IP address.
 .TP
 .BI \-P ", " \-\-proxy
 Fallback proxy if the request cannot be resolved.
+
+.TP
+.BI \-\-proxy\-all
+Forward every request to the proxy target and disable local file serving.
+Requires \-\-proxy.
 
 .TP
 .BI \-\-proxy\-options

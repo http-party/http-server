@@ -64,6 +64,7 @@ with the provided Dockerfile.
 |`-a`   |Address to use |0.0.0.0|
 |`--base-dir` | Base path to serve files from | `/` |
 |`-d`     |Show directory listings |`true` |
+|`-dir-overrides-404` | Whether `-d` should override magic `404.html` | `false`
 |`-i`   | Display autoIndex | `true` |
 |`-g` or `--gzip` |When enabled it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.|`false`|
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
@@ -71,12 +72,14 @@ with the provided Dockerfile.
 |`-s` or `--silent` |Suppress log messages from output  | |
 |`--coop` |Enable COOP via the `Cross-Origin-Opener-Policy` header  | |
 |`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header  | |
+|`--cors` | Enable CORS via the `Access-Control-Allow-Origin: *` header. Optionally provide comma-separated values to add to `Access-Control-Allow-Headers`  | |
 |`-H` or `--header` |Add an extra response header (can be used several times)  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
+|`--proxy-all` |Forward every request to the proxy target instead of serving local files|`false`|
 |`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false |
 |`--username` |Username for basic authentication | |
 |`--password` |Password for basic authentication | |
