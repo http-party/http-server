@@ -58,7 +58,7 @@ test('range starts beyond the end', (t) => {
       headers: { range: '500-' },
     };
     request.get(opts, (err, res, body) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 416, 'range error status code');
       t.equal(res.headers['content-range'], 'bytes */11');
       t.equal(body, 'Requested range not satisfiable');
