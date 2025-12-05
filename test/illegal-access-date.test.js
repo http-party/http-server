@@ -18,7 +18,7 @@ test('if-modified-since illegal access date', (t) => {
       headers: { 'if-modified-since': '275760-09-24' },
     };
     request.get(opts, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       server.close(() => { t.end(); });
     });

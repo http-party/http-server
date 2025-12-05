@@ -26,7 +26,7 @@ test('properly handles whitespace in accept-encoding', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'gzip');
     });
@@ -55,7 +55,7 @@ test('properly handles single accept-encoding entry', (t) => {
     };
 
     request.get(options, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['content-encoding'], 'gzip');
     });
