@@ -324,7 +324,27 @@ function listen(port) {
       }
     }
 
+    // Set up "CTRL-C" hook, before printing out "Hit CTRL-C to stop the server"
+    function stopServer() {
+      server.close();
+      logger.info(chalk.red('http-server stopped.'));
+      process.exit();
+    }
+
+    process.on('SIGINT', stopServer);
+    process.on('SIGTERM', stopServer);
+
+    if (process.platform === 'win32') {
+      require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+      }).on('SIGINT', function () {
+        process.emit('SIGINT');
+      });
+    }
+
     logger.info('Hit CTRL-C to stop the server');
+
     if (argv.o) {
       let openHost = host
       if ('::' === host || '0.0.0.0'===host){
@@ -342,22 +362,3 @@ function listen(port) {
     if (!argv.s) logger.info();
   });
 }
-
-if (process.platform === 'win32') {
-  require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  }).on('SIGINT', function () {
-    process.emit('SIGINT');
-  });
-}
-
-process.on('SIGINT', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});
-
-process.on('SIGTERM', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});
