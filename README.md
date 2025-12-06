@@ -76,6 +76,7 @@ with the provided Dockerfile.
 |`-H` or `--header` |Add an extra response header (can be used several times)  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |
 |`-c` |Set cache time (in seconds) for cache-control max-age header, e.g. `-c10` for 10 seconds. To disable caching, use `-c-1`.|`3600` |
+|`-t` |Connection timeout in seconds, e.g. `-t60` for 1 minute. To disable timeout, use `-t0`.|`120` |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
