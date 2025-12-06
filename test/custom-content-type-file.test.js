@@ -38,7 +38,7 @@ test('custom contentType via .types file', (t) => {
     const port = server.address().port;
 
     request.get(`http://localhost:${port}/custom_mime_type.opml`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200, 'custom_mime_type.opml should be found');
       t.equal(res.headers['content-type'], 'application/foo');
       server.close(() => { t.end(); });

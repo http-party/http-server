@@ -12,7 +12,7 @@ test('should handle ENOTDIR as 404', (t) => {
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/index.html/hello`, (err, res, body) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 404);
       t.equal(body, 'File not found. :(');
     });

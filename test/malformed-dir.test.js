@@ -12,7 +12,7 @@ test('malformed showdir uri', (t) => {
 
   server.listen(0, () => {
     request.get(`http://localhost:${server.address().port}/?%`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 400);
       server.close(() => { t.end(); });
     });

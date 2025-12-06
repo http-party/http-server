@@ -8,7 +8,7 @@ const request = require('request');
 
 const root = path.join(__dirname, 'public');
 
-test('cors defaults to false', (t) => {
+test('coop defaults to false', (t) => {
   t.plan(4);
 
   const httpServer = http.createServer(
@@ -26,8 +26,8 @@ test('cors defaults to false', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.type(res.headers['access-control-allow-origin'], 'undefined');
-      t.type(res.headers['access-control-allow-headers'], 'undefined');
+      t.type(res.headers['cross-origin-opener-policy'], 'undefined');
+      t.type(res.headers['cross-origin-embedder-policy'], 'undefined');
     });
   });
   t.once('end', () => {
@@ -35,13 +35,13 @@ test('cors defaults to false', (t) => {
   });
 });
 
-test('cors set to false', (t) => {
+test('coop set to false', (t) => {
   t.plan(4);
 
   const httpServer = http.createServer(
     server({
       root,
-      cors: false,
+      coop: false,
       autoIndex: true,
       defaultExt: 'html',
     })
@@ -54,8 +54,8 @@ test('cors set to false', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.type(res.headers['access-control-allow-origin'], 'undefined');
-      t.type(res.headers['access-control-allow-headers'], 'undefined');
+      t.type(res.headers['cross-origin-opener-policy'], 'undefined');
+      t.type(res.headers['cross-origin-embedder-policy'], 'undefined');
     });
   });
   t.once('end', () => {
@@ -63,13 +63,13 @@ test('cors set to false', (t) => {
   });
 });
 
-test('cors set to true', (t) => {
+test('coop set to true', (t) => {
   t.plan(4);
 
   const httpServer = http.createServer(
     server({
       root,
-      cors: true,
+      coop: true,
       autoIndex: true,
       defaultExt: 'html',
     })
@@ -81,8 +81,8 @@ test('cors set to true', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
-      t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
+      t.equal(res.headers['cross-origin-opener-policy'], 'same-origin');
+      t.equal(res.headers['cross-origin-embedder-policy'], 'require-corp');
     });
   });
   t.once('end', () => {
@@ -90,13 +90,13 @@ test('cors set to true', (t) => {
   });
 });
 
-test('CORS set to true', (t) => {
+test('COOP set to true', (t) => {
   t.plan(4);
 
   const httpServer = http.createServer(
     server({
       root,
-      CORS: true,
+      COOP: true,
       autoIndex: true,
       defaultExt: 'html',
     })
@@ -108,8 +108,8 @@ test('CORS set to true', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
-      t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
+      t.equal(res.headers['cross-origin-opener-policy'], 'same-origin');
+      t.equal(res.headers['cross-origin-embedder-policy'], 'require-corp');
     });
   });
   t.once('end', () => {
