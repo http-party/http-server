@@ -10,7 +10,6 @@ const portfinder = require('portfinder');
 const httpServer = require('../lib/http-server');
 
 const node = process.execPath;
-const defaultPort = 8080;
 
 function startServer(args) {
   return spawn(node, [require.resolve('../bin/http-server')].concat(args));
@@ -173,18 +172,20 @@ test('--proxy-all does not consume following positional args', (t) => {
 });
 
 function doHeaderOptionTest(t, argv, obj) {
-  const options = ['.', '--port', defaultPort].concat(argv);
-  const server = startServer(options);
+  getPort().then((port) => {
+    const options = ['.', '--port', port].concat(argv);
+    const server = startServer(options);
 
-  tearDown(server, t);
+    tearDown(server, t);
 
-  server.stdout.on('data', (msg) => {
-    checkServerIsRunning(`http://localhost:${defaultPort}`, msg, t, (err, res) => {
-      t.error(err);
+    server.stdout.on('data', (msg) => {
+      checkServerIsRunning(`http://localhost:${port}`, msg, t, (err, res) => {
+        t.error(err);
 
-      for (const [k, v] of Object.entries(obj)) {
-        t.equal(res.headers[k], v, 'expected header value matches in response');
-      }
+        for (const [k, v] of Object.entries(obj)) {
+          t.equal(res.headers[k], v, 'expected header value matches in response');
+        }
+      });
     });
   });
 }
