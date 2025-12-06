@@ -5,6 +5,8 @@ const ecstatic = require('../lib/core');
 const http = require('http');
 const request = require('request');
 const eol = require('eol');
+const fs = require('fs');
+const path = require('path');
 
 test('range', (t) => {
   t.plan(4);
@@ -51,6 +53,9 @@ test('range starts beyond the end', (t) => {
   const server = http.createServer(ecstatic(`${__dirname}/public/subdir`));
   t.on('end', () => { server.close(); });
 
+  const filePath = path.join(__dirname, 'public/subdir/e.html');
+  const fileSize = fs.statSync(filePath).size;
+
   server.listen(0, () => {
     const port = server.address().port;
     const opts = {
@@ -60,7 +65,7 @@ test('range starts beyond the end', (t) => {
     request.get(opts, (err, res, body) => {
       t.error(err);
       t.equal(res.statusCode, 416, 'range error status code');
-      t.equal(res.headers['content-range'], 'bytes */11');
+      t.equal(res.headers['content-range'], `bytes */${fileSize}`);
       t.equal(body, 'Requested range not satisfiable');
     });
   });
@@ -71,6 +76,9 @@ test('NaN range', (t) => {
   const server = http.createServer(ecstatic(`${__dirname}/public/subdir`));
   t.on('end', () => { server.close(); });
 
+  const filePath = path.join(__dirname, 'public/subdir/e.html');
+  const fileSize = fs.statSync(filePath).size;
+
   server.listen(0, () => {
     const port = server.address().port;
     const opts = {
@@ -80,7 +88,7 @@ test('NaN range', (t) => {
     request.get(opts, (err, res, body) => {
       t.error(err);
       t.equal(res.statusCode, 416, 'range error status code');
-      t.equal(res.headers['content-range'], 'bytes */11');
+      t.equal(res.headers['content-range'], `bytes */${fileSize}`);
       t.equal(body, 'Requested range not satisfiable');
     });
   });
@@ -91,6 +99,9 @@ test('flipped range', (t) => {
   const server = http.createServer(ecstatic(`${__dirname}/public/subdir`));
   t.on('end', () => { server.close(); });
 
+  const filePath = path.join(__dirname, 'public/subdir/e.html');
+  const fileSize = fs.statSync(filePath).size;
+
   server.listen(0, () => {
     const port = server.address().port;
     const opts = {
@@ -100,7 +111,7 @@ test('flipped range', (t) => {
     request.get(opts, (err, res, body) => {
       t.error(err);
       t.equal(res.statusCode, 416, 'range error status code');
-      t.equal(res.headers['content-range'], 'bytes */11');
+      t.equal(res.headers['content-range'], `bytes */${fileSize}`);
       t.equal(body, 'Requested range not satisfiable');
     });
   });
