@@ -34,6 +34,11 @@ Show directory listings.
 Default is true.
 
 .TP
+.BI \-d
+Whether -d should override magic 404.html
+Default is false.
+
+.TP
 .BI \-i
 Display autoIndex.
 Default is true.
@@ -65,6 +70,12 @@ Default file extension is none is provided.
 Suppress log messages from output.
 
 .TP
+.BI \-\-coop " " [\fIMODE\fR]
+Enable COOP via the "Cross-Origin-Opener-Policy" header and sets
+the "Cross-Origin-Embedder-Policy" header to "require-corp".
+Optionally provide COOP mode which defaults to "same-origin".
+
+.TP
 .BI \-\-cors " " [\fIHEADERS\fR]
 Enable CORS by setting "Access-Control-Allow-Origin" to "*".
 Optional comma-separated headers list adds to "Access-Control-Allow-Headers".
@@ -84,6 +95,12 @@ Optionally provide a URL path to open the browser window to.
 Cache time (max-age) in seconds.
 To disable caching, use \-c \-1.
 Default is 3600.
+
+.TP
+.BI \-t " " \fITIMEOUT\fR
+Connection timeout in seconds, e.g. -t60 for 1 minute.
+To disable timeout, use \-t0.
+Default is 120.
 
 .TP
 .BI \-U ", " \-\-utc
@@ -111,7 +128,7 @@ Pass proxy options using nested dotted objects.
 Pass in .json configuration file.
 
 .TP
-.BI \-\-username " " \fIUSERNAME\fR
+.BI \-\-user ", " \-\-username " " \fIUSERNAME\fR
 Username for basic authentication.
 Can also be specified with the environment variable NODE_HTTP_SERVER_USERNAME.
 Defaults to none.

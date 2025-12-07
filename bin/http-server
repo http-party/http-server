@@ -3,17 +3,18 @@
 'use strict';
 
 var chalk     = require('chalk'),
-    os         = require('os'),
-    httpServer = require('../lib/http-server'),
-    portfinder = require('portfinder'),
-    opener     = require('opener'),
+  os         = require('os'),
+  httpServer = require('../lib/http-server'),
+  portfinder = require('portfinder'),
+  opener     = require('opener'),
 
-    fs         = require('fs'),
-    url        = require('url');
+  fs         = require('fs'),
+  url        = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
     tls: 'ssl',
-    header: 'H'
+    header: 'H',
+    user: 'username',
   },
   boolean: ['proxy-all']
 });
@@ -30,6 +31,7 @@ if (argv.h || argv.help) {
     '  -p --port    Port to use. If 0, look for open port. [8080]',
     '  -a           Address to use [0.0.0.0] or [::]',
     '  -d           Show directory listings [true]',
+    '  --dir-overrides-404   Whether -d should override magic 404.html [false]',
     '  --base-dir   Base directory to serve files from [/]',
     '  -i           Display autoIndex [true]',
     '  -g --gzip    Serve gzip files when possible [false]',
@@ -44,6 +46,8 @@ if (argv.h || argv.help) {
     '',
     '  -e --ext     Default file extension if none supplied [none]',
     '  -s --silent  Suppress log messages from output',
+    '  --coop[=mode]   Enable COOP via the "Cross-Origin-Opener-Policy" header',
+    '                  Optionally provide COOP mode.',
     '  --content-type     Default content type for unknown file types [application/octet-stream]',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
     '                     When enabled, sets Access-Control-Allow-Origin to "*"',
@@ -55,8 +59,8 @@ if (argv.h || argv.help) {
     '               Optionally provide a URL path to open the browser window to.',
     '  -c           Cache time (max-age) in seconds [3600], e.g. -c10 for 10 seconds.',
     '               To disable caching, use -c-1.',
-    '  -t           Connections timeout in seconds [120], e.g. -t60 for 1 minute.',
-    '               To disable timeout, use -t0',
+    '  -t           Connection timeout in seconds [120], e.g. -t60 for 1 minute.',
+    '               To disable timeout, use -t0.',
     '  -U --utc     Use UTC time format in log messages.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
@@ -66,8 +70,8 @@ if (argv.h || argv.help) {
     '  --proxy-config   Pass in .json configuration file. e.g.: ./path/to/config.json',
     '  --websocket      Enable websocket proxy',
     '',
-    '  --username   Username for basic authentication [none]',
-    '               Can also be specified with the env variable NODE_HTTP_SERVER_USERNAME',
+    '  --user --username   Username for basic authentication [none]',
+    '                      Can also be specified with the env variable NODE_HTTP_SERVER_USERNAME',
     '  --password   Password for basic authentication [none]',
     '               Can also be specified with the env variable NODE_HTTP_SERVER_PASSWORD',
     '',
@@ -117,8 +121,8 @@ if (!argv.s && !argv.silent) {
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       var ip = argv['log-ip']
-          ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
-          : '';
+        ? req.headers['x-forwarded-for'] || '' +  req.connection.remoteAddress
+        : '';
       if (error) {
         logger.info(
           '[%s] %s "%s %s" Error (%s): "%s"',
@@ -131,8 +135,7 @@ if (!argv.s && !argv.silent) {
           '[%s] %s "%s" (%s)-> "%s"',
           date, ip, chalk.cyan(req.url), chalk.magenta('Proxy'), chalk.cyan(req.proxy.target)
         );
-      }
-      else {
+      } else {
         logger.info(
           '[%s] %s "%s %s" "%s"',
           date, ip, chalk.cyan(req.method), chalk.cyan(req.url),
@@ -141,8 +144,7 @@ if (!argv.s && !argv.silent) {
       }
     }
   };
-}
-else if (chalk) {
+} else if (chalk) {
   logger = {
     info: function () {},
     request: function () {}
@@ -160,8 +162,7 @@ if (!port) {
     if (err) { throw err; }
     listen(port);
   });
-}
-else {
+} else {
   listen(port);
 }
 
@@ -171,6 +172,7 @@ function listen(port) {
     cache: argv.c,
     timeout: argv.t,
     showDir: argv.d,
+    dirOverrides404: argv['dir-overrides-404'],
     baseDir: baseDir,
     autoIndex: argv.i,
     gzip: argv.g || argv.gzip,
@@ -196,6 +198,13 @@ function listen(port) {
       options.headers[str] = '';
     } else {
       options.headers[m[1]] = m[3];
+    }
+  }
+
+  if (argv.coop) {
+    options.coop = true;
+    if (typeof argv.coop === 'string') {
+      options.coopHeader = argv.coop;
     }
   }
 
@@ -229,9 +238,8 @@ function listen(port) {
 
   if (proxy) {
     try {
-      new url.URL(proxy)
-    }
-    catch (err) {
+      new url.URL(proxy);
+    } catch (err) {
       logger.info(chalk.red('Error: Invalid proxy url'));
       process.exit(1);
     }
@@ -278,19 +286,17 @@ function listen(port) {
     options.https = {
       cert: argv.C || argv.cert || 'cert.pem',
       key: argv.K || argv.key || 'key.pem',
-      passphrase: sslPassphrase,
+      passphrase: sslPassphrase
     };
     try {
       fs.lstatSync(options.https.cert);
-    }
-    catch (err) {
+    } catch (err) {
       logger.info(chalk.red('Error: Could not find certificate ' + options.https.cert));
       process.exit(1);
     }
     try {
       fs.lstatSync(options.https.key);
-    }
-    catch (err) {
+    } catch (err) {
       logger.info(chalk.red('Error: Could not find private key ' + options.https.key));
       process.exit(1);
     }
@@ -311,9 +317,12 @@ function listen(port) {
 
     logger.info([
       chalk.yellow('\nhttp-server settings: '),
+      ([chalk.yellow('COOP: '), argv.coop ? chalk.cyan(argv.coop) : chalk.red('disabled')].join('')),
       ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
       ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
-      ([chalk.yellow('Connection Timeout: '), argv.t === '0' ? chalk.red('disabled') : (argv.t ? chalk.cyan(argv.t + ' seconds') : chalk.cyan('120 seconds'))].join('')),
+      ([chalk.yellow('Connection Timeout: '), Math.max(0, argv.t) === 0 ? chalk.red('disabled') :
+        ((!isNaN(argv.t) && !isNaN(parseFloat(argv.t))) ?
+          chalk.cyan(Number(argv.t) + ' seconds') : chalk.cyan('120 seconds'))].join('')),
       ([chalk.yellow('Directory Listings: '), argv.d ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
       ([chalk.yellow('AutoIndex: '), argv.i ? chalk.red('not visible') : chalk.cyan('visible')].join('')),
       ([chalk.yellow('Serve GZIP Files: '), argv.g || argv.gzip ? chalk.cyan('true') : chalk.red('false')].join('')),
@@ -351,13 +360,32 @@ function listen(port) {
     if (typeof proxy === 'string') {
       if (proxyOptions) {
         logger.info('Unhandled requests will be served from: ' + proxy + '. Options: ' + JSON.stringify(proxyOptions));
-      }
-      else {
+      } else {
         logger.info('Unhandled requests will be served from: ' + proxy);
       }
     }
 
+    // Set up "CTRL-C" hook, before printing out "Hit CTRL-C to stop the server"
+    function stopServer() {
+      server.close();
+      logger.info(chalk.red('http-server stopped.'));
+      process.exit();
+    }
+
+    process.on('SIGINT', stopServer);
+    process.on('SIGTERM', stopServer);
+
+    if (process.platform === 'win32') {
+      require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+      }).on('SIGINT', function () {
+        process.emit('SIGINT');
+      });
+    }
+
     logger.info('Hit CTRL-C to stop the server');
+
     if (argv.o) {
       let openHost = host
       if ('::' === host || '0.0.0.0'===host){
@@ -375,22 +403,3 @@ function listen(port) {
     if (!argv.s) logger.info();
   });
 }
-
-if (process.platform === 'win32') {
-  require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  }).on('SIGINT', function () {
-    process.emit('SIGINT');
-  });
-}
-
-process.on('SIGINT', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});
-
-process.on('SIGTERM', function () {
-  logger.info(chalk.red('http-server stopped.'));
-  process.exit();
-});

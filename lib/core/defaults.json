@@ -1,11 +1,13 @@
 {
   "autoIndex": true,
   "showDir": true,
+  "dirOverrides404": false,
   "showDotfiles": true,
   "humanReadable": true,
   "hidePermissions": false,
   "si": false,
   "cache": "max-age=3600",
+  "coop": false,
   "cors": false,
   "gzip": true,
   "brotli": false,
