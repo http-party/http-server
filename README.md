@@ -80,12 +80,14 @@ with the provided Dockerfile.
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
+|`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false | |
+|`--proxy-config` |Pass in `.json` configuration file or stringified JSON. e.g.: `./path/to/config.json` | |
 |`--proxy-all` |Forward every request to the proxy target instead of serving local files|`false`|
 |`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false |
 |`--user` or `--username` |Username for basic authentication | |
 |`--password` |Password for basic authentication | |
 |`-S`, `--tls` or `--ssl` |Enable secure request serving with TLS/SSL (HTTPS)|`false`|
-|`-C` or `--cert` |Path to ssl cert file |`cert.pem` | 
+|`-C` or `--cert` |Path to ssl cert file |`cert.pem` |
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
 |`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |

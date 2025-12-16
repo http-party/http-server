@@ -67,6 +67,7 @@ if (argv.h || argv.help) {
     '  -P --proxy       Fallback proxy if the request cannot be resolved. e.g.: http://someurl.com',
     '  --proxy-all      Send every request to the proxy target instead of serving local files',
     '  --proxy-options  Pass options to proxy using nested dotted objects. e.g.: --proxy-options.secure false',
+    '  --proxy-config   Pass in .json configuration file. e.g.: ./path/to/config.json',
     '  --websocket      Enable websocket proxy',
     '',
     '  --user --username   Username for basic authentication [none]',
@@ -93,6 +94,7 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
+    proxyConfig = argv['proxy-config'],
     websocket = argv.websocket,
     proxyAll = Boolean(argv['proxy-all']),
     utc = argv.U || argv.utc,
@@ -126,6 +128,12 @@ if (!argv.s && !argv.silent) {
           '[%s] %s "%s %s" Error (%s): "%s"',
           date, ip, chalk.red(req.method), chalk.red(req.url),
           chalk.red(error.status.toString()), chalk.red(error.message)
+        );
+      }
+      else if (req.proxy) {
+        logger.info(
+          '[%s] %s "%s" (%s)-> "%s"',
+          date, ip, chalk.cyan(req.url), chalk.magenta('Proxy'), chalk.cyan(req.proxy.target)
         );
       } else {
         logger.info(
@@ -174,6 +182,7 @@ function listen(port) {
     logFn: logger.request,
     proxy: proxy,
     proxyOptions: proxyOptions,
+    proxyConfig: proxyConfig,
     proxyAll: proxyAll,
     showDotfiles: argv.dotfiles,
     mimetypes: argv.mimetypes,
@@ -234,6 +243,38 @@ function listen(port) {
       logger.info(chalk.red('Error: Invalid proxy url'));
       process.exit(1);
     }
+  }
+
+  if (proxyConfig) {
+    try {
+      if (fs.existsSync(proxyConfig)) {
+        proxyConfig = fs.readFileSync(proxyConfig, 'utf8');
+      }
+      if (typeof proxyConfig === 'string') {
+        proxyConfig = JSON.parse(proxyConfig);
+      }
+      if (typeof proxyConfig !== 'object') {
+        throw new Error('Invalid proxy config');
+      }
+    }
+    catch (err) {
+      logger.info(chalk.red('Error: Invalid proxy config or file'));
+      process.exit(1);
+    }
+    // Proxy file overrides cli config
+    proxy = undefined;
+    proxyOptions = undefined;
+  }
+
+  if (proxyAll && proxyConfig) {
+    logger.info(chalk.red('Error: --proxy-all cannot be used with --proxy-config'));
+    logger.info(
+      '%s\n%s\n%s',
+      chalk.yellow('Hint: Use'),
+      chalk.cyan('"/**": {\n  "target": "your-proxy"\n}'),
+      chalk.yellow('in the proxy config to achieve the same effect.')
+    );
+    process.exit(1);
   }
 
   if (proxyAll && !proxy) {
