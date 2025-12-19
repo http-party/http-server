@@ -24,7 +24,7 @@ test('private-network-access defaults to false', (t) => {
     const uri = `http://localhost:${port}/subdir/index.html`;
 
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.type(res.headers['access-control-allow-private-network'], 'undefined');
     });
@@ -51,7 +51,7 @@ test('privateNetworkAccess set to false', (t) => {
     const uri = `http://localhost:${port}/subdir/index.html`;
 
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.type(res.headers['access-control-allow-private-network'], 'undefined');
     });
@@ -77,7 +77,7 @@ test('privateNetworkAccess set to true', (t) => {
     const port = httpServer.address().port;
     const uri = `http://localhost:${port}/subdir/index.html`;
     request.get({ uri }, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 200);
       t.equal(res.headers['access-control-allow-private-network'], 'true');
     });
