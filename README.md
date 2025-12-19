@@ -96,7 +96,7 @@ with the provided Dockerfile.
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
 |`-h` or `--help` |Print this list and exit. |   |
 |`-v` or `--version`|Print the version and exit. | |
-| `-n` or `--no-panic` | Don't print error stack in the console, put it in a log file | `false`|
+| `--no-panic` | Don't print error stack in the console, put it in a log file | `false`|
 
 ## Magic Files
 
