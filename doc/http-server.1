@@ -70,6 +70,10 @@ Default file extension is none is provided.
 Suppress log messages from output.
 
 .TP
+.BI \-n ", " \-\-no-panic
+Gracefully shut down whenever a fatal error occurs, sending stack to log file, not console.
+
+.TP
 .BI \-\-coop " " [\fIMODE\fR]
 Enable COOP via the "Cross-Origin-Opener-Policy" header and sets
 the "Cross-Origin-Embedder-Policy" header to "require-corp".

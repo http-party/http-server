@@ -7,7 +7,6 @@ var chalk     = require('chalk'),
   httpServer = require('../lib/http-server'),
   portfinder = require('portfinder'),
   opener     = require('opener'),
-
   fs         = require('fs'),
   url        = require('url');
 var argv = require('minimist')(process.argv.slice(2), {
@@ -18,7 +17,6 @@ var argv = require('minimist')(process.argv.slice(2), {
   },
   boolean: ['proxy-all']
 });
-
 var ifaces = os.networkInterfaces();
 
 if (argv.h || argv.help) {
@@ -86,12 +84,15 @@ if (argv.h || argv.help) {
     '  --no-dotfiles      Do not show dotfiles',
     '  --mimetypes        Path to a .types file for custom mimetype definition',
     '  -h --help          Print this list and exit.',
-    '  -v --version       Print the version and exit.'
+    '  -v --version       Print the version and exit.',
+    '  --no-panic         If error occurs, gracefully shut down and create log file',
+    '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC'   
   ].join('\n'));
   process.exit();
 }
 
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
+    nopanic = !argv['panic'] || argv.n || process.env.NODE_HTTP_SERVER_NO_PANIC,
     host = argv.a || '::',
     tls = argv.S || argv.tls,
     title = argv.T || argv.title,
@@ -105,6 +106,19 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     version = argv.v || argv.version,
     baseDir = argv['base-dir'],
     logger;
+
+if (nopanic){
+  process.on('error', (e)=> {
+    // Results in a string like "2021-12-27 14:56:31"
+    const etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    console.log(colors.green(etime));
+    console.log(`${colors.red('Fatal error: ')}${e.code}: ${e.message}`);
+    const filename = `httpserver-${etime.split(' ').join('_')}.log`;
+    console.log(colors.bold(`Check ${filename} file in this folder.`));
+    fs.writeFileSync(filename, JSON.stringify(e));
+    process.exit(1);
+  });
+}
 
 var proxyOptionsBooleanProps = [
   'ws', 'xfwd', 'secure', 'toProxy', 'prependPath', 'ignorePath', 'changeOrigin',
