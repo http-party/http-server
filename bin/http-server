@@ -21,8 +21,6 @@ var argv = require('minimist')(process.argv.slice(2), {
 
 var ifaces = os.networkInterfaces();
 
-process.title = 'http-server';
-
 if (argv.h || argv.help) {
   console.log([
     'usage: http-server [path] [options]',
@@ -64,6 +62,8 @@ if (argv.h || argv.help) {
     '               To disable caching, use -c-1.',
     '  -t           Connection timeout in seconds [120], e.g. -t60 for 1 minute.',
     '               To disable timeout, use -t0.',
+    '  -T --title   Custom title suffix for the terminal window [none]',
+    '               The terminal title will be "http-server PORT [TITLE]"',
     '  -U --utc     Use UTC time format in log messages.',
     '  --log-ip     Enable logging of the client\'s IP address',
     '',
@@ -94,6 +94,7 @@ if (argv.h || argv.help) {
 var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     host = argv.a || '::',
     tls = argv.S || argv.tls,
+    title = argv.T || argv.title,
     sslPassphrase = process.env.NODE_HTTP_SERVER_SSL_PASSPHRASE,
     proxy = argv.P || argv.proxy,
     proxyOptions = argv['proxy-options'],
@@ -311,6 +312,9 @@ function listen(port) {
 
   var server = httpServer.createServer(options);
   server.listen(port, host, function () {
+    // Set process title with port and optional custom suffix
+    process.title = 'http-server ' + port + (title ? ' ' + title : '');
+
     var protocol = tls ? 'https://' : 'http://',
       path = baseDir ? '/' + baseDir.replace(/^\//, '') : '';
 
