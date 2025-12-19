@@ -50,6 +50,9 @@ if (argv.h || argv.help) {
     '                  Optionally provide COOP mode.',
     '  --content-type     Default content type for unknown file types [application/octet-stream]',
     '  --cors[=headers]   Enable CORS via the "Access-Control-Allow-Origin" header',
+    '                     Optionally provide CORS headers list separated by commas',
+    '  --private-network-access Enable Private Network Access via the',
+    '                           "Access-Control-Allow-Private-Network" header',
     '                     When enabled, sets Access-Control-Allow-Origin to "*"',
     '                     Optional value adds to Access-Control-Allow-Headers',
     '  -H',
@@ -236,6 +239,10 @@ function listen(port) {
     }
   }
 
+  if (argv['private-network-access']) {
+    options.privateNetworkAccess = true;
+  }
+
   if (proxy) {
     try {
       new url.URL(proxy);
@@ -319,6 +326,7 @@ function listen(port) {
       chalk.yellow('\nhttp-server settings: '),
       ([chalk.yellow('COOP: '), argv.coop ? chalk.cyan(argv.coop) : chalk.red('disabled')].join('')),
       ([chalk.yellow('CORS: '), argv.cors ? chalk.cyan(argv.cors) : chalk.red('disabled')].join('')),
+      ([chalk.yellow('Private Network Access: '), argv['private-network-access'] ? chalk.cyan(argv['private-network-access']) : chalk.red('disabled')].join('')),
       ([chalk.yellow('Cache: '), argv.c ? (argv.c === '-1' ? chalk.red('disabled') : chalk.cyan(argv.c + ' seconds')) : chalk.cyan('3600 seconds')].join('')),
       ([chalk.yellow('Connection Timeout: '), Math.max(0, argv.t) === 0 ? chalk.red('disabled') :
         ((!isNaN(argv.t) && !isNaN(parseFloat(argv.t))) ?

@@ -72,6 +72,7 @@ with the provided Dockerfile.
 |`-s` or `--silent` |Suppress log messages from output  | |
 |`--coop` |Enable COOP via the `Cross-Origin-Opener-Policy` header  | |
 |`--cors` |Enable CORS via the `Access-Control-Allow-Origin` header  | |
+|`--private-network-access` |Enable Private Network Access via the `Access-Control-Allow-Private-Network` header  | |
 |`--cors` | Enable CORS via the `Access-Control-Allow-Origin: *` header. Optionally provide comma-separated values to add to `Access-Control-Allow-Headers`  | |
 |`-H` or `--header` |Add an extra response header (can be used several times)  | |
 |`-o [path]` |Open browser window after starting the server. Optionally provide a URL path to open. e.g.: -o /other/dir/ | |

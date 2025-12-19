@@ -15,6 +15,7 @@
   "handleError": [ "handleError", "handleerror" ],
   "coop": [ "coop", "COOP" ],
   "cors": [ "cors", "CORS" ],
+  "privateNetworkAccess": [ "privateNetworkAccess", "privatenetworkaccess", "private-network-access" ],
   "headers": [ "H", "header", "headers" ],
   "contentType": [ "contentType", "contenttype", "content-type" ],
   "mimeType": [

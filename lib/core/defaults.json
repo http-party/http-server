@@ -9,6 +9,7 @@
   "cache": "max-age=3600",
   "coop": false,
   "cors": false,
+  "privateNetworkAccess": false,
   "gzip": true,
   "brotli": false,
   "forceContentEncoding": false,
