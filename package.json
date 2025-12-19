@@ -1,6 +1,6 @@
 {
   "name": "http-server",
-  "version": "14.1.0",
+  "version": "14.1.2",
   "description": "A simple zero-configuration command-line http server",
   "main": "./lib/http-server",
   "repository": {
@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "start": "node ./bin/http-server",
-    "test": "tap --reporter=spec test/*.test.js",
-    "test-watch": "tap --reporter=spec --watch test/*.test.js"
+    "test": "tap --reporter=terse --allow-incomplete-coverage test/*.test.js",
+    "test-watch": "tap --reporter=terse --allow-incomplete-coverage --watch test/*.test.js"
   },
   "files": [
     "lib",
@@ -29,7 +29,7 @@
   ],
   "man": "./doc/http-server.1",
   "engines": {
-    "node": ">=12"
+    "node": ">=16.20.2"
   },
   "contributors": [
     {
@@ -82,6 +82,10 @@
     {
       "name": "Jade Michael Thornton",
       "email": "jademichael@jmthornton.net"
+    },
+    {
+      "name": "Jorens Merenjanu",
+      "email": "jorensmerenjanu@gmail.com"
     }
   ],
   "dependencies": {
@@ -92,7 +96,8 @@
     "html-encoding-sniffer": "^3.0.0",
     "http-proxy": "^1.18.1",
     "mime": "^1.6.0",
-    "minimist": "^1.2.5",
+    "minimatch": "^10.1.1",
+    "minimist": "^1.2.6",
     "opener": "^1.5.1",
     "portfinder": "^1.0.28",
     "secure-compare": "3.0.1",
@@ -105,7 +110,7 @@
     "eslint-config-populist": "^4.2.0",
     "express": "^4.17.1",
     "request": "^2.88.2",
-    "tap": "^14.11.0"
+    "tap": "^21.0.1"
   },
   "bugs": {
     "url": "https://github.com/http-party/http-server/issues"
