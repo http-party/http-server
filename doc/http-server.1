@@ -34,6 +34,11 @@ Show directory listings.
 Default is true.
 
 .TP
+.BI \-d
+Whether -d should override magic 404.html
+Default is false.
+
+.TP
 .BI \-i
 Display autoIndex.
 Default is true.
@@ -50,6 +55,13 @@ If both brotli and gzip are enabled, brotli takes precedence.
 Default is false.
 
 .TP
+.BI \-\-force\-content\-encoding
+When using --gzip or --brotli, includes the content encoding
+header even when the extension for the compressed file is
+specified in the URL. "test.png.br" will be served the same
+way as "test.png".
+
+.TP
 .BI \-e ", " \-\-ext " " \fIEXTENSION\fR
 Default file extension is none is provided.
 
@@ -62,9 +74,24 @@ Suppress log messages from output.
 Gracefully shut down whenever a fatal error occurs, sending stack to log file, not console.
 
 .TP
+.BI \-\-coop " " [\fIMODE\fR]
+Enable COOP via the "Cross-Origin-Opener-Policy" header and sets
+the "Cross-Origin-Embedder-Policy" header to "require-corp".
+Optionally provide COOP mode which defaults to "same-origin".
+
+.TP
 .BI \-\-cors " " [\fIHEADERS\fR]
-Enable CORS via the "Access-Control-Allow-Origin" header.
-Optionally provide CORS headers list separated by commas.
+Enable CORS by setting "Access-Control-Allow-Origin" to "*".
+Optional comma-separated headers list adds to "Access-Control-Allow-Headers".
+Default Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Range.
+
+.TP
+.BI \-H ", " \-\-header " " \fIHEADER\fR
+Add an extra response header (can be used several times)
+
+.TP
+.BI \-\-private-network-access
+Enable Private Network Access via the "Access-Control-Allow-Private-Network" header.
 
 .TP
 .BI \-o " " [\fIPATH\fR]
@@ -76,6 +103,17 @@ Optionally provide a URL path to open the browser window to.
 Cache time (max-age) in seconds.
 To disable caching, use \-c \-1.
 Default is 3600.
+
+.TP
+.BI \-t " " \fITIMEOUT\fR
+Connection timeout in seconds, e.g. -t60 for 1 minute.
+To disable timeout, use \-t0.
+Default is 120.
+
+.TP
+.BI \-T ", " \-\-title " " \fITITLE\fR
+Custom title suffix for the terminal window.
+The terminal title will be "http-server PORT [TITLE]".
 
 .TP
 .BI \-U ", " \-\-utc
@@ -90,11 +128,20 @@ Enable logging of the client IP address.
 Fallback proxy if the request cannot be resolved.
 
 .TP
+.BI \-\-proxy\-all
+Forward every request to the proxy target and disable local file serving.
+Requires \-\-proxy.
+
+.TP
 .BI \-\-proxy\-options
 Pass proxy options using nested dotted objects.
 
 .TP
-.BI \-\-username " " \fIUSERNAME\fR
+.BI \-\-proxy\-config
+Pass in .json configuration file.
+
+.TP
+.BI \-\-user ", " \-\-username " " \fIUSERNAME\fR
 Username for basic authentication.
 Can also be specified with the environment variable NODE_HTTP_SERVER_USERNAME.
 Defaults to none.

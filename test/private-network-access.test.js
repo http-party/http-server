@@ -8,8 +8,8 @@ const request = require('request');
 
 const root = path.join(__dirname, 'public');
 
-test('cors defaults to false', (t) => {
-  t.plan(4);
+test('private-network-access defaults to false', (t) => {
+  t.plan(3);
 
   const httpServer = http.createServer(
     server({
@@ -26,8 +26,7 @@ test('cors defaults to false', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.type(res.headers['access-control-allow-origin'], 'undefined');
-      t.type(res.headers['access-control-allow-headers'], 'undefined');
+      t.type(res.headers['access-control-allow-private-network'], 'undefined');
     });
   });
   t.once('end', () => {
@@ -35,13 +34,13 @@ test('cors defaults to false', (t) => {
   });
 });
 
-test('cors set to false', (t) => {
-  t.plan(4);
+test('privateNetworkAccess set to false', (t) => {
+  t.plan(3);
 
   const httpServer = http.createServer(
     server({
       root,
-      cors: false,
+      privateNetworkAccess: false,
       autoIndex: true,
       defaultExt: 'html',
     })
@@ -54,8 +53,7 @@ test('cors set to false', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.type(res.headers['access-control-allow-origin'], 'undefined');
-      t.type(res.headers['access-control-allow-headers'], 'undefined');
+      t.type(res.headers['access-control-allow-private-network'], 'undefined');
     });
   });
   t.once('end', () => {
@@ -63,13 +61,13 @@ test('cors set to false', (t) => {
   });
 });
 
-test('cors set to true', (t) => {
-  t.plan(4);
+test('privateNetworkAccess set to true', (t) => {
+  t.plan(3);
 
   const httpServer = http.createServer(
     server({
       root,
-      cors: true,
+      privateNetworkAccess: true,
       autoIndex: true,
       defaultExt: 'html',
     })
@@ -81,35 +79,7 @@ test('cors set to true', (t) => {
     request.get({ uri }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
-      t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
-    });
-  });
-  t.once('end', () => {
-    httpServer.close();
-  });
-});
-
-test('CORS set to true', (t) => {
-  t.plan(4);
-
-  const httpServer = http.createServer(
-    server({
-      root,
-      CORS: true,
-      autoIndex: true,
-      defaultExt: 'html',
-    })
-  );
-
-  httpServer.listen(() => {
-    const port = httpServer.address().port;
-    const uri = `http://localhost:${port}/subdir/index.html`;
-    request.get({ uri }, (err, res) => {
-      t.error(err);
-      t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
-      t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
+      t.equal(res.headers['access-control-allow-private-network'], 'true');
     });
   });
   t.once('end', () => {

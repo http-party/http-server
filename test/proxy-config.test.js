@@ -17,10 +17,19 @@ const httpsOpts = {
   cert: path.join(__dirname, 'fixtures', 'https', 'agent2-cert.pem')
 }
 
+const proxyConfigTest = {
+  "/rewrite/**": {
+    "target": "http://localhost:8082",
+    "pathRewrite": {
+      "^/rewrite": ""
+    }
+  }
+}
+
 // Tests are grouped into those which can run together. The groups are given
 // their own port to run on and live inside a Promise. Tests are done when all
 // Promise test groups complete.
-test('proxy options', (t) => {
+test('proxy config', (t) => {
   new Promise((resolve) => {
     const server = httpServer.createServer({
       root,
@@ -35,43 +44,39 @@ test('proxy options', (t) => {
       brotli: true,
       gzip: true
     })
-    server.listen(0, async () => {
-      const port = server.address().port;
+    // TODO #723 we should use portfinder
+    server.listen(8082, async () => {
       try {
 
-        // Another server proxies to the main server
+        // Another server proxies 8083 to 8082
         const proxyServer = httpServer.createServer({
-          proxy: `http://localhost:${port}`,
-          root: path.join(__dirname, 'fixtures'),
-          tls: true,
-          https: httpsOpts,
-          proxyOptions: {
-            secure: false
-          }
+          root,
+          //tls: true,
+          //https: httpsOpts,
+          proxyConfig: proxyConfigTest
         })
 
         await new Promise((resolve) => {
-          proxyServer.listen(0, async () => {
-            const proxyPort = proxyServer.address().port;
+          proxyServer.listen(8083, async () => {
             try {
               // Serve files from proxy root
-              await requestAsync(`https://localhost:${proxyPort}/root/file`, { rejectUnauthorized: false }).then(async (res) => {
+              await requestAsync('http://localhost:8083/file', { rejectUnauthorized: false }).then(async (res) => {
                 t.ok(res)
                 t.equal(res.statusCode, 200)
 
                 // File content matches
                 const fileData = await fsReadFile(path.join(root, 'file'), 'utf8')
-                t.equal(res.body.trim(), fileData.trim(), 'proxied root file content matches')
+                t.equal(res.body.trim(), fileData.trim(), 'none proxied file content matches')
               }).catch(err => t.fail(err.toString()))
 
-              // Proxy fallback
-              await requestAsync(`https://localhost:${proxyPort}/file`, { rejectUnauthorized: false }).then(async (res) => {
+              // Serve files from proxy with rewrite
+              await requestAsync('http://localhost:8083/rewrite/file', { rejectUnauthorized: false }).then(async (res) => {
                 t.ok(res)
                 t.equal(res.statusCode, 200)
 
                 // File content matches
                 const fileData = await fsReadFile(path.join(root, 'file'), 'utf8')
-                t.equal(res.body.trim(), fileData.trim(), 'proxy fallback root file content matches')
+                t.equal(res.body.trim(), fileData.trim(), 'proxied file content matches')
               }).catch(err => t.fail(err.toString()))
             } catch (err) {
               t.fail(err.toString())
