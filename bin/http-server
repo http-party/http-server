@@ -17,7 +17,6 @@ var argv = require('minimist')(process.argv.slice(2), {
   },
   boolean: ['proxy-all']
 });
-
 var ifaces = os.networkInterfaces();
 
 if (argv.h || argv.help) {
