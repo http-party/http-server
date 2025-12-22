@@ -18,7 +18,7 @@ test('should not add trailing slash when showDir and autoIndex are off', (t) => 
   server.listen(0, () => {
     const port = server.address().port;
     request.get(`http://localhost:${port}/subdir`, (err, res) => {
-      t.ifError(err);
+      t.error(err);
       t.equal(res.statusCode, 404);
       t.equal(res.body, 'File not found. :(');
     });

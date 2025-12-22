@@ -84,3 +84,23 @@ test('H array', (t) => {
     t.equal(headers.beep, 'boop');
   });
 });
+
+// CRLF injection prevention
+test('CRLF injection prevention', (t) => {
+  t.plan(1);
+
+  t.throws(() => {
+    const server = http.createServer(
+      ecstatic({
+        root,
+        H: [
+          'X-CRLF-Injection: X\r\nContent-Type: text/html',
+        ],
+        autoIndex: true,
+        defaultExt: 'html',
+      })
+    );
+
+    server.close();
+  }, /Header is not a string or contains CRLF/);
+});

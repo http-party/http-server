@@ -3,3 +3,5 @@ npm-debug.log*
 .nyc_*/
 .dir-locals.el
 .DS_Store
+.httpserver*
+.tap
