@@ -78,10 +78,13 @@ test('cors set to true', (t) => {
   httpServer.listen(() => {
     const port = httpServer.address().port;
     const uri = `http://localhost:${port}/subdir/index.html`;
-    request.get({ uri }, (err, res) => {
+    request.get({
+      uri,
+      headers: {'Origin': 'https://abc.example.com:7777'},
+    }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
+      t.equal(res.headers['access-control-allow-origin'], 'https://abc.example.com:7777');
       t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
     });
   });
@@ -105,10 +108,13 @@ test('CORS set to true', (t) => {
   httpServer.listen(() => {
     const port = httpServer.address().port;
     const uri = `http://localhost:${port}/subdir/index.html`;
-    request.get({ uri }, (err, res) => {
+    request.get({
+      uri,
+      headers: {'Origin': 'https://abc.example.com:7777'},
+    }, (err, res) => {
       t.error(err);
       t.equal(res.statusCode, 200);
-      t.equal(res.headers['access-control-allow-origin'], '*');
+      t.equal(res.headers['access-control-allow-origin'], 'https://abc.example.com:7777');
       t.equal(res.headers['access-control-allow-headers'], 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since');
     });
   });
