@@ -112,10 +112,10 @@ if (nopanic){
   process.on('error', (e)=> {
     // Results in a string like "2021-12-27 14:56:31"
     const etime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    console.log(colors.green(etime));
-    console.log(`${colors.red('Fatal error: ')}${e.code}: ${e.message}`);
+    console.log(chalk.green(etime));
+    console.log(`${chalk.red('Fatal error: ')}${e.code}: ${e.message}`);
     const filename = `httpserver-${etime.split(' ').join('_')}.log`;
-    console.log(colors.bold(`Check ${filename} file in this folder.`));
+    console.log(chalk.bold(`Check ${filename} file in this folder.`));
     fs.writeFileSync(filename, JSON.stringify(e));
     process.exit(1);
   });
@@ -137,6 +137,7 @@ if (proxyOptions) {
 if (!argv.s && !argv.silent) {
   logger = {
     info: console.log,
+    warning: console.warn,
     request: function (req, res, error) {
       var date = utc ? new Date().toUTCString() : new Date();
       var ip = argv['log-ip']
@@ -230,7 +231,7 @@ function listen(port) {
 
   if (websocket) {
     if (!proxy) {
-      logger.warning(colors.yellow('WebSocket proxy will not be enabled because proxy is not enabled'));
+      logger.warning(chalk.yellow('WebSocket proxy will not be enabled because proxy is not enabled'));
     } else {
       options.websocket = true;
     }
