@@ -93,8 +93,9 @@ with the provided Dockerfile.
 |`-K` or `--key` |Path to ssl key file |`key.pem` |
 |`-r` or `--robots` | Automatically provide a /robots.txt (The content of which defaults to `User-agent: *\nDisallow: /`)  | `false` |
 |`--no-dotfiles` |Do not show dotfiles| |
-|`--hide-permissions` |Do not show file permissions| |
 |`--mimetypes` |Path to a .types file for custom mimetype definition| |
+|`--hide-permissions` |Do not show file permissions| |
+|`--allowed-hosts` |Comma-separated list of hosts allowed to access the server. e.g.: `--allowed-hosts localhost,example.com`| |
 |`-h` or `--help` |Print this list and exit. |   |
 |`-v` or `--version`|Print the version and exit. | |
 | `--no-panic` | Don't print error stack in the console, put it in a log file | `false`|

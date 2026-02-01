@@ -87,7 +87,8 @@ if (argv.h || argv.help) {
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.',
     '  --no-panic         If error occurs, gracefully shut down and create log file',
-    '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC'   
+    '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC',
+    '  --allowed-hosts    Comma-separated list of hosts allowed to access the server. e.g.: --allowed-hosts localhost,example.com',
   ].join('\n'));
   process.exit();
 }
@@ -106,7 +107,8 @@ var port = argv.p || argv.port || parseInt(process.env.PORT, 10),
     utc = argv.U || argv.utc,
     version = argv.v || argv.version,
     baseDir = argv['base-dir'],
-    logger;
+    logger,
+    allowedHosts = argv['allowed-hosts'];
 
 if (nopanic){
   process.on('error', (e)=> {
@@ -185,6 +187,12 @@ if (!port) {
   listen(port);
 }
 
+if (allowedHosts && typeof allowedHosts === 'string') {
+  allowedHosts = allowedHosts.split(',').map((host) => host.trim().toLowerCase());
+} else {
+  allowedHosts = undefined;
+}
+
 function listen(port) {
   var options = {
     root: argv._[0],
@@ -209,7 +217,8 @@ function listen(port) {
     contentType: argv['content-type'],
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
-    headers: {}
+    headers: {},
+    allowedHosts,
   };
 
   function setHeader(str) {
@@ -369,8 +378,11 @@ function listen(port) {
 
     logger.info(chalk.yellow('\nAvailable on:'));
 
-
-    if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
+    if (allowedHosts) {
+      for (const host of allowedHosts) {
+        logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
+      }
+    } else if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
       logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
