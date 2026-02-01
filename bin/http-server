@@ -185,6 +185,13 @@ if (!port) {
   listen(port);
 }
 
+let allowedHosts = argv['allowed-hosts'];
+if (allowedHosts && typeof allowedHosts === 'string') {
+  allowedHosts = allowedHosts.split(',').map((host) => host.trim());
+} else {
+  allowedHosts = undefined;
+}
+
 function listen(port) {
   var options = {
     root: argv._[0],
@@ -209,7 +216,8 @@ function listen(port) {
     contentType: argv['content-type'],
     username: argv.username || process.env.NODE_HTTP_SERVER_USERNAME,
     password: argv.password || process.env.NODE_HTTP_SERVER_PASSWORD,
-    headers: {}
+    headers: {},
+    allowedHosts,
   };
 
   function setHeader(str) {
@@ -369,8 +377,11 @@ function listen(port) {
 
     logger.info(chalk.yellow('\nAvailable on:'));
 
-
-    if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
+    if (allowedHosts) {
+      for (const host of allowedHosts) {
+        logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
+      }
+    } else if (argv.a && (host !== '::' || host !== '0.0.0.0')) {
       logger.info(`  ${protocol}${host}:${chalk.green(port.toString())}${path}`);
     } else {
       Object.keys(ifaces).forEach(function (dev) {
