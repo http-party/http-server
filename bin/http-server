@@ -187,7 +187,7 @@ if (!port) {
 }
 
 if (allowedHosts && typeof allowedHosts === 'string') {
-  allowedHosts = allowedHosts.split(',').map((host) => host.trim());
+  allowedHosts = allowedHosts.split(',').map((host) => host.trim().toLowerCase());
 } else {
   allowedHosts = undefined;
 }
