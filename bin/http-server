@@ -87,7 +87,8 @@ if (argv.h || argv.help) {
     '  -h --help          Print this list and exit.',
     '  -v --version       Print the version and exit.',
     '  --no-panic         If error occurs, gracefully shut down and create log file',
-    '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC'   
+    '                     Can also be specified with the env variable NODE_HTTP_SERVER_NO_PANIC',
+    '  --allowed-hosts    Comma-separated list of hosts allowed to access the server. e.g.: --allowed-hosts localhost,example.com',
   ].join('\n'));
   process.exit();
 }
