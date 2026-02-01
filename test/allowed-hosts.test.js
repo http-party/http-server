@@ -3,7 +3,7 @@ const path = require('path')
 const httpServer = require('../lib/http-server')
 const request = require('request');
 
-// // Prevent errors from being swallowed
+// Prevent errors from being swallowed
 process.on('uncaughtException', console.error)
 
 test('allowed hosts functionality', (t) => {
