@@ -2,7 +2,7 @@
 
 'use strict';
 
-var chalk     = require('chalk'),
+var chalk     = require('picocolors'),
   os         = require('os'),
   httpServer = require('../lib/http-server'),
   portfinder = require('portfinder'),
