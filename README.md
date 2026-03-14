@@ -81,6 +81,7 @@ with the provided Dockerfile.
 |`-T` or `--title` |Custom title suffix for the terminal window. The title will be "http-server PORT [TITLE]".| |
 |`-U` or `--utc` |Use UTC time format in log messages.| |
 |`--log-ip` |Enable logging of the client's IP address |`false` |
+|`--log-request-headers` |Enable logging of the client\'s request headers |`false` |
 |`-P` or `--proxy` |Proxies all requests which can't be resolved locally to the given url. e.g.: -P http://someurl.com | |
 |`--proxy-options` |Pass proxy [options](https://github.com/http-party/node-http-proxy#options) using nested dotted objects. e.g.: --proxy-options.secure false | |
 |`--proxy-config` |Pass in `.json` configuration file or stringified JSON. e.g.: `./path/to/config.json` | |
