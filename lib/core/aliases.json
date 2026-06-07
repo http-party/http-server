@@ -1,5 +1,6 @@
 {
   "autoIndex": [ "autoIndex", "autoindex" ],
+  "sort": [ "sort" ],
   "showDir": [ "showDir", "showdir" ],
   "dirOverrides404": [
     "dirOverrides404", 
