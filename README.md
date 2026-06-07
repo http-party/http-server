@@ -66,6 +66,7 @@ with the provided Dockerfile.
 |`-d`     |Show directory listings |`true` |
 |`-dir-overrides-404` | Whether `-d` should override magic `404.html` | `false`
 |`-i`   | Display autoIndex | `true` |
+|`--sort` |Sort directory listings by `name`, `modified`, or `created`. `mtime` and `birthtime` are also accepted. Date sorting shows newest entries first. |`name` |
 |`-g` or `--gzip` |When enabled it will serve `./public/some-file.js.gz` in place of `./public/some-file.js` when a gzipped version of the file exists and the request accepts gzip encoding. If brotli is also enabled, it will try to serve brotli first.|`false`|
 |`-b` or `--brotli`|When enabled it will serve `./public/some-file.js.br` in place of `./public/some-file.js` when a brotli compressed version of the file exists and the request accepts `br` encoding. If gzip is also enabled, it will try to serve brotli first. |`false`|
 |`-e` or `--ext`  |Default file extension if none supplied |`html` | 
