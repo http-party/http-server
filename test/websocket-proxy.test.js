@@ -212,3 +212,38 @@ test('websocket proxy error handling', (t) => {
             t.end()
         })
 })
+
+for (const changeOrigin of [undefined, true, false]) {
+    const name = changeOrigin === undefined ? 'default' : String(changeOrigin)
+    test(`websocket proxy changeOrigin: ${name}`, async (t) => {
+        const targetServer = http.createServer()
+        const targetWss = new WebSocket.Server({ server: targetServer })
+        t.teardown(() => {
+            for (const socket of targetWss.clients) socket.terminate()
+            targetWss.close()
+            return new Promise((resolve) => targetServer.close(resolve))
+        })
+        targetWss.on('connection', (socket, request) => {
+            socket.send(request.headers.host)
+        })
+        await new Promise((resolve) => targetServer.listen(0, '127.0.0.1', resolve))
+        const targetHost = `127.0.0.1:${targetServer.address().port}`
+        const proxyServer = httpServer.createServer({
+            proxy: `http://${targetHost}`,
+            websocket: true,
+            proxyOptions: changeOrigin === undefined ? undefined : { changeOrigin },
+            root: path.join(__dirname, 'fixtures')
+        })
+        t.teardown(() => new Promise((resolve) => proxyServer.server.close(resolve)))
+        await new Promise((resolve) => proxyServer.listen(0, '127.0.0.1', resolve))
+        const proxyHost = `127.0.0.1:${proxyServer.server.address().port}`
+        const socket = new WebSocket(`ws://${proxyHost}`)
+        t.teardown(() => socket.terminate())
+        const receivedHost = await new Promise((resolve, reject) => {
+            socket.once('message', (data) => resolve(data.toString()))
+            socket.once('error', reject)
+        })
+        t.equal(receivedHost, changeOrigin === false ? proxyHost : targetHost,
+            'upstream Host follows the configured changeOrigin option')
+    })
+}
