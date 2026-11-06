@@ -222,6 +222,10 @@ function listen(port) {
     allowedHosts,
   };
 
+  if (options.robots === 'true') {
+    options.robots = true;
+  }
+
   function setHeader(str) {
     const m = /^(.+?)\s*(:\s*(.*))$/.exec(str);
     if (!m || m.length < 4) {

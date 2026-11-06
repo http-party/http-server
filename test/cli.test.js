@@ -254,3 +254,35 @@ test('setting default content-type via cli', (t) => {
     });
   });
 });
+
+const defaultRobots = 'User-agent: *\nDisallow: /';
+const customRobots = 'User-agent: *\nDisallow: /private';
+
+[
+  ['short flag with true', ['-r', 'true'], defaultRobots],
+  ['long flag with true', ['--robots', 'true'], defaultRobots],
+  ['inline true value', ['--robots=true'], defaultRobots],
+  ['bare short flag', ['-r'], defaultRobots],
+  ['bare long flag', ['--robots'], defaultRobots],
+  ['short flag with custom content', ['-r', 'User-agent: *\\nDisallow: /private'], customRobots],
+  ['long flag with custom content', ['--robots', 'User-agent: *\\nDisallow: /private'], customRobots]
+].forEach(([name, args, expected]) => {
+  test(`robots option: ${name}`, (t) => {
+    t.plan(5);
+
+    getPort().then((port) => {
+      const root = path.resolve(__dirname, 'fixtures', 'root');
+      const server = startServer([root, '--port', port].concat(args));
+
+      tearDown(server, t);
+
+      server.stdout.on('data', (msg) => {
+        checkServerIsRunning(`http://localhost:${port}/robots.txt`, msg, t, (err, res) => {
+          t.error(err);
+          t.equal(res.headers['content-type'], 'text/plain');
+          t.equal(res.body, expected);
+        });
+      });
+    });
+  });
+});
